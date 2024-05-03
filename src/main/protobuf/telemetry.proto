@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+message TelemetryMessage {
+  string earthReceiveTime = 1;
+  AntennaId antennaId = 2;
+  int64  dataLinkContinuity = 3;
+  FrameQuality FrameQuality = 4;
+  bytes privateAnnotation = 5;
+  bytes data = 6;
+}
+
+message AntennaId {
+  oneof antennaIdForm {
+    string globalForm = 1;
+    bytes localForm = 2;
+  }
+}
+
+enum FrameQuality {
+    GOOD = 0;
+    ERRED = 1;
+    UNDETERMINED = 2;
+}

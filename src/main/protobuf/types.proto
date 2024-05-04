@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+message AntennaId {
+  oneof antennaIdForm {
+    string globalForm = 1;
+    bytes localForm = 2;
+  }
+}
+
+enum FrameQuality {
+    GOOD = 0;
+    ERRED = 1;
+    UNDETERMINED = 2;
+}
+
+message DateTime {
+  uint32 days = 1;          // days since Jab 1st 1958
+  uint32 msOfDay = 2;       // mill seconds of the day
+  uint32 picoSecsOfMs = 3;   // sub pico seconds of the milliseconds
+}
+
+message Annotation {
+  string name = 1;
+  oneof annotationValue {
+    double doubleValue = 2;
+    float floatValue = 3;
+    int32 int32Value = 4;
+    int64 int64Value = 5;
+    bool boolValue = 6;    
+    string stringValue = 7;
+    bytes octetStringValue = 8;
+  }
+}
+
+  enum ProductionState {
+    CONFIGURED = 0;
+    OPERATIONAL = 1;
+    HALTED = 2;
+    INTERRUPTED = 3;
+  }
+
+  enum FrameSyncStatus {
+    IN_LOCK = 0;
+    OUT_OF_LOCK = 1;
+    UNKOWN = 3;
+  }

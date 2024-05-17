@@ -4,12 +4,12 @@ import "types.proto";
 
 message TelemetryMessage {
   oneof message {
-    Telemetry telemetry = 1;
+    TelemetryData telemetry = 1;
     SyncNotify syncNotify = 2;
   }
 }
 
-message Telemetry {
+message TelemetryData {
   DateTime earthReceiveTime = 1;
   AntennaId antennaId = 2;
   int64  dataLinkContinuity = 3;

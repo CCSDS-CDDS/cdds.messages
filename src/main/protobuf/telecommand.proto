@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+import "types.proto";
+
+message TelecommandMessage {
+    int64 commandId = 1;
+    ReportRequest reportRequest = 2;
+    DateTime earliestRadiatonTime = 3;  // optional
+    DateTime latestRadiationTime = 4;   // optional
+    oneof message {
+        bytes cltu = 5;
+        bytes telecommandFrame = 6;
+    }
+}
+
+message TelecommandMessageAck {
+   int64 commandId = 1; 
+}
+
+message TelecommandMessageNak {
+   int64 commandId = 1;
+   Diagnostic diagnostic = 2;
+}
+
+message TelecommandReport {
+    int64 commandId = 1;
+    ReportType reportType = 2;
+    int64 lastCommandIdProcessed = 3;
+    int64 lastCommandIdOK = 4;
+    DateTime radiationStartTime = 5;        // ReportType RADIATED
+    DateTime radiationStopTime = 6;         // ReportType RADIATED
+    ProductionState productionState = 7;
+}
+
+enum ReportType {
+    RADIATED = 0;
+    EXPIRED = 1;
+    PRODCUTION_INTERRUPTED = 2;
+    PRODUCTION_HALTED = 3;
+    BUFFER_EMPTY = 4;
+}
+
+enum Diagnostic {
+    DUPLICATE_COMMAND_ID = 0;
+    UNABLE_TO_PROCESS = 1;
+    UNABLE_TO_STORE =2;
+    OUT_OF_SEQUENCE = 3;
+    INCOSISTENT_RADIATION_TIMES = 4;
+    INVALID_TIME = 5;
+    LATE_ARRIVAL = 6;
+    GENERIC_ERROR = 7;
+    OTHER_REASON = 8;
+}
+
+enum ReportRequest {
+    PRODUCE_REPORT = 0;
+    NO_REPORT = 1;
+}
+
+

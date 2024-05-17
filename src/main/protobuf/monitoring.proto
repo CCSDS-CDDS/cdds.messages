@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+import "types.proto";
+
+message GenericMonitoringMessage {    
+    repeated MonitoringParameter monitoringParameters = 1;
+}
+
+message MonitoringParameter {
+    string identifier = 1;
+    DateTime timeStamp = 2;
+    oneof value {
+        double doubleValue = 3;
+        float floatValue = 4;
+        int32 int32Value = 5;
+        int64 int64Value = 6;
+        bool boolValue = 7;    
+        string stringValue = 8;
+        bytes octetStringValue = 9;
+    }
+}
+
+message RcfTsProviderMonitoring {
+    DateTime timeStamp = 1;
+    
+    SleRtnProdStat rcfProdStat = 2;
+    string rcfSvcInstanceId = 3;
+    SleSvcInstanceState rcfSvcInstanceState = 4;
+    string rcfInitiatorId = 5;
+    string rcfResponderId = 6;
+    string rcfResponderPortId = 7;
+    int32 rcfRtnTimeoutPeriod = 8;
+    SleRtnDeliveryMode rcfDeliveryMode = 9;
+    uint32 rcfLatencyLimit = 10;
+    uint32 rcfTransferBufferSize = 11;
+    RcfPermittedGvcidSet rcfPermittedGvcidSet = 12;
+    RcfRequestedGvcid rcfRequestedGvcid = 13;
+    uint32 rcfMinReportingCycle = 14;
+    bool rcfReportingCycle = 15;
+    int64 rcfNumberOfFramesDelivered = 16;
+    
+    SleRtnProdStat eventRcfProdStatChange = 17;
+    ConfigurationValue eventRcfProdConfigurationChange = 18;
+    string eventRcfOperatorMessage = 19;
+}
+
+enum SleRtnProdStat {
+    SLE_RUNNING = 0;
+    SLE_INTERRUPTED = 1;
+    SLE_HALTED = 2;
+}
+enum SleSvcInstanceState {
+    SLE_UNBOUND = 0;
+    SLE_READY = 1;
+    SLE_ACTIVE = 2;
+}
+
+enum SleRtnDeliveryMode {
+    ONLINE_TIMELY = 0;
+    ONLINE_COMPLETE = 1;
+    OFFLINE = 2;
+}
+
+message RcfPermittedGvcidSet {
+    string todo = 1;
+}
+
+message RcfRequestedGvcid {
+    string todo = 1;
+}
+
+message ConfigurationValue {
+    string todo = 1;
+}

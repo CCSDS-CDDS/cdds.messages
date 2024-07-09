@@ -15,11 +15,13 @@ message TelecommandMessage {
 
 message TelecommandMessageAck {
    int64 commandId = 1; 
+   string origin;                          // origin of the ACK
 }
 
 message TelecommandMessageNak {
    int64 commandId = 1;
    Diagnostic diagnostic = 2;
+   string origin;                          // origin of the NACK
 }
 
 message TelecommandReport {
@@ -30,6 +32,7 @@ message TelecommandReport {
     DateTime radiationStartTime = 5;        // ReportType RADIATED
     DateTime radiationStopTime = 6;         // ReportType RADIATED
     ProductionState productionState = 7;
+    string origin;                          // origin of the report
 }
 
 enum ReportType {

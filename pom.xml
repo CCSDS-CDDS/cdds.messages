@@ -11,24 +11,52 @@
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
+<!--        <os.detected.classifier>5.14.0-362.18.1.el9_3.x86_64</os.detected.classifier>-->
     </properties>
 
     <build>
             <plugins>
-                <plugin>
-                    <groupId>com.github.os72</groupId>
-                    <artifactId>protoc-jar-maven-plugin</artifactId>
-                    <version>3.11.4</version>
-                    <executions>
-                        <execution>
-                            <phase>generate-sources</phase>
-                            <goals>
-                                <goal>run</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-            </plugins>
+<!--                <plugin>-->
+<!--                    <groupId>com.github.os72</groupId>-->
+<!--                    <artifactId>protoc-jar-maven-plugin</artifactId>-->
+<!--                    <version>3.11.4</version>-->
+<!--                    <executions>-->
+<!--                        <execution>-->
+<!--                            <phase>generate-sources</phase>-->
+<!--                            <goals>-->
+<!--                                <goal>run</goal>-->
+<!--                            </goals>-->
+<!--                        </execution>-->
+<!--                    </executions>-->
+<!--                </plugin>-->
+            
+            
+	            <plugin>
+	                    <groupId>org.xolstice.maven.plugins</groupId>
+	                    <artifactId>protobuf-maven-plugin</artifactId>
+	                    <version>0.6.1</version>
+	                    <executions>
+	                        <execution>
+	                            <goals>
+	                                <goal>compile</goal>
+	                                <goal>test-compile</goal>
+	                            </goals>
+	                        </execution>
+	                    </executions>
+	                    <configuration>
+	                        <protoSourceRoot>${basedir}/src/main/protobuf</protoSourceRoot>
+<!--	                        <protocArtifact>com.google.protobuf:protoc:3.14.0:exe:${os.detected.classifier}</protocArtifact>-->
+<!--	                        <pluginId>protoc-gen-doc</pluginId>-->
+<!--	                        <pluginArtifact>org.pseudomuto:protoc-gen-doc:1.5.1:exe:${os.detected.classifier}</pluginArtifact>-->
+<!--	                        <pluginParameters>-->
+<!--	                            <param>mode=html</param>-->
+<!--	                            <param>include_imports</param>-->
+<!--	                        </pluginParameters>-->
+	                    </configuration>
+	                </plugin>
+                
+                </plugins>
+            
     </build>
 
     <dependencies>
@@ -36,7 +64,16 @@
 			<groupId>com.google.protobuf</groupId>
 			<artifactId>protobuf-java</artifactId>
 			<version>3.25.3</version>
-		</dependency>        
+		</dependency>
+		
+		        <!-- https://mvnrepository.com/artifact/io.github.pseudomuto/protoc-gen-doc -->
+        <dependency>
+            <groupId>io.github.pseudomuto</groupId>
+            <artifactId>protoc-gen-doc</artifactId>
+            <version>1.5.1</version>
+            <type>pom</type>
+        </dependency>
+		        
     </dependencies>
 
 </project>

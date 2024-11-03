@@ -2,6 +2,10 @@ syntax = "proto3";
 
 import "types.proto";
 
+/**
+ * Telemetry Message
+ * Either a Telemtry Data message or a Sync Notity message
+ */
 message TelemetryMessage {
   oneof message {
     TelemetryData telemetry = 1;
@@ -9,7 +13,25 @@ message TelemetryMessage {
   }
 }
 
+/**
+ * The provider shall invoke the RAF-TRANSFER-DATA operation to deliver a
+ * telemetry frame to the user.
+ * The RAF-TRANSFER-DATA operation shall be an unconfirmed operation.
+ *  NOTE – Although RAF-TRANSFER-DATA is an unconfirmed operation, it is assumed that
+ * the communications service provides certain guarantees, as described in 1.3.1.
+ * 3.6.1.3 RAF-TRANSFER-DATA is valid only in state 3 (‘active’) and shall be invoked
+ * only by the provider
+ */
 message TelemetryData {
+  /**
+   * For a frame, the earth-receive-time parameter shall contain the UTC time at which
+   * the signal event corresponding to the leading edge of the first bit of the Attached Sync
+   * Marker that immediately preceded this encoded or uncoded frame was presented at the phase
+   * center of the antenna used to acquire the frame. The earth-receive-time parameter
+   * shall contain the UTC time at which the signal event corresponding to the leading edge of the
+   * first bit of the start sequence that immediately preceded this encoded frame was presented at
+   * the phase center of the antenna used to acquire the frame.
+   */
   DateTime earthReceiveTime = 1;
   AntennaId antennaId = 2;
   int64  dataLinkContinuity = 3;

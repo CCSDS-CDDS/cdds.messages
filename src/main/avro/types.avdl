@@ -1,0 +1,41 @@
+@namespace("ccsds.cdds.types")
+protocol Types {
+
+    enum FrameQuality {
+        GOOD,
+        ERRED,
+        UNDETERMINED
+    }
+
+    enum ProductionState {
+        CONFIGURED,
+        OPERATIONAL,
+        HALTED,
+        INTERRUPTED
+    }
+
+    enum FrameSyncStatus {
+        IN_LOCK,
+        OUT_OF_LOCK,
+        UNKOWN
+    }
+
+    record DateTime {
+        long days;
+        long msOfDay;
+        long picoSecsOfMs;
+    }
+
+    record GlobalAntennaId {
+        string globalAntennaId;
+    }
+    
+    record LocalAntennaId {
+       bytes localAntennaId;
+    }
+
+    record Annotation {
+        string name;
+        union {int, float, double, DateTime, string, bytes} annotationValue;
+    }
+}

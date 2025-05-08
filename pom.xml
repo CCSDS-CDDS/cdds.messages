@@ -54,9 +54,26 @@
 <!--	                        </pluginParameters>-->
 	                    </configuration>
 	                </plugin>
-                
-                </plugins>
-            
+
+                    <plugin>
+                        <groupId>org.apache.avro</groupId>
+                        <artifactId>avro-maven-plugin</artifactId>
+                        <version>1.11.1</version>
+                        <executions>
+                          <execution>
+                            <phase>generate-sources</phase>
+                            <goals>
+                              <goal>schema</goal>
+                              <goal>idl-protocol</goal>
+                            </goals>
+                            <configuration>
+                              <sourceDirectory>${project.basedir}/src/main/avro/</sourceDirectory>
+                              <!--<outputDirectory>${project.basedir}/src/main/java/</outputDirectory>-->
+                            </configuration>
+                          </execution>
+                        </executions>
+                      </plugin>
+            </plugins>
     </build>
 
     <dependencies>
@@ -79,6 +96,6 @@
             <artifactId>avro</artifactId>
             <version>1.11.1</version>
         </dependency>
-    </dependencies>
 
+     </dependencies>   
 </project>

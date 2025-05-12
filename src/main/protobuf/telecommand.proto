@@ -13,35 +13,48 @@ message TelecommandMessage {
     }
 }
 
-message TelecommandMessageAck {
-   int64 commandId = 1; 
-   string origin = 2;                          // origin of the ACK
-}
-
-message TelecommandMessageNak {
-   int64 commandId = 1;
-   Diagnostic diagnostic = 2;
-   string origin = 3;                          // origin of the NACK
-}
-
 message TelecommandReport {
-    int64 commandId = 1;
-    ReportType reportType = 2;
-    int64 lastCommandIdProcessed = 3;
-    int64 lastCommandIdOK = 4;
-    DateTime radiationStartTime = 5;        // ReportType RADIATED
-    DateTime radiationStopTime = 6;         // ReportType RADIATED
-    ProductionState productionState = 7;
-    string origin = 8;                          // origin of the report
+    int64 commandId = 1; 
+    // int64 lastCommandIdProcessed = 2; // this is not needed, commandId is referring to the command
+    int64 lastCommandIdOK = 3; 
+    ProductionState productionState = 4;
+    int64 bufferAvailable = 5;              // TODO: unit
+    DateTime    notificationTime = 6;
+    string origin = 7;                          // origin of the message 
+
+    oneof report {
+        TelecommandAck ack = 8;
+        TelecommandFailure failure = 9; 
+        TelecommandRadiation radiation = 10;
+        TelecommandProductionStatusChange productionStatusChange = 11;    
+        TelecommandBufferEmpty bufferEmpty = 12;
+    }
 }
 
-enum ReportType {
-    RADIATED = 0;
-    EXPIRED = 1;
-    PRODCUTION_INTERRUPTED = 2;
-    PRODUCTION_HALTED = 3;
-    BUFFER_EMPTY = 4;
+message TelecommandAck {
 }
+
+message TelecommandFailure {
+    Diagnostic diagnostic = 1;
+}
+
+message TelecommandRadiation {
+    DateTime radiationStartTime = 1;        // ReportType RADIATED
+    DateTime radiationStopTime = 2;         // ReportType RADIATED
+}
+
+message TelecommandProductionStatusChange {
+}
+
+message TelecommandBufferEmpty {
+}
+
+//enum ReportType {
+    // RADIATED = 0;                // TelecommandRadiation 
+    // EXPIRED = 1;                 // shifted to Diagnostic
+    // PRODCUTION_STATUS_CHANGE = 1;
+    // BUFFER_EMPTY = 2;
+//}
 
 enum Diagnostic {
     DUPLICATE_COMMAND_ID = 0;
@@ -53,8 +66,11 @@ enum Diagnostic {
     LATE_ARRIVAL = 6;
     GENERIC_ERROR = 7;
     OTHER_REASON = 8;
+    RADIATION_FAILURE = 9;
+    EXPIRED = 10; 
 }
 
+// TODO: decide on the granularity of reporting: All, only radiation , only failures?
 enum ReportRequest {
     PRODUCE_REPORT = 0;
     NO_REPORT = 1;

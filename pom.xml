@@ -11,7 +11,7 @@
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-<!--        <os.detected.classifier>5.14.0-362.18.1.el9_3.x86_64</os.detected.classifier>-->
+       <os.detected.classifier>osx-aarch_64</os.detected.classifier>
     </properties>
 
     <build>
@@ -42,17 +42,32 @@
 	                                <goal>test-compile</goal>
 	                            </goals>
 	                        </execution>
+                          
+                          <execution>
+                            <id>generate-protobuf-docs</id>
+                            <goals>
+                              <!-- mvn protobuf:compile-custom -->
+                              <goal>compile-custom</goal>
+                            </goals>
+                          </execution>
+
 	                    </executions>
 	                    <configuration>
 	                        <protoSourceRoot>${basedir}/src/main/protobuf</protoSourceRoot>
-<!--	                        <protocArtifact>com.google.protobuf:protoc:3.14.0:exe:${os.detected.classifier}</protocArtifact>-->
-<!--	                        <pluginId>protoc-gen-doc</pluginId>-->
-<!--	                        <pluginArtifact>org.pseudomuto:protoc-gen-doc:1.5.1:exe:${os.detected.classifier}</pluginArtifact>-->
-<!--	                        <pluginParameters>-->
-<!--	                            <param>mode=html</param>-->
-<!--	                            <param>include_imports</param>-->
-<!--	                        </pluginParameters>-->
+                          
+	                        <!-- <protocArtifact>com.google.protobuf:protoc:3.14.0:exe:${os.detected.classifier}</protocArtifact> -->
+
+	                        <pluginId>generate-protobuf-docs</pluginId>
+                          <!-- The protoc-gen-doc binary needs to be installed, see the comamnd below: -->
+                          <!-- mvn install:install-file -DgroupId=org.pseudomuto -DartifactId=protoc-gen-doc -Dversion=1.5.1 -Dclassifier=osx-aarch_64.exe -Dpackaging=exe -Dfile=/Users/Shared/tools/homebrew/bin/protoc-gen-doc  -->
+	                        <pluginArtifact>org.pseudomuto:protoc-gen-doc:1.5.1:exe:${os.detected.classifier}.exe</pluginArtifact>
+	                        <pluginParameters>
+	                            <param>mode=html</param>
+	                            <param>include_imports</param>
+	                        </pluginParameters>
+                          
 	                    </configuration>
+
 	                </plugin>
 
                     <plugin>

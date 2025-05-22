@@ -18,7 +18,7 @@ message TelecommandReport {
     // int64 lastCommandIdProcessed = 2; // this is not needed, commandId is referring to the command
     int64 lastCommandIdOK = 3; 
     ProductionState productionState = 4;
-    int64 bufferAvailable = 5;              // TODO: unit
+    int64 bufferAvailable = 5;                  // The available buffer for telecommands in bytes
     DateTime    notificationTime = 6;
     string origin = 7;                          // origin of the message 
 

@@ -44,7 +44,7 @@
 	                        </execution>
                           
                           <execution>
-                            <id>generate-protobuf-docs</id>
+                            <id>doc</id>
                             <goals>
                               <!-- mvn protobuf:compile-custom -->
                               <goal>compile-custom</goal>
@@ -53,19 +53,39 @@
 
 	                    </executions>
 	                    <configuration>
+                          <protocExecutable>protoc</protocExecutable>
 	                        <protoSourceRoot>${basedir}/src/main/protobuf</protoSourceRoot>
                           
-	                        <!-- <protocArtifact>com.google.protobuf:protoc:3.14.0:exe:${os.detected.classifier}</protocArtifact> -->
+	                        <protocArtifact>com.google.protobuf:protoc:3.14.0:exe:${os.detected.classifier}</protocArtifact>
 
-	                        <pluginId>generate-protobuf-docs</pluginId>
+	                        <pluginId>doc</pluginId>
                           <!-- The protoc-gen-doc binary needs to be installed, see the comamnd below: -->
                           <!-- mvn install:install-file -DgroupId=org.pseudomuto -DartifactId=protoc-gen-doc -Dversion=1.5.1 -Dclassifier=osx-aarch_64.exe -Dpackaging=exe -Dfile=/Users/Shared/tools/homebrew/bin/protoc-gen-doc  -->
 	                        <pluginArtifact>org.pseudomuto:protoc-gen-doc:1.5.1:exe:${os.detected.classifier}.exe</pluginArtifact>
-	                        <pluginParameters>
-	                            <param>mode=html</param>
+                          <outputDirectory>${project.build.directory}/generated-docs</outputDirectory>
+	                        
+                          <!-- for parameter handling see https://github.com/xolstice/protobuf-maven-plugin/blob/master/src/main/java/org/xolstice/maven/plugin/protobuf/Protoc.java -->
+                          <!-- <pluginParameter>markdown,cdds.md</pluginParameter>  -->
+                          <!-- <pluginParameter>docbook,cdds.docbook</pluginParameter>  -->
+
+                          <!-- use a cdds.tmpl to allow html tags like <br/> to go from proto comments to html -->
+                          <pluginParameter>cdds.tmpl,cdds.html</pluginParameter> 
+
+                          <!-- <pluginParameters>
+	                            <param>mode=markdown,docs.md</param>
 	                            <param>include_imports</param>
-	                        </pluginParameters>
-                          
+	                        </pluginParameters> -->
+
+                        <!-- <protocPlugins>
+                          <protocPlugin>
+                            <id>generate-protobuf-docs</id>
+                            <groupId>pseudomuto</groupId>
+                            <artifactId>protoc-gen-doc</artifactId>
+                            <version>1.5.1</version>
+                            <mainClass>protoc-gen-doc</mainClass>
+                          </protocPlugin>
+                        </protocPlugins> -->
+
 	                    </configuration>
 
 	                </plugin>

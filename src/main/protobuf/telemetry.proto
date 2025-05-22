@@ -3,48 +3,142 @@ syntax = "proto3";
 import "types.proto";
 
 /**
- * Telemetry Message
+ * The Telemetry Message transports
+ *
  * Either a Telemtry Data message or a Sync Notity message
  */
 message TelemetryMessage {
+  /** 
+   * The sequence number allows a detection of duplicates, reordering or gaps caused by the 
+   * transport technology from the CDDS Telemetry Provider to the CDDS Telemtry user.
+   *  
+   * This sequence number is not to be confused with the dataLinkContinuity
+   * indicating the data continuity of frames as received from the space link.
+   */
+  int64 sequenceNumber = 1; /* @exclude TODO: shall we include a sequence number? */
+  
   oneof message {
-    TelemetryData telemetry = 1;
-    SyncNotify syncNotify = 2;
+    TelemetryData telemetry = 2;
+    SyncNotify syncNotify = 3;
   }
 }
 
 /**
- * The provider shall invoke the RAF-TRANSFER-DATA operation to deliver a
- * telemetry frame to the user.
- * The RAF-TRANSFER-DATA operation shall be an unconfirmed operation.
- *  NOTE – Although RAF-TRANSFER-DATA is an unconfirmed operation, it is assumed that
- * the communications service provides certain guarantees, as described in 1.3.1.
- * 3.6.1.3 RAF-TRANSFER-DATA is valid only in state 3 (‘active’) and shall be invoked
- * only by the provider
+ * TelemetryData message shall deliver a telemetry frame from a CDDS Provider 
+ * to a CDDS User.
  */
 message TelemetryData {
   /**
-   * For a frame, the earth-receive-time parameter shall contain the UTC time at which
-   * the signal event corresponding to the leading edge of the first bit of the Attached Sync
-   * Marker that immediately preceded this encoded or uncoded frame was presented at the phase
-   * center of the antenna used to acquire the frame. The earth-receive-time parameter
-   * shall contain the UTC time at which the signal event corresponding to the leading edge of the
-   * first bit of the start sequence that immediately preceded this encoded frame was presented at
-   * the phase center of the antenna used to acquire the frame.
+   * For a received telemtry frame, the earthReceiveTime shall
+   * contain the UTC time at which the signal event corresponding to the leading
+   * edge of the first bit of the Attached Sync Marker that immediately preceded
+   * this encoded or uncoded frame was presented at the phase center of the
+   * antenna used to acquire the frame.
    */
   DateTime earthReceiveTime = 1;
+
+  /**
+   * The antennaId shall indicate which antenna of the Earth User Node
+   * was used to acquire the frame.
+   */
   AntennaId antennaId = 2;
-  int64  dataLinkContinuity = 3;
-  FrameQuality FrameQuality = 4;
-  repeated Annotation privateAnnotation = 5;
-  bytes data = 6;
+
+  /**
+   * The dataLinkContinuity shall indicate whether the extracted frame
+   * is the direct successor of the previous frame
+   * on the selected Master or Virtual Channel.
+   * 
+   * The dataLinkContinuity shall contain an integer value:
+   *
+   * If the gcvId is provided, the dataLinkContinuity is defined as follows:
+
+   * A value of ‘-1’ indicates that this is the first frame after the start of
+   * production or the selected channel is a Master Channel carrying AOS Transfer
+   * Frames or USLP Transfer Frames and therefore no information regarding a
+   * discontinuity on the channel can be provided. 
+   */
+  int64 dataLinkContinuity = 3;
+
+  oneof qualityOrGvcId {
+
+    /**
+     * The frameQuality shall indicate the result of the forward error correction decoding
+     * or Frame Error Control Field evaluation and shall contain one of the
+     * following values:
+     * <br/><br/>
+     * a) ‘good’ No error was detected by the decoder
+     * <br/><br/>
+     * b) ‘erred’ An error was detected by the decoder
+     * <br/><br/>
+     * c) ‘undetermined’ – the results of the decoding process for this frame are not specifiedi or no decoding was performed.
+     * <br/><br/>
+     */
+    FrameQuality frameQuality = 4;
+
+    /**
+     * The global virtual channel identifier.
+     * If the gvcId is provided, the frame quality is good
+     */
+    GvcId gvcId = 5; 
+  }
+
+  /**
+   * 0..N privateAnnotation shall be used to convey additional information that
+   * may be associated with a frame. The content of private annotations must be agreed amon
+   * CDDS user and CDDS provider before use.
+   */
+  repeated Annotation privateAnnotation = 6;
+
+  /**
+   * The data shall be the telemetry frame acquired from the selected 
+   * channel for delivery to the CDDS User. It is a TM Transfer Frame, an AOS Transfer Frame, or a
+   * USLP Transfer Frame. If the frameQuality is provided and good, or the gvcId is provided, data carries
+   * the uncoded telemtry frame.
+   * <br/><br/> 
+   * For Reed-Solomon, LDPC or turbo encoding, if the the frameQuality is provided and indicates 'ERRED',
+   *  data carries the full coded block of data 
+   * as identified by the frame synchornization process. For BCH encoded frames failing the decoding,
+   * the result of the BCH decoding including the fill bits for whcih decoding was not possible is delivered.
+   */
+  bytes data = 7;
 }
 
+/**
+ * The CDDS provider shall invoke the SyncNotify to
+ * notify the CDDS user of the occurrence of an event affecting the production of the provided service.
+ */
 message SyncNotify {
+  
+  /**
+   * The date and time at which evetn underlying the notification occurred.
+   */
   DateTime time = 1;
-  oneof notification {
+
+  oneof notification {  // TODO: Does this need to be a one of? We could include
+                        // all relevant fields in each SyncNotify
+    /**
+     * The frameSyncStatus notification is sent by the CDDS Provider to notify the CDDS user
+     * of a change of the frame synchonization status. 
+     */
     FrameSyncStatus frameSyncStatus = 2;
-    ProductionState productionState = 3; 
+
+    /**
+     * The productionState notification is sent by the CDDS Provider to notify the CDDS user
+     * of a change of the production status. 
+     */
+    ProductionState productionState = 3;
+
+    /**
+     * The dataDiscarded notification is sent by the CDDS Provider to the CDDS User in case
+     * the CDDS Provider had to discard data due to excessive backlog of data causing an overrun
+     * of the internal buffering capabilities. This is a non-nominal case.
+     */
+    int64 dataDiscarded = 4;  // the number of data discarded due to excessive backlog
+
+    /**
+     * The endOfData notification is sent by the CDDS Provider to the CDDS Useri
+     * when there is no more data to send. 
+     */
+    bool endOfData = 5;  // the provider has no more data to send
   }
 }
-

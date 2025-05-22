@@ -47,3 +47,17 @@ message Annotation {
     OUT_OF_LOCK = 1;
     UNKOWN = 3;
   }
+
+  message GvcId {
+    int32 spacecraftId = 1;
+    FrameVersion version = 2;
+    int32 virtualChannelId = 3; // optional, if ommitted this is a masger channel
+    
+
+  }
+
+  enum FrameVersion {
+    PACKET_TM = 0;
+    AOS = 1;
+    USLP = 2;
+  }

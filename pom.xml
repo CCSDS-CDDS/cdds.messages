@@ -69,7 +69,7 @@
                           <!-- <pluginParameter>docbook,cdds.docbook</pluginParameter>  -->
 
                           <!-- use a cdds.tmpl to allow html tags like <br/> to go from proto comments to html -->
-                          <pluginParameter>cdds.tmpl,cdds.html</pluginParameter> 
+                          <pluginParameter>src/main/resources/cdds.tmpl,cdds.html</pluginParameter> 
 
                           <!-- <pluginParameters>
 	                            <param>mode=markdown,docs.md</param>

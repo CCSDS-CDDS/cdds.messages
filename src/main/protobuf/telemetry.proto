@@ -70,7 +70,7 @@ message TelemetryData {
      * <br/><br/>
      * b) ‘erred’ An error was detected by the decoder
      * <br/><br/>
-     * c) ‘undetermined’ – the results of the decoding process for this frame are not specifiedi or no decoding was performed.
+     * c) ‘undetermined’ – the results of the decoding process for this frame are not specified or no decoding was performed.
      * <br/><br/>
      */
     FrameQuality frameQuality = 4;

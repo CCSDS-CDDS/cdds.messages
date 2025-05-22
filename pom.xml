@@ -1,96 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cdds</groupId>
-    <artifactId>cdds.messages</artifactId>
-    <version>1.0-SNAPSHOT</version>
+  <groupId>cdds</groupId>
+  <artifactId>cdds.messages</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
 
-    <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-       <os.detected.classifier>osx-aarch_64</os.detected.classifier>
-    </properties>
+  <properties>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+    <os.detected.classifier>osx-aarch_64</os.detected.classifier>
+  </properties>
 
-    <build>
-            <plugins>
-<!--                <plugin>-->
-<!--                    <groupId>com.github.os72</groupId>-->
-<!--                    <artifactId>protoc-jar-maven-plugin</artifactId>-->
-<!--                    <version>3.11.4</version>-->
-<!--                    <executions>-->
-<!--                        <execution>-->
-<!--                            <phase>generate-sources</phase>-->
-<!--                            <goals>-->
-<!--                                <goal>run</goal>-->
-<!--                            </goals>-->
-<!--                        </execution>-->
-<!--                    </executions>-->
-<!--                </plugin>-->
-            
-            
-	            <plugin>
-	                    <groupId>org.xolstice.maven.plugins</groupId>
-	                    <artifactId>protobuf-maven-plugin</artifactId>
-	                    <version>0.6.1</version>
-	                    <executions>
-	                        <execution>
-	                            <goals>
-	                                <goal>compile</goal>
-	                                <goal>test-compile</goal>
-	                            </goals>
-	                        </execution>
-                          
-                          <execution>
-                            <id>doc</id>
-                            <goals>
-                              <!-- mvn protobuf:compile-custom -->
-                              <goal>compile-custom</goal>
-                            </goals>
-                          </execution>
+  <build>
+    <plugins>
 
-	                    </executions>
-	                    <configuration>
-                          <protocExecutable>protoc</protocExecutable>
-	                        <protoSourceRoot>${basedir}/src/main/protobuf</protoSourceRoot>
-                          
-	                        <protocArtifact>com.google.protobuf:protoc:3.14.0:exe:${os.detected.classifier}</protocArtifact>
+      <!-- generate Java sources -->
+      <plugin>
+        <groupId>com.github.os72</groupId>
+        <artifactId>protoc-jar-maven-plugin</artifactId>
+        <version>3.11.4</version>
+        <executions>
+          <execution>
+            <id>run</id>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <phase>generate-sources</phase>
+          </execution>
+        </executions>
+      </plugin>
 
-	                        <pluginId>doc</pluginId>
-                          <!-- The protoc-gen-doc binary needs to be installed, see the comamnd below: -->
-                          <!-- mvn install:install-file -DgroupId=org.pseudomuto -DartifactId=protoc-gen-doc -Dversion=1.5.1 -Dclassifier=osx-aarch_64.exe -Dpackaging=exe -Dfile=/Users/Shared/tools/homebrew/bin/protoc-gen-doc  -->
-	                        <pluginArtifact>org.pseudomuto:protoc-gen-doc:1.5.1:exe:${os.detected.classifier}.exe</pluginArtifact>
-                          <outputDirectory>${project.build.directory}/generated-docs</outputDirectory>
-	                        
-                          <!-- for parameter handling see https://github.com/xolstice/protobuf-maven-plugin/blob/master/src/main/java/org/xolstice/maven/plugin/protobuf/Protoc.java -->
-                          <!-- <pluginParameter>markdown,cdds.md</pluginParameter>  -->
-                          <!-- <pluginParameter>docbook,cdds.docbook</pluginParameter>  -->
+      <!-- generate documentation -->
+      <plugin>
+        <groupId>org.xolstice.maven.plugins</groupId>
+        <artifactId>protobuf-maven-plugin</artifactId>
+        <version>0.6.1</version>
+        <executions>
+          <execution>
+            <id>generate-sources</id>
+            <goals>
+              <goal>compile</goal>
+              <goal>test-compile</goal>
+            </goals>
+          </execution>
 
-                          <!-- use a cdds.tmpl to allow html tags like <br/> to go from proto comments to html -->
-                          <pluginParameter>src/main/resources/cdds.tmpl,cdds.html</pluginParameter> 
+          <execution>
+            <id>doc</id>
+            <goals>
+              <!-- mvn protobuf:compile-custom -->
+              <goal>compile-custom</goal>
+            </goals>
+          </execution>
 
-                          <!-- <pluginParameters>
-	                            <param>mode=markdown,docs.md</param>
-	                            <param>include_imports</param>
-	                        </pluginParameters> -->
+        </executions>
+        <configuration>
+          <protocExecutable>protoc</protocExecutable>
+          <protoSourceRoot>${basedir}/src/main/protobuf</protoSourceRoot>
 
-                        <!-- <protocPlugins>
-                          <protocPlugin>
-                            <id>generate-protobuf-docs</id>
-                            <groupId>pseudomuto</groupId>
-                            <artifactId>protoc-gen-doc</artifactId>
-                            <version>1.5.1</version>
-                            <mainClass>protoc-gen-doc</mainClass>
-                          </protocPlugin>
-                        </protocPlugins> -->
+          <protocArtifact>com.google.protobuf:protoc:3.14.0:exe:${os.detected.classifier}</protocArtifact>
 
-	                    </configuration>
+          <pluginId>doc</pluginId>
+          <!-- The protoc-gen-doc binary needs to be installed, see the comamnd below: -->
+          <!-- mvn install:install-file -DgroupId=org.pseudomuto -DartifactId=protoc-gen-doc
+          -Dversion=1.5.1 -Dclassifier=osx-aarch_64.exe -Dpackaging=exe
+          -Dfile=/Users/Shared/tools/homebrew/bin/protoc-gen-doc  -->
+          <pluginArtifact>org.pseudomuto:protoc-gen-doc:1.5.1:exe:${os.detected.classifier}.exe</pluginArtifact>
+          <outputDirectory>${project.build.directory}/generated-docs</outputDirectory>
 
-	                </plugin>
+          <!-- for parameter handling see
+          https://github.com/xolstice/protobuf-maven-plugin/blob/master/src/main/java/org/xolstice/maven/plugin/protobuf/Protoc.java -->
+          <!-- <pluginParameter>markdown,cdds.md</pluginParameter>  -->
+          <!-- <pluginParameter>docbook,cdds.docbook</pluginParameter>  -->
 
-                    <plugin>
+          <!-- use a cdds.tmpl to allow html tags like <br/> to go from proto comments to html -->
+          <pluginParameter>src/main/resources/cdds.tmpl,cdds.html</pluginParameter>
+
+        </configuration>
+
+      </plugin>
+
+      <!-- <plugin>
                         <groupId>org.apache.avro</groupId>
                         <artifactId>avro-maven-plugin</artifactId>
                         <version>1.11.1</version>
@@ -103,34 +95,33 @@
                             </goals>
                             <configuration>
                               <sourceDirectory>${project.basedir}/src/main/avro/</sourceDirectory>
-                              <!--<outputDirectory>${project.basedir}/src/main/java/</outputDirectory>-->
                             </configuration>
                           </execution>
                         </executions>
-                      </plugin>
-            </plugins>
-    </build>
+                      </plugin> -->
+    </plugins>
+  </build>
 
-    <dependencies>
-        <dependency>
-			<groupId>com.google.protobuf</groupId>
-			<artifactId>protobuf-java</artifactId>
-			<version>4.28.3</version> <!-- 4..28.3 is aligned with libprotoc 28.3 for code generation -->
-		</dependency>
-		
-		        <!-- https://mvnrepository.com/artifact/io.github.pseudomuto/protoc-gen-doc -->
-        <dependency>
-            <groupId>io.github.pseudomuto</groupId>
-            <artifactId>protoc-gen-doc</artifactId>
-            <version>1.5.1</version>
-            <type>pom</type>
-        </dependency>
-		        
-        <dependency>
-            <groupId>org.apache.avro</groupId>
-            <artifactId>avro</artifactId>
-            <version>1.11.1</version>
-        </dependency>
+  <dependencies>
+    <dependency>
+      <groupId>com.google.protobuf</groupId>
+      <artifactId>protobuf-java</artifactId>
+      <version>4.28.3</version> <!-- 4..28.3 is aligned with libprotoc 28.3 for code generation -->
+    </dependency>
 
-     </dependencies>   
+    <!-- https://mvnrepository.com/artifact/io.github.pseudomuto/protoc-gen-doc -->
+    <dependency>
+      <groupId>io.github.pseudomuto</groupId>
+      <artifactId>protoc-gen-doc</artifactId>
+      <version>1.5.1</version>
+      <type>pom</type>
+    </dependency>
+
+    <!-- <dependency>
+        <groupId>org.apache.avro</groupId>
+        <artifactId>avro</artifactId>
+        <version>1.11.1</version>
+      </dependency> -->
+
+  </dependencies>
 </project>

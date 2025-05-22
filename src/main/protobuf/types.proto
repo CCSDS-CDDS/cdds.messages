@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+package ccsds.cdds;
+
 message AntennaId {
   oneof antennaIdForm {
     string globalForm = 1;

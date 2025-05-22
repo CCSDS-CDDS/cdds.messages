@@ -1,0 +1,11 @@
+syntax = "proto3";
+package ccsds.cdds.tc; 
+import "types.proto";
+import "monitoring.proto";
+import "telecommand.proto";
+import "telemetry.proto";
+ 
+service TCService {
+    rpc sendTelecommand(stream TelecommandMessage) returns (stream TelecommandReport); 
+}
+

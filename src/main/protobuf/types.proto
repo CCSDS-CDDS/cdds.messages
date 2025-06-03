@@ -26,15 +26,21 @@ message DateTime {
 
 message Annotation {
   string name = 1;
-  oneof annotationValue {
-    double doubleValue = 2;
-    float floatValue = 3;
-    int32 int32Value = 4;
-    int64 int64Value = 5;
-    bool boolValue = 6;    
-    string stringValue = 7;
-    bytes octetStringValue = 8;
-  }
+  Value value = 2;
+}
+
+message Value {
+  oneof value {
+    double doubleValue = 3;
+    float floatValue = 4;
+    int32 int32Value = 5;
+    uint32 uint32Value = 6;
+    int64 int64Value = 7;
+    uint64 unint64Value = 8;
+    bool boolValue = 9;
+    string stringValue = 10;
+    bytes octetStringValue = 11;
+  }  
 }
 
   enum ProductionState {
@@ -50,16 +56,46 @@ message Annotation {
     UNKOWN = 3;
   }
 
+  /**
+   * The Global Virtual Channel identifier
+   */
   message GvcId {
-    int32 spacecraftId = 1;
+    uint32 spacecraftId = 1;
     FrameVersion version = 2;
-    int32 virtualChannelId = 3; // optional, if ommitted this is a masger channel
+    uint32 virtualChannelId = 3; // optional, if ommitted this is a masger channel
     
 
   }
 
+  /**
+   * The frame version correspondig to tehe CCSDS frame versions:
+   * <br/><br/>
+   * 0: CCSDS 132.0 TM Space Data Link Protocol 
+   * <br/><br/>
+   * 1: CCSDS 732.0 AOS Space Data Link Protocol  
+   * <br/><br/>
+   * 2: CCSDS 732.1 USLP Space Data Link Protocol   
+   */
   enum FrameVersion {
     PACKET_TM = 0;
     AOS = 1;
     USLP = 2;
+  }
+
+  /**
+   * An Object Identifier
+   */ 
+  message ObjectIdentifier {
+
+    /**
+     * An optional OID string in dotted notation.
+     * Example: 1.2.3.4.5
+     */
+    string oidString = 1;
+
+    /**
+     * The sequence of numbers representing the 
+     * Object Identifier
+     */
+    repeated uint64 arcs = 2;
   }

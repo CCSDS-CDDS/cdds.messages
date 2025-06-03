@@ -4,73 +4,71 @@ package ccsds.cdds;
 
 import "types.proto";
 
-message GenericMonitoringMessage {    
-    repeated MonitoringParameter monitoringParameters = 1;
+/**
+ * A monitoring message can deliver lists of GenericMonitoringParameter and
+ * FunctionalResourceParameter.
+ */
+message MonitoringMessage {
+  
+  /**
+   * A Monitoring Message can carry generic monitoring parameters.
+   */
+  repeated GenericMonitoringParameter genericMonitoringParameters = 1;
+
+  /**
+   * A Monitoring Message can carry Functional Resource Parameters. 
+   */
+  repeated FunctionalResourceParameter functionalResourceParameters = 2;
 }
 
-message MonitoringParameter {
-    string identifier = 1;
-    DateTime timeStamp = 2;
-    oneof value {
-        double doubleValue = 3;
-        float floatValue = 4;
-        int32 int32Value = 5;
-        int64 int64Value = 6;
-        bool boolValue = 7;    
-        string stringValue = 8;
-        bytes octetStringValue = 9;
-    }
+/**
+ * Generic Monitoring Parameters reports any sort of generic
+ * monitoring parameter. Generic monitoring parameters have to be 
+ * defined and agreed among a CDDS Provider and the CDDS User.
+ */
+message GenericMonitoringParameter {
+
+  /**
+   * A unique identifier of the monitoring parameter.
+   * The scope of the identifier is within the monitoring services.
+   */
+  string identifier = 1;
+
+  /**
+   * The times stamp when the monitoring parameter was generated.
+   */
+  DateTime timeStamp = 2;
+
+  /**
+   * The value of the monitoring parameter.
+   */
+  Value value = 3;
 }
 
-message RcfTsProviderMonitoring {
-    DateTime timeStamp = 1;
-    
-    SleRtnProdStat rcfProdStat = 2;
-    string rcfSvcInstanceId = 3;
-    SleSvcInstanceState rcfSvcInstanceState = 4;
-    string rcfInitiatorId = 5;
-    string rcfResponderId = 6;
-    string rcfResponderPortId = 7;
-    int32 rcfRtnTimeoutPeriod = 8;
-    SleRtnDeliveryMode rcfDeliveryMode = 9;
-    uint32 rcfLatencyLimit = 10;
-    uint32 rcfTransferBufferSize = 11;
-    RcfPermittedGvcidSet rcfPermittedGvcidSet = 12;
-    RcfRequestedGvcid rcfRequestedGvcid = 13;
-    uint32 rcfMinReportingCycle = 14;
-    bool rcfReportingCycle = 15;
-    int64 rcfNumberOfFramesDelivered = 16;
-    
-    SleRtnProdStat eventRcfProdStatChange = 17;
-    ConfigurationValue eventRcfProdConfigurationChange = 18;
-    string eventRcfOperatorMessage = 19;
-}
 
-enum SleRtnProdStat {
-    SLE_RUNNING = 0;
-    SLE_INTERRUPTED = 1;
-    SLE_HALTED = 2;
-}
-enum SleSvcInstanceState {
-    SLE_UNBOUND = 0;
-    SLE_READY = 1;
-    SLE_ACTIVE = 2;
-}
+/**
+ * Functional Resource Parameters reports parameters of Functional Resources.
+ * Functional Resources follow either SANA registered Functional Resource definitions
+ * or private Functional Resource definitions.
+ */
+message FunctionalResourceParameter {
 
-enum SleRtnDeliveryMode {
-    ONLINE_TIMELY = 0;
-    ONLINE_COMPLETE = 1;
-    OFFLINE = 2;
-}
+  /**
+   * The Obejct Identifier of the Functional Resource.
+   */
+  ObjectIdentifier functionalResourceIdentifier = 1;
 
-message RcfPermittedGvcidSet {
-    string todo = 1;
-}
+  /**
+   * The instance number of the Functional Resource
+   * for which the parameter is reported for.
+   */
+  uint64 functionalResourceInstance = 2;
+  DateTime timeStamp = 3;
 
-message RcfRequestedGvcid {
-    string todo = 1;
-}
-
-message ConfigurationValue {
-    string todo = 1;
+  /**
+   * The value of the of the functional resource parameter is encoded again
+   * as a protobuf type. The protobuf specification is external to this
+   * specification.
+   */
+  bytes parameterValue = 4;
 }

@@ -131,7 +131,7 @@ message TelecommandReport {
         /**
          * Reporting on the status of the CDDS Provider
          */
-        TelecommandStatusReport statusReport = 13;
+        TelecommandProviderStatus providerStatus = 13;
     }
 }
 

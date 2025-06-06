@@ -49,7 +49,7 @@ public class TimeUtil {
      */
     public static String dateTime(DateTime dt) {
         
-        // 1. Define the custom epoch: January 1, 1958 UTC
+        // 1. Define the CCSDS epoch: January 1, 1958 UTC
         LocalDate epoch = LocalDate.of(1958, 1, 1);
         LocalDate targetDate = epoch.plusDays(dt.getDays());
 

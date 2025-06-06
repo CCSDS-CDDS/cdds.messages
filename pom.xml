@@ -106,7 +106,7 @@
     <dependency>
       <groupId>com.google.protobuf</groupId>
       <artifactId>protobuf-java</artifactId>
-      <version>4.28.3</version> <!-- 4..28.3 is aligned with libprotoc 28.3 for code generation -->
+      <version>3.25.8</version> <!-- aligned with libprotoc 29.3 for code generation,  4.x.y gives compile errors -->
     </dependency>
 
     <!-- https://mvnrepository.com/artifact/io.github.pseudomuto/protoc-gen-doc -->

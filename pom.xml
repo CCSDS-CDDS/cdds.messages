@@ -82,6 +82,12 @@
 
       </plugin>
 
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.2.5</version> <!-- Version that supports JUnit 5 -->
+      </plugin>
+      
       <!-- <plugin>
                         <groupId>org.apache.avro</groupId>
                         <artifactId>avro-maven-plugin</artifactId>
@@ -115,6 +121,13 @@
       <artifactId>protoc-gen-doc</artifactId>
       <version>1.5.1</version>
       <type>pom</type>
+    </dependency>
+
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.13.0</version> 
+      <scope>test</scope>
     </dependency>
 
     <!-- <dependency>

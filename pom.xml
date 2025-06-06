@@ -12,6 +12,7 @@
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
     <os.detected.classifier>osx-aarch_64</os.detected.classifier>
+    <protoc-version>3.25.8</protoc-version>
   </properties>
 
   <build>
@@ -22,6 +23,9 @@
         <groupId>com.github.os72</groupId>
         <artifactId>protoc-jar-maven-plugin</artifactId>
         <version>3.11.4</version>
+        <configuration>
+          <protocVersion>3.25.8</protocVersion>
+        </configuration>
         <executions>
           <execution>
             <id>run</id>
@@ -60,7 +64,7 @@
           <protocExecutable>protoc</protocExecutable>
           <protoSourceRoot>${basedir}/src/main/protobuf</protoSourceRoot>
 
-          <protocArtifact>com.google.protobuf:protoc:3.14.0:exe:${os.detected.classifier}</protocArtifact>
+          <protocArtifact>com.google.protobuf:protoc:3.25.8:exe:${os.detected.classifier}</protocArtifact>
 
           <pluginId>doc</pluginId>
           <!-- The protoc-gen-doc binary needs to be installed, see the comamnd below: -->
@@ -112,7 +116,7 @@
     <dependency>
       <groupId>com.google.protobuf</groupId>
       <artifactId>protobuf-java</artifactId>
-      <version>3.25.8</version> <!-- aligned with libprotoc 29.3 for code generation,  4.x.y gives compile errors -->
+      <version>${protoc-version}</version> <!-- aligned with libprotoc 29.3 for code generation,  4.x.y gives compile errors -->
     </dependency>
 
     <!-- https://mvnrepository.com/artifact/io.github.pseudomuto/protoc-gen-doc -->

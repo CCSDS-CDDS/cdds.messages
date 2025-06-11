@@ -71,7 +71,7 @@ public class TestTelemetryFile {
                         )
                         .build()
                     )
-                    .setData(ByteString.copyFrom(data, 0, TM_FRAME_LENGTH))
+                    .setData(ByteString.copyFrom(data, 0, data.length))
                     .build()
                 ).build();
 
@@ -85,10 +85,12 @@ public class TestTelemetryFile {
     public void testTmFileWriteRead() {
         System.out.println("Test TM file creation");
 
+        final byte[] data = getFrameData(TM_FRAME_LENGTH);
+
         final List<TelemetryMessage> writtenTmMessages = new LinkedList<>();
         try (FileOutputStream output = new FileOutputStream(TELEMETRY_TLM)) {
             for (int idx = 0; idx < NUM_TM_MESSAGES; idx++) {
-                TelemetryMessage tmMessage = createTelemtryMessage(getFrameData(TM_FRAME_LENGTH));
+                TelemetryMessage tmMessage = createTelemtryMessage(data);
                 writtenTmMessages.add(tmMessage);
 
                 if(idx == 0) {

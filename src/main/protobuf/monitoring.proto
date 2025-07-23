@@ -54,7 +54,7 @@ message GenericMonitoringParameter {
 message FunctionalResourceParameter {
 
   /**
-   * The Obejct Identifier of the Functional Resource.
+   * The Object Identifier of the Functional Resource.
    */
   ObjectIdentifier functionalResourceIdentifier = 1;
 

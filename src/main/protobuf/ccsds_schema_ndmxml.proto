@@ -1,0 +1,1094 @@
+// ccsdsschemandmxml.proto at 0:0
+syntax = "proto3";
+package ccsds.schema.ndmxml;
+
+message AccType {
+  AccUnits units = 1;
+  double value = 2;
+}
+enum AccUnits {
+  // Default
+  ACC_UNITS_UNSPECIFIED = 0;
+  ACC_UNITS_KM_S2 = 1;
+}
+enum AcmAttitudeType {
+  // Default
+  ACM_ATTITUDE_TYPE_UNSPECIFIED = 0;
+  ACM_ATTITUDE_TYPE_QUATERNION = 1;
+  ACM_ATTITUDE_TYPE_EULER_ANGLES = 2;
+  ACM_ATTITUDE_TYPE_DCM = 3;
+  ACM_ATTITUDE_TYPE_ANGVEL = 4;
+  ACM_ATTITUDE_TYPE_Q_DOT = 5;
+  ACM_ATTITUDE_TYPE_EULER_RATE = 6;
+  ACM_ATTITUDE_TYPE_GYRO_BIAS = 7;
+}
+enum AcmCovarianceLineType {
+  // Default
+  ACM_COVARIANCE_LINE_TYPE_UNSPECIFIED = 0;
+  ACM_COVARIANCE_LINE_TYPE_ANGLE = 1;
+  ACM_COVARIANCE_LINE_TYPE_ANGLE_GYROBIAS = 2;
+  ACM_COVARIANCE_LINE_TYPE_ANGLE_ANGVEL = 3;
+  ACM_COVARIANCE_LINE_TYPE_QUATERNION = 4;
+  ACM_COVARIANCE_LINE_TYPE_QUATERNION_GYROBIAS = 5;
+  ACM_COVARIANCE_LINE_TYPE_QUATERNION_ANGVEL = 6;
+}
+enum AdMethodType {
+  // Default
+  AD_METHOD_TYPE_UNSPECIFIED = 0;
+  AD_METHOD_TYPE_EKF = 1;
+  AD_METHOD_TYPE_TRIAD = 2;
+  AD_METHOD_TYPE_QUEST = 3;
+  AD_METHOD_TYPE_BATCH = 4;
+  AD_METHOD_TYPE_Q_METHOD = 5;
+  AD_METHOD_TYPE_FILTER_SMOOTHER = 6;
+  AD_METHOD_TYPE_OTHER = 7;
+}
+message AdmHeader {
+  repeated string comment = 1;
+  string classification = 2;
+  string creationDate = 3;
+  string originator = 4;
+  string messageId = 5;
+}
+message AltType {
+  LengthUnits units = 1;
+  double value = 2;
+}
+message AngMomentumType {
+  AngMomentumUnits units = 1;
+  double value = 2;
+}
+enum AngMomentumUnits {
+  // Default
+  ANG_MOMENTUM_UNITS_UNSPECIFIED = 0;
+  ANG_MOMENTUM_UNITS_N_M_S = 1;
+}
+message AngVelComponentType {
+  AngleRateUnits units = 1;
+  double value = 2;
+}
+message AngVelStateType {
+  repeated string comment = 1;
+  string refFrameA = 2;
+  string refFrameB = 3;
+  string angvelFrame = 4;
+  AngVelComponentType angvelX = 5;
+  AngVelComponentType angvelY = 6;
+  AngVelComponentType angvelZ = 7;
+}
+message AngVelType {
+  AngVelComponentType angvelX = 1;
+  AngVelComponentType angvelY = 2;
+  AngVelComponentType angvelZ = 3;
+}
+message AngleRateType {
+  AngleRateUnits units = 1;
+  double value = 2;
+}
+enum AngleRateUnits {
+  // Default
+  ANGLE_RATE_UNITS_UNSPECIFIED = 0;
+  ANGLE_RATE_UNITS_DEG_S = 1;
+}
+message AngleType {
+  AngleUnits units = 1;
+  double value = 2;
+}
+enum AngleTypeType {
+  // Default
+  ANGLE_TYPE_TYPE_UNSPECIFIED = 0;
+  ANGLE_TYPE_TYPE_AZEL = 1;
+  ANGLE_TYPE_TYPE_RADEC = 2;
+  ANGLE_TYPE_TYPE_XEYN = 3;
+  ANGLE_TYPE_TYPE_XSYE = 4;
+}
+enum AngleUnits {
+  // Default
+  ANGLE_UNITS_UNSPECIFIED = 0;
+  ANGLE_UNITS_DEG = 1;
+}
+enum ApmRateFrameType {
+  // Default
+  APM_RATE_FRAME_TYPE_UNSPECIFIED = 0;
+  APM_RATE_FRAME_TYPE_EULER_FRAME_A = 1;
+  APM_RATE_FRAME_TYPE_EULER_FRAME_B = 2;
+}
+message AreaType {
+  AreaUnits units = 1;
+  double value = 2;
+}
+enum AreaUnits {
+  // Default
+  AREA_UNITS_UNSPECIFIED = 0;
+  AREA_UNITS_M2 = 1;
+}
+message AtmosphericReentryParametersType {
+  repeated string comment = 1;
+  DayIntervalTypeUR orbitLifetime = 2;
+  PositionTypeUR reentryAltitude = 3;
+  DayIntervalTypeUR orbitLifetimeWindowStart = 4;
+  DayIntervalTypeUR orbitLifetimeWindowEnd = 5;
+  string nominalReentryEpoch = 6;
+  string reentryWindowStart = 7;
+  string reentryWindowEnd = 8;
+  PercentageTypeUR orbitLifetimeConfidenceLevel = 9;
+}
+enum AttBasisType {
+  // Default
+  ATT_BASIS_TYPE_UNSPECIFIED = 0;
+  ATT_BASIS_TYPE_PREDICTED = 1;
+  ATT_BASIS_TYPE_DETERMINED_GND = 2;
+  ATT_BASIS_TYPE_DETERMINED_OBC = 3;
+  ATT_BASIS_TYPE_SIMULATED = 4;
+}
+message AttManeuverStateType {
+  repeated string comment = 1;
+  string manEpochStart = 2;
+  DurationType manDuration = 3;
+  string manRefFrame = 4;
+  TorqueType manTorX = 5;
+  TorqueType manTorY = 6;
+  TorqueType manTorZ = 7;
+  DeltamassTypeZ manDeltaMass = 8;
+}
+enum AttRateType {
+  // Default
+  ATT_RATE_TYPE_UNSPECIFIED = 0;
+  ATT_RATE_TYPE_ANGVEL = 1;
+  ATT_RATE_TYPE_Q_DOT = 2;
+  ATT_RATE_TYPE_EULER_RATE = 3;
+  ATT_RATE_TYPE_GYRO_BIAS = 4;
+}
+message AttitudeStateType {
+  QuaternionEphemerisType quaternionephemeris = 1;
+  QuaternionDerivativeType quaternionderivative = 2;
+  QuaternionAngVelType quaternionangvel = 3;
+  EulerAngleType eulerangle = 4;
+  EulerAngleDerivativeType euleranglederivative = 5;
+  EulerAngleAngVelType eulerangleangvel = 6;
+  SpinType spin = 7;
+  SpinNutationType spinnutation = 8;
+  SpinNutationMomType spinnutationmom = 9;
+}
+enum AttitudeTypeType {
+  // Default
+  ATTITUDE_TYPE_TYPE_UNSPECIFIED = 0;
+  ATTITUDE_TYPE_TYPE_QUATERNION = 1;
+  ATTITUDE_TYPE_TYPE_QUATERNION_DERIVATIVE = 2;
+  ATTITUDE_TYPE_TYPE_QUATERNION_ANGVEL = 3;
+  ATTITUDE_TYPE_TYPE_EULER_ANGLE = 4;
+  ATTITUDE_TYPE_TYPE_EULER_ANGLE_DERIVATIVE = 5;
+  ATTITUDE_TYPE_TYPE_EULER_ANGLE_ANGVEL = 6;
+  ATTITUDE_TYPE_TYPE_SPIN = 7;
+  ATTITUDE_TYPE_TYPE_SPIN_NUTATION = 8;
+  ATTITUDE_TYPE_TYPE_SPIN_NUTATION_MOM = 9;
+}
+message BallisticCoeffType {
+  BallisticCoeffUnitsType units = 1;
+  double value = 2;
+}
+enum BallisticCoeffUnitsType {
+  // Default
+  BALLISTIC_COEFF_UNITS_TYPE_UNSPECIFIED = 0;
+  BALLISTIC_COEFF_UNITS_TYPE_KG_M2 = 1;
+}
+enum ControlledType {
+  // Default
+  CONTROLLED_TYPE_UNSPECIFIED = 0;
+  CONTROLLED_TYPE_YES = 1;
+  CONTROLLED_TYPE_NO = 2;
+  CONTROLLED_TYPE_UNKNOWN = 3;
+}
+enum CovBasisType {
+  // Default
+  COV_BASIS_TYPE_UNSPECIFIED = 0;
+  COV_BASIS_TYPE_PREDICTED = 1;
+  COV_BASIS_TYPE_DETERMINED = 2;
+  COV_BASIS_TYPE_EMPIRICAL = 3;
+  COV_BASIS_TYPE_SIMULATED = 4;
+  COV_BASIS_TYPE_OTHER = 5;
+}
+enum CovOrderType {
+  // Default
+  COV_ORDER_TYPE_UNSPECIFIED = 0;
+  COV_ORDER_TYPE_LTM = 1;
+  COV_ORDER_TYPE_UTM = 2;
+  COV_ORDER_TYPE_FULL = 3;
+  COV_ORDER_TYPE_LTMWCC = 4;
+  COV_ORDER_TYPE_UTMWCC = 5;
+}
+message CpType {
+  LengthUnits units = 1;
+}
+enum DataQualityType {
+  // Default
+  DATA_QUALITY_TYPE_UNSPECIFIED = 0;
+  DATA_QUALITY_TYPE_RAW = 1;
+  DATA_QUALITY_TYPE_VALIDATED = 2;
+  DATA_QUALITY_TYPE_DEGRADED = 3;
+}
+message DayIntervalTypeUO {
+  DayIntervalUnits units = 1;
+  double value = 2;
+}
+message DayIntervalTypeUR {
+  DayIntervalUnits units = 1;
+  double value = 2;
+}
+enum DayIntervalUnits {
+  // Default
+  DAY_INTERVAL_UNITS_UNSPECIFIED = 0;
+  DAY_INTERVAL_UNITS_D = 1;
+}
+message DeltamassType {
+  MassUnits units = 1;
+  double value = 2;
+}
+message DeltamassTypeZ {
+  MassUnits units = 1;
+  double value = 2;
+}
+enum DisintegrationType {
+  // Default
+  DISINTEGRATION_TYPE_UNSPECIFIED = 0;
+  DISINTEGRATION_TYPE_NONE = 1;
+  DISINTEGRATION_TYPE_MASS_LOSS = 2;
+  DISINTEGRATION_TYPE_BREAK_UP = 3;
+  DISINTEGRATION_TYPE_MASS_LOSS_BREAK_UP = 4;
+}
+message DistanceType {
+  PositionUnits units = 1;
+  double value = 2;
+}
+message DurationType {
+  TimeUnits units = 1;
+  double value = 2;
+}
+message EulerAngleAngVelType {
+  string epoch = 1;
+  AngleType angle1 = 2;
+  AngleType angle2 = 3;
+  AngleType angle3 = 4;
+  AngVelComponentType angvelX = 5;
+  AngVelComponentType angvelY = 6;
+  AngVelComponentType angvelZ = 7;
+}
+message EulerAngleDerivativeType {
+  string epoch = 1;
+  AngleType angle1 = 2;
+  AngleType angle2 = 3;
+  AngleType angle3 = 4;
+  AngleRateType angle1Dot = 5;
+  AngleRateType angle2Dot = 6;
+  AngleRateType angle3Dot = 7;
+}
+message EulerAngleStateType {
+  repeated string comment = 1;
+  string refFrameA = 2;
+  string refFrameB = 3;
+  RotseqType eulerRotSeq = 4;
+  AngleType angle1 = 5;
+  AngleType angle2 = 6;
+  AngleType angle3 = 7;
+  AngleRateType angle1Dot = 8;
+  AngleRateType angle2Dot = 9;
+  AngleRateType angle3Dot = 10;
+}
+message EulerAngleType {
+  string epoch = 1;
+  AngleType angle1 = 2;
+  AngleType angle2 = 3;
+  AngleType angle3 = 4;
+}
+message FrequencyType {
+  FrequencyUnits units = 1;
+  double value = 2;
+}
+enum FrequencyUnits {
+  // Default
+  FREQUENCY_UNITS_UNSPECIFIED = 0;
+  FREQUENCY_UNITS_HZ = 1;
+}
+message GeomagType {
+  GeomagUnits units = 1;
+  double value = 2;
+}
+enum GeomagUnits {
+  // Default
+  GEOMAG_UNITS_UNSPECIFIED = 0;
+  GEOMAG_UNITS_N_T = 1;
+}
+message GmType {
+  GmUnits units = 1;
+  double value = 2;
+}
+enum GmUnits {
+  // Default
+  GM_UNITS_UNSPECIFIED = 0;
+  GM_UNITS_KM3_S2 = 1;
+}
+message GroundImpactParametersType {
+  repeated string comment = 1;
+  double probabilityOfImpact = 2;
+  double probabilityOfBurnUp = 3;
+  double probabilityOfBreakUp = 4;
+  double probabilityOfLandImpact = 5;
+  double probabilityOfCasualty = 6;
+  string nominalImpactEpoch = 7;
+  string impactWindowStart = 8;
+  string impactWindowEnd = 9;
+  string impactRefFrame = 10;
+  LonType nominalImpactLon = 11;
+  LatType nominalImpactLat = 12;
+  AltType nominalImpactAlt = 13;
+  PercentageTypeUR impact1Confidence = 14;
+  LonType impact1StartLon = 15;
+  LatType impact1StartLat = 16;
+  LonType impact1StopLon = 17;
+  LatType impact1StopLat = 18;
+  DistanceType impact1CrossTrack = 19;
+  PercentageTypeUR impact2Confidence = 20;
+  LonType impact2StartLon = 21;
+  LatType impact2StartLat = 22;
+  LonType impact2StopLon = 23;
+  LatType impact2StopLat = 24;
+  DistanceType impact2CrossTrack = 25;
+  PercentageTypeUR impact3Confidence = 26;
+  LonType impact3StartLon = 27;
+  LatType impact3StartLat = 28;
+  LonType impact3StopLon = 29;
+  LatType impact3StopLat = 30;
+  DistanceType impact3CrossTrack = 31;
+}
+enum ImpactUncertaintyType {
+  // Default
+  IMPACT_UNCERTAINTY_TYPE_UNSPECIFIED = 0;
+  IMPACT_UNCERTAINTY_TYPE_NONE = 1;
+  IMPACT_UNCERTAINTY_TYPE_ANALYTICAL = 2;
+  IMPACT_UNCERTAINTY_TYPE_STOCHASTIC = 3;
+  IMPACT_UNCERTAINTY_TYPE_EMPIRICAL = 4;
+}
+message InclinationType {
+  AngleUnits units = 1;
+  double value = 2;
+}
+message InertiaStateType {
+  repeated string comment = 1;
+  string inertiaRefFrame = 2;
+  MomentType ixx = 3;
+  MomentType iyy = 4;
+  MomentType izz = 5;
+  MomentType ixy = 6;
+  MomentType ixz = 7;
+  MomentType iyz = 8;
+}
+enum IntegrationRefType {
+  // Default
+  INTEGRATION_REF_TYPE_UNSPECIFIED = 0;
+  INTEGRATION_REF_TYPE_START = 1;
+  INTEGRATION_REF_TYPE_MIDDLE = 2;
+  INTEGRATION_REF_TYPE_END = 3;
+}
+message Km2Type {
+  Km2Units units = 1;
+  double value = 2;
+}
+enum Km2Units {
+  // Default
+  KM2_UNITS_UNSPECIFIED = 0;
+  KM2_UNITS_KM2 = 1;
+}
+message Km2s2Type {
+  Km2s2Units units = 1;
+  double value = 2;
+}
+enum Km2s2Units {
+  // Default
+  KM2S2_UNITS_UNSPECIFIED = 0;
+  KM2S2_UNITS_KM2_S2 = 1;
+}
+message Km2sType {
+  Km2sUnits units = 1;
+  double value = 2;
+}
+enum Km2sUnits {
+  // Default
+  KM2S_UNITS_UNSPECIFIED = 0;
+  KM2S_UNITS_KM2_S = 1;
+}
+enum LatLonUnits {
+  // Default
+  LAT_LON_UNITS_UNSPECIFIED = 0;
+  LAT_LON_UNITS_DEG = 1;
+}
+message LatType {
+  LatLonUnits units = 1;
+  double value = 2;
+}
+message LengthTypeUO {
+  LengthUnits units = 1;
+  double value = 2;
+}
+message LengthTypeUR {
+  LengthUnits units = 1;
+  double value = 2;
+}
+enum LengthUnits {
+  // Default
+  LENGTH_UNITS_UNSPECIFIED = 0;
+  LENGTH_UNITS_M = 1;
+}
+message LonType {
+  LatLonUnits units = 1;
+  double value = 2;
+}
+enum ManBasisType {
+  // Default
+  MAN_BASIS_TYPE_UNSPECIFIED = 0;
+  MAN_BASIS_TYPE_CANDIDATE = 1;
+  MAN_BASIS_TYPE_PLANNED = 2;
+  MAN_BASIS_TYPE_ANTICIPATED = 3;
+  MAN_BASIS_TYPE_TELEMETRY = 4;
+  MAN_BASIS_TYPE_DETERMINED = 5;
+  MAN_BASIS_TYPE_SIMULATED = 6;
+  MAN_BASIS_TYPE_OTHER = 7;
+}
+enum ManDCType {
+  // Default
+  MAN_D_C_TYPE_UNSPECIFIED = 0;
+  MAN_D_C_TYPE_CONTINUOUS = 1;
+  MAN_D_C_TYPE_TIME = 2;
+  MAN_D_C_TYPE_TIME_AND_ANGLE = 3;
+}
+message ManeuverFreqType {
+  NumPerYearUnits units = 1;
+  double value = 2;
+}
+message MassType {
+  MassUnits units = 1;
+  double value = 2;
+}
+enum MassUnits {
+  // Default
+  MASS_UNITS_UNSPECIFIED = 0;
+  MASS_UNITS_KG = 1;
+}
+enum ModeType {
+  // Default
+  MODE_TYPE_UNSPECIFIED = 0;
+  MODE_TYPE_SEQUENTIAL = 1;
+  MODE_TYPE_SINGLE_DIFF = 2;
+}
+message MomentType {
+  MomentUnits units = 1;
+  double value = 2;
+}
+enum MomentUnits {
+  // Default
+  MOMENT_UNITS_UNSPECIFIED = 0;
+  MOMENT_UNITS_KG_M2 = 1;
+}
+message Ms2Type {
+  Ms2Units units = 1;
+  double value = 2;
+}
+enum Ms2Units {
+  // Default
+  MS2_UNITS_UNSPECIFIED = 0;
+  MS2_UNITS_M_S2 = 1;
+}
+message NdmHeader {
+  repeated string comment = 1;
+  string creationDate = 2;
+  string originator = 3;
+}
+enum NumPerYearUnits {
+  // Default
+  NUM_PER_YEAR_UNITS_UNSPECIFIED = 0;
+  NUM_PER_YEAR_UNITS_YR = 1;
+}
+enum ObjectDescriptionType {
+  // Default
+  OBJECT_DESCRIPTION_TYPE_UNSPECIFIED = 0;
+  OBJECT_DESCRIPTION_TYPE_PAYLOAD = 1;
+  OBJECT_DESCRIPTION_TYPE_ROCKET_BODY = 2;
+  OBJECT_DESCRIPTION_TYPE_DEBRIS = 3;
+  OBJECT_DESCRIPTION_TYPE_UNKNOWN = 4;
+  OBJECT_DESCRIPTION_TYPE_OTHER = 5;
+}
+message OdParametersType {
+  repeated string comment = 1;
+  string timeLastobStart = 2;
+  string timeLastobEnd = 3;
+  DayIntervalTypeUO recommendedOdSpan = 4;
+  DayIntervalTypeUO actualOdSpan = 5;
+  uint32 obsAvailable = 6;
+  uint32 obsUsed = 7;
+  uint32 tracksAvailable = 8;
+  uint32 tracksUsed = 9;
+  PercentageTypeUO residualsAccepted = 10;
+  double weightedRms = 11;
+}
+message OdmHeader {
+  repeated string comment = 1;
+  string classification = 2;
+  string creationDate = 3;
+  string originator = 4;
+  string messageId = 5;
+}
+message OemCovarianceMatrixAbstractType {
+  repeated string comment = 1;
+  string epoch = 2;
+  string covRefFrame = 3;
+}
+message OemCovarianceMatrixType {
+  repeated string comment = 1;
+  string epoch = 2;
+  string covRefFrame = 3;
+  PositionCovarianceType cxX = 21;
+  PositionCovarianceType cyX = 22;
+  PositionCovarianceType cyY = 23;
+  PositionCovarianceType czX = 24;
+  PositionCovarianceType czY = 25;
+  PositionCovarianceType czZ = 26;
+  PositionVelocityCovarianceType cxDotX = 27;
+  PositionVelocityCovarianceType cxDotY = 28;
+  PositionVelocityCovarianceType cxDotZ = 29;
+  VelocityCovarianceType cxDotXDot = 30;
+  PositionVelocityCovarianceType cyDotX = 31;
+  PositionVelocityCovarianceType cyDotY = 32;
+  PositionVelocityCovarianceType cyDotZ = 33;
+  VelocityCovarianceType cyDotXDot = 34;
+  VelocityCovarianceType cyDotYDot = 35;
+  PositionVelocityCovarianceType czDotX = 36;
+  PositionVelocityCovarianceType czDotY = 37;
+  PositionVelocityCovarianceType czDotZ = 38;
+  VelocityCovarianceType czDotXDot = 39;
+  VelocityCovarianceType czDotYDot = 40;
+  VelocityCovarianceType czDotZDot = 41;
+}
+message OpmCovarianceMatrixAbstractType {
+  repeated string comment = 1;
+  string covRefFrame = 2;
+}
+message OpmCovarianceMatrixType {
+  repeated string comment = 1;
+  string covRefFrame = 2;
+  PositionCovarianceType cxX = 21;
+  PositionCovarianceType cyX = 22;
+  PositionCovarianceType cyY = 23;
+  PositionCovarianceType czX = 24;
+  PositionCovarianceType czY = 25;
+  PositionCovarianceType czZ = 26;
+  PositionVelocityCovarianceType cxDotX = 27;
+  PositionVelocityCovarianceType cxDotY = 28;
+  PositionVelocityCovarianceType cxDotZ = 29;
+  VelocityCovarianceType cxDotXDot = 30;
+  PositionVelocityCovarianceType cyDotX = 31;
+  PositionVelocityCovarianceType cyDotY = 32;
+  PositionVelocityCovarianceType cyDotZ = 33;
+  VelocityCovarianceType cyDotXDot = 34;
+  VelocityCovarianceType cyDotYDot = 35;
+  PositionVelocityCovarianceType czDotX = 36;
+  PositionVelocityCovarianceType czDotY = 37;
+  PositionVelocityCovarianceType czDotZ = 38;
+  VelocityCovarianceType czDotXDot = 39;
+  VelocityCovarianceType czDotYDot = 40;
+  VelocityCovarianceType czDotZDot = 41;
+}
+message PercentageTypeUO {
+  PercentageUnits units = 1;
+  double value = 2;
+}
+message PercentageTypeUR {
+  PercentageUnits units = 1;
+  double value = 2;
+}
+enum PercentageUnits {
+  // Default
+  PERCENTAGE_UNITS_UNSPECIFIED = 0;
+  PERCENTAGE_UNITS_ = 1;
+}
+message PositionCovarianceType {
+  PositionCovarianceUnits units = 1;
+  double value = 2;
+}
+enum PositionCovarianceUnits {
+  // Default
+  POSITION_COVARIANCE_UNITS_UNSPECIFIED = 0;
+  POSITION_COVARIANCE_UNITS_KM2 = 1;
+}
+message PositionTypeUO {
+  PositionUnits units = 1;
+  double value = 2;
+}
+message PositionTypeUR {
+  PositionUnits units = 1;
+  double value = 2;
+}
+enum PositionUnits {
+  // Default
+  POSITION_UNITS_UNSPECIFIED = 0;
+  POSITION_UNITS_KM = 1;
+}
+message PositionVelocityCovarianceType {
+  PositionVelocityCovarianceUnits units = 1;
+  double value = 2;
+}
+enum PositionVelocityCovarianceUnits {
+  // Default
+  POSITION_VELOCITY_COVARIANCE_UNITS_UNSPECIFIED = 0;
+  POSITION_VELOCITY_COVARIANCE_UNITS_KM2_S = 1;
+}
+message QuaternionAngVelType {
+  string epoch = 1;
+  QuaternionType quaternion = 2;
+  AngVelType angvel = 3;
+}
+message QuaternionDerivativeType {
+  string epoch = 1;
+  QuaternionType quaternion = 2;
+  QuaternionDotType quaterniondot = 3;
+}
+message QuaternionDotComponentType {
+  QuaternionDotUnits units = 1;
+  double value = 2;
+}
+message QuaternionDotType {
+  QuaternionDotComponentType q1Dot = 1;
+  QuaternionDotComponentType q2Dot = 2;
+  QuaternionDotComponentType q3Dot = 3;
+  QuaternionDotComponentType qcDot = 4;
+}
+enum QuaternionDotUnits {
+  // Default
+  QUATERNION_DOT_UNITS_UNSPECIFIED = 0;
+  QUATERNION_DOT_UNITS1_S = 1;
+}
+message QuaternionEphemerisType {
+  string epoch = 1;
+  QuaternionType quaternion = 2;
+}
+message QuaternionStateType {
+  repeated string comment = 1;
+  string refFrameA = 2;
+  string refFrameB = 3;
+  QuaternionType quaternion = 4;
+  QuaternionDotType quaterniondot = 5;
+}
+message QuaternionType {
+  double q1 = 1;
+  double q2 = 2;
+  double q3 = 3;
+  double qc = 4;
+}
+enum RangeUnitsType {
+  // Default
+  RANGE_UNITS_TYPE_UNSPECIFIED = 0;
+  RANGE_UNITS_TYPE_KM = 1;
+  RANGE_UNITS_TYPE_RU = 2;
+  RANGE_UNITS_TYPE_S = 3;
+}
+enum RangemodeType {
+  // Default
+  RANGEMODE_TYPE_UNSPECIFIED = 0;
+  RANGEMODE_TYPE_COHERENT = 1;
+  RANGEMODE_TYPE_CONSTANT = 2;
+  RANGEMODE_TYPE_ONE_WAY = 3;
+}
+message RdmSpacecraftParametersType {
+  repeated string comment = 1;
+  MassType wetMass = 2;
+  MassType dryMass = 3;
+  string hazardousSubstances = 4;
+  AreaType solarRadArea = 5;
+  double solarRadCoeff = 6;
+  AreaType dragArea = 7;
+  double dragCoeff = 8;
+  AreaType rcs = 9;
+  BallisticCoeffType ballisticCoeff = 10;
+  Ms2Type thrustAcceleration = 11;
+}
+enum ReentryUncertaintyMethodType {
+  // Default
+  REENTRY_UNCERTAINTY_METHOD_TYPE_UNSPECIFIED = 0;
+  REENTRY_UNCERTAINTY_METHOD_TYPE_NONE = 1;
+  REENTRY_UNCERTAINTY_METHOD_TYPE_ANALYTICAL = 2;
+  REENTRY_UNCERTAINTY_METHOD_TYPE_STOCHASTIC = 3;
+  REENTRY_UNCERTAINTY_METHOD_TYPE_EMPIRICAL = 4;
+}
+enum RefFrameType {
+  // Default
+  REF_FRAME_TYPE_UNSPECIFIED = 0;
+  REF_FRAME_TYPE_EME2000 = 1;
+  REF_FRAME_TYPE_ICRF = 2;
+  REF_FRAME_TYPE_ITRF2000 = 3;
+  REF_FRAME_TYPE_ITRF93 = 4;
+  REF_FRAME_TYPE_ITRF97 = 5;
+  REF_FRAME_TYPE_TOD = 6;
+}
+message RelTimeType {
+  TimeUnits units = 1;
+  double value = 2;
+}
+enum RevNumBasisType {
+  // Default
+  REV_NUM_BASIS_TYPE_UNSPECIFIED = 0;
+  REV_NUM_BASIS_TYPE0 = 1;
+  REV_NUM_BASIS_TYPE1 = 2;
+}
+enum RotseqType {
+  // Default
+  ROTSEQ_TYPE_UNSPECIFIED = 0;
+  ROTSEQ_TYPE_XYX = 1;
+  ROTSEQ_TYPE_XYZ = 2;
+  ROTSEQ_TYPE_XZX = 3;
+  ROTSEQ_TYPE_XZY = 4;
+  ROTSEQ_TYPE_YXY = 5;
+  ROTSEQ_TYPE_YXZ = 6;
+  ROTSEQ_TYPE_YZX = 7;
+  ROTSEQ_TYPE_YZY = 8;
+  ROTSEQ_TYPE_ZXY = 9;
+  ROTSEQ_TYPE_ZXZ = 10;
+  ROTSEQ_TYPE_ZYX = 11;
+  ROTSEQ_TYPE_ZYZ = 12;
+}
+message SensorNoiseType {
+  AngleUnits units = 1;
+  string value = 2;
+}
+message SigmaUType {
+  SigmaUUnits units = 1;
+  double value = 2;
+}
+enum SigmaUUnits {
+  // Default
+  SIGMA_U_UNITS_UNSPECIFIED = 0;
+  SIGMA_U_UNITS_DEG_S15 = 1;
+}
+message SigmaVType {
+  SigmaVUnits units = 1;
+  double value = 2;
+}
+enum SigmaVUnits {
+  // Default
+  SIGMA_V_UNITS_UNSPECIFIED = 0;
+  SIGMA_V_UNITS_DEG_S05 = 1;
+}
+message SolarFluxType {
+  SolarFluxUnits units = 1;
+  double value = 2;
+}
+enum SolarFluxUnits {
+  // Default
+  SOLAR_FLUX_UNITS_UNSPECIFIED = 0;
+  SOLAR_FLUX_UNITS_SFU = 1;
+  SOLAR_FLUX_UNITS104_JANSKY = 2;
+  SOLAR_FLUX_UNITS1022_W_M2_HZ = 3;
+  SOLAR_FLUX_UNITS1019_ERG_S_CM2_HZ = 4;
+}
+message SpacecraftParametersType {
+  repeated string comment = 1;
+  MassType mass = 2;
+  AreaType solarRadArea = 3;
+  double solarRadCoeff = 4;
+  AreaType dragArea = 5;
+  double dragCoeff = 6;
+}
+message SpinNutationMomType {
+  string epoch = 1;
+  AngleType spinAlpha = 2;
+  AngleType spinDelta = 3;
+  AngleType spinAngle = 4;
+  AngleRateType spinAngleVel = 5;
+  AngleType momentumAlpha = 6;
+  AngleType momentumDelta = 7;
+  AngleRateType nutationVel = 8;
+}
+message SpinNutationType {
+  string epoch = 1;
+  AngleType spinAlpha = 2;
+  AngleType spinDelta = 3;
+  AngleType spinAngle = 4;
+  AngleRateType spinAngleVel = 5;
+  AngleType nutation = 6;
+  DurationType nutationPer = 7;
+  AngleType nutationPhase = 8;
+}
+message SpinStateType {
+  repeated string comment = 1;
+  string refFrameA = 2;
+  string refFrameB = 3;
+  AngleType spinAlpha = 4;
+  AngleType spinDelta = 5;
+  AngleType spinAngle = 6;
+  AngleRateType spinAngleVel = 7;
+  AngleType nutation = 8;
+  DurationType nutationPer = 9;
+  AngleType nutationPhase = 10;
+  AngleType momentumAlpha = 21;
+  AngleType momentumDelta = 22;
+  AngleRateType nutationVel = 23;
+}
+message SpinType {
+  string epoch = 1;
+  AngleType spinAlpha = 2;
+  AngleType spinDelta = 3;
+  AngleType spinAngle = 4;
+  AngleRateType spinAngleVel = 5;
+}
+message StateVectorAccType {
+  string epoch = 1;
+  PositionTypeUO x = 2;
+  PositionTypeUO y = 3;
+  PositionTypeUO z = 4;
+  VelocityTypeUO xDot = 5;
+  VelocityTypeUO yDot = 6;
+  VelocityTypeUO zDot = 7;
+  AccType xDdot = 8;
+  AccType yDdot = 9;
+  AccType zDdot = 10;
+}
+message StateVectorType {
+  repeated string comment = 1;
+  string epoch = 2;
+  PositionTypeUO x = 3;
+  PositionTypeUO y = 4;
+  PositionTypeUO z = 5;
+  VelocityTypeUO xDot = 6;
+  VelocityTypeUO yDot = 7;
+  VelocityTypeUO zDot = 8;
+}
+message TargetMomentumType {
+  AngMomentumUnits units = 1;
+}
+message TdmAngleType {
+  AngleUnits units = 1;
+  double value = 2;
+}
+message TdmBody {
+  repeated TdmSegment segment = 1;
+}
+message TdmData {
+  repeated string comment = 1;
+  repeated TrackingDataObservationType observation = 2;
+}
+message TdmHeader {
+  repeated string comment = 1;
+  string creationDate = 2;
+  string originator = 3;
+  string messageId = 4;
+}
+message TdmMetadata {
+  repeated string comment = 1;
+  string trackId = 2;
+  string dataTypes = 3;
+  string timeSystem = 4;
+  string startTime = 5;
+  string stopTime = 6;
+  string participant1 = 7;
+  string participant2 = 8;
+  string participant3 = 9;
+  string participant4 = 10;
+  string participant5 = 11;
+  ModeType mode = 12;
+  string path = 13;
+  string path1 = 14;
+  string path2 = 15;
+  string ephemerisName1 = 31;
+  string ephemerisName2 = 32;
+  string ephemerisName3 = 33;
+  string ephemerisName4 = 34;
+  string ephemerisName5 = 35;
+  string transmitBand = 36;
+  string receiveBand = 37;
+  int32 turnaroundNumerator = 38;
+  int32 turnaroundDenominator = 39;
+  TimetagRefType timetagRef = 40;
+  double integrationInterval = 41;
+  IntegrationRefType integrationRef = 42;
+  double freqOffset = 43;
+  RangemodeType rangeMode = 44;
+  double rangeModulus = 45;
+  RangeUnitsType rangeUnits = 46;
+  AngleTypeType angleType = 47;
+  RefFrameType referenceFrame = 48;
+  string interpolation = 49;
+  uint32 interpolationDegree = 50;
+  double dopplerCountBias = 51;
+  uint32 dopplerCountScale = 52;
+  YesNoType dopplerCountRollover = 53;
+  double transmitDelay1 = 54;
+  double transmitDelay2 = 55;
+  double transmitDelay3 = 56;
+  double transmitDelay4 = 57;
+  double transmitDelay5 = 58;
+  double receiveDelay1 = 59;
+  double receiveDelay2 = 60;
+  double receiveDelay3 = 61;
+  double receiveDelay4 = 62;
+  double receiveDelay5 = 63;
+  DataQualityType dataQuality = 64;
+  double correctionAngle1 = 65;
+  double correctionAngle2 = 66;
+  double correctionDoppler = 67;
+  double correctionMag = 68;
+  double correctionRange = 69;
+  double correctionRcs = 70;
+  double correctionReceive = 71;
+  double correctionTransmit = 72;
+  double correctionAberrationYearly = 73;
+  double correctionAberrationDiurnal = 74;
+  YesNoType correctionsApplied = 75;
+}
+message TdmSegment {
+  TdmMetadata metadata = 1;
+  TdmData data = 2;
+}
+message TdmType {
+  string id = 1;
+  string version = 2;
+  TdmHeader header = 3;
+  TdmBody body = 4;
+}
+message ThrustType {
+  ThrustUnits units = 1;
+  double value = 2;
+}
+enum ThrustUnits {
+  // Default
+  THRUST_UNITS_UNSPECIFIED = 0;
+  THRUST_UNITS_N = 1;
+}
+message TimeOffsetType {
+  TimeUnits units = 1;
+  double value = 2;
+}
+enum TimeUnits {
+  // Default
+  TIME_UNITS_UNSPECIFIED = 0;
+  TIME_UNITS_S = 1;
+}
+enum TimetagRefType {
+  // Default
+  TIMETAG_REF_TYPE_UNSPECIFIED = 0;
+  TIMETAG_REF_TYPE_TRANSMIT = 1;
+  TIMETAG_REF_TYPE_RECEIVE = 2;
+}
+message TorqueType {
+  TorqueUnits units = 1;
+  double value = 2;
+}
+enum TorqueUnits {
+  // Default
+  TORQUE_UNITS_UNSPECIFIED = 0;
+  TORQUE_UNITS_N_M = 1;
+}
+message TrackingDataObservationType {
+  string epoch = 1;
+  AngleType angle1 = 2;
+  AngleType angle2 = 3;
+  double carrierPower = 4;
+  double clockBias = 5;
+  double clockDrift = 6;
+  double dopplerCount = 7;
+  double dopplerInstantaneous = 8;
+  double dopplerIntegrated = 9;
+  double dor = 10;
+  double mag = 11;
+  double pcN0 = 12;
+  double prN0 = 13;
+  double pressure = 14;
+  double range = 15;
+  double rcs = 16;
+  double receiveFreq = 17;
+  double receiveFreq1 = 18;
+  double receiveFreq2 = 19;
+  double receiveFreq3 = 20;
+  double receiveFreq4 = 21;
+  double receiveFreq5 = 22;
+  double receivePhaseCt1 = 23;
+  double receivePhaseCt2 = 24;
+  double receivePhaseCt3 = 25;
+  double receivePhaseCt4 = 26;
+  double receivePhaseCt5 = 27;
+  PercentageTypeUO rhumidity = 28;
+  double stec = 29;
+  double temperature = 30;
+  double transmitFreq1 = 31;
+  double transmitFreq2 = 32;
+  double transmitFreq3 = 33;
+  double transmitFreq4 = 34;
+  double transmitFreq5 = 35;
+  double transmitFreqRate1 = 36;
+  double transmitFreqRate2 = 37;
+  double transmitFreqRate3 = 38;
+  double transmitFreqRate4 = 39;
+  double transmitFreqRate5 = 40;
+  double transmitPhaseCt1 = 41;
+  double transmitPhaseCt2 = 42;
+  double transmitPhaseCt3 = 43;
+  double transmitPhaseCt4 = 44;
+  double transmitPhaseCt5 = 45;
+  double tropoDry = 46;
+  double tropoWet = 47;
+  double vlbiDelay = 48;
+}
+enum TrajBasisType {
+  // Default
+  TRAJ_BASIS_TYPE_UNSPECIFIED = 0;
+  TRAJ_BASIS_TYPE_PREDICTED = 1;
+  TRAJ_BASIS_TYPE_DETERMINED = 2;
+  TRAJ_BASIS_TYPE_TELEMETRY = 3;
+  TRAJ_BASIS_TYPE_SIMULATED = 4;
+  TRAJ_BASIS_TYPE_OTHER = 5;
+}
+message UserDefinedParameterType {
+  string parameter = 1;
+  string value = 2;
+}
+message UserDefinedType {
+  repeated SequenceWrapper_UserDefinedType sequencewrapper = 1;
+
+  message SequenceWrapper_UserDefinedType {
+    repeated string comment = 1;
+    repeated UserDefinedParameterType userDefined = 2;
+  }
+}
+message VelocityCovarianceType {
+  VelocityCovarianceUnits units = 1;
+  double value = 2;
+}
+enum VelocityCovarianceUnits {
+  // Default
+  VELOCITY_COVARIANCE_UNITS_UNSPECIFIED = 0;
+  VELOCITY_COVARIANCE_UNITS_KM2_S2 = 1;
+}
+message VelocityTypeUO {
+  VelocityUnits units = 1;
+  double value = 2;
+}
+message VelocityTypeUR {
+  VelocityUnits units = 1;
+  double value = 2;
+}
+enum VelocityUnits {
+  // Default
+  VELOCITY_UNITS_UNSPECIFIED = 0;
+  VELOCITY_UNITS_KM_S = 1;
+}
+message WkgType {
+  WkgUnits units = 1;
+  double value = 2;
+}
+enum WkgUnits {
+  // Default
+  WKG_UNITS_UNSPECIFIED = 0;
+  WKG_UNITS_W_KG = 1;
+}
+enum YesNoType {
+  // Default
+  YES_NO_TYPE_UNSPECIFIED = 0;
+  YES_NO_TYPE_YES = 1;
+  YES_NO_TYPE_NO = 2;
+}

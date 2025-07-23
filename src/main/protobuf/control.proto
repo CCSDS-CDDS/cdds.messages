@@ -1,0 +1,116 @@
+syntax = "proto3";
+
+package ccsds.cdds;
+
+import "types.proto";
+
+/**
+ * The generic control directive allows invocation of 
+ * control directive identified by an identifier,
+ * known to both, the CDDS User and CDDS Provider.
+ */
+message GenericControlDirective {
+
+   /**
+     * The invocation identifier is a unique identifier of one invocation of
+     * a control directive.
+     */
+    uint32 invocationId = 1;
+    
+    /**
+     * The directive identfier uniquely identifies a control directive
+     * known to both, the CDDS User and CDDS Provider.
+     */
+    string directiveId = 2;
+
+    /**
+     * The qualifiers of the directive with identifier and value.
+     */
+    repeated GenericQualifier directiveQualifiers = 3;
+
+}
+
+/**
+ * The generic qualifier has an identifier and a value.
+ */ 
+message GenericQualifier {
+
+    /**
+     * Identfies the qulifier for a given directive.
+     * Scope: Within one given directive 
+     */ 
+    string qualifierId = 1;
+
+    /**
+     * The value of the qualifier.
+     */
+    Value qualifierValue = 2; 
+}
+
+message FunctionalResourceDirective {
+
+    /**
+     * The invocation identifier is a unique identifier of one invocation of
+     * a control directive.
+     */
+    uint32 invocationId = 1;
+
+    /**
+     * The Object Identifier of the Functional Resource.
+     */
+    ObjectIdentifier functionalResourceIdentifier = 2;
+
+    /**
+     * The instance number of the Functional Resource
+     * for which the directive is invoked.
+     */
+    uint64 functionalResourceInstance = 3;
+  
+    /**
+     * The identifier of the directiv to invoke
+     */
+    ObjectIdentifier directiveIdentifier = 4;
+
+    /**
+     * The qualifiers of the invoked directive
+     */
+    repeated DirectiveQualifier directiveQualifiers = 5;
+}
+
+message DirectiveQualifier {
+    
+    ObjectIdentifier qualifierId = 1;
+
+    Value qualifierValue = 2;
+}
+
+message DirectiveReport {
+
+    /**
+     * The invocation identifier is referring to a previously invoked  
+     * control directive.
+     */
+    uint32 invocationId = 1;    
+
+    /**
+     * The result is informing about the outcome of a directive execution or a rejected directive.
+     */
+    DirectiveResult result = 2;
+
+    DirectiveExecutionDiagnostic diagnostic = 3; 
+}
+
+enum DirectiveResult {
+    ACCEPTED = 0;
+    REJECTED = 1;
+    EXECUTED = 2;
+    EXECUTION_ERROR = 4;
+}
+
+enum DirectiveExecutionDiagnostic {
+    UNKOWN_DIRECTIVE = 0;
+    UNKOWN_QUALIFIER = 1;
+    QUALIFIER_OUT_OF_RANGE = 2;
+    UNAUTHORIZED = 3;
+    OTHER = 4;
+}

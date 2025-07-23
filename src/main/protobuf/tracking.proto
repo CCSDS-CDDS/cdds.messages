@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package ccsds.cdds;
+
+import "ccsds_schema_ndmxml.proto";
+
+/**
+ * The Tracking data message provides either a text TDM (KVM or XML)
+ * or a protobuf encoded TDM.
+ */ 
+message TrackingDataMessage {
+    oneof message {
+
+        /**
+         * A text TDM (KVM or XML) 
+         */ 
+        TdmTypeText tdmText = 1;
+
+        /**
+         * A protobuf encoded TDM. 
+         */
+        ccsds.schema.ndmxml.TdmType tdmProto = 2;
+    }
+}
+
+/**
+ * Tracking data message following the KVN encoding of
+ * CCSDS 503.0 Blue Book
+ */
+message TdmTypeText {
+
+    /**
+     * The TDM header in KVN or XML
+     */
+    string header = 1;
+
+    /**
+     * Atomic segments in KVN or XML notation
+     */ 
+    repeated AtomicSegment atomicSegments = 2;
+
+    Format format  = 3;
+}
+
+/**
+ * Atomic segements following CCSDS 503.0 Blue Book 
+ * Note: The AtomicSegment elements shall be encoded in the same way.
+ * Either in KVN/ASCII or XML/UTF-8
+ */
+message AtomicSegment {
+
+    /**
+     * The TDM Metadata according to CCSDS 503.0 Blue Book  
+     */
+    string metaData = 1;
+
+    /**
+     * The TDM Data according to CCSDS 503.0 Blue Book   
+     */
+    string data = 2;
+}
+
+enum Format {
+    KVN = 0;
+    XML = 1;
+}

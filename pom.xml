@@ -91,7 +91,16 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.2.5</version> <!-- Version that supports JUnit 5 -->
       </plugin>
-      
+     
+      <!-- avoid warning of platform dependant build -->
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.3.1</version>
+        <configuration>
+          <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
+
       <!-- <plugin>
                         <groupId>org.apache.avro</groupId>
                         <artifactId>avro-maven-plugin</artifactId>

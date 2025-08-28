@@ -12,7 +12,7 @@ import "types.proto";
 message TelemetryMessage {
   /** 
    * The sequence number allows a detection of duplicates, reordering or gaps caused by the 
-   * transport technology from the CDDS Telemetry Provider to the CDDS Telemtry user.
+   * transport technology from the CDDS Telemetry Provider to the CDDS Telemetry user.
    *  
    * This sequence number is not to be confused with the dataLinkContinuity
    * indicating the data continuity of frames as received from the space link.
@@ -112,7 +112,7 @@ message TelemetryData {
 message SyncNotify {
   
   /**
-   * The date and time at which evetn underlying the notification occurred.
+   * The date and time at which event underlying the notification occurred.
    */
   DateTime time = 1;
 
@@ -135,12 +135,12 @@ message SyncNotify {
      * the CDDS Provider had to discard data due to excessive backlog of data causing an overrun
      * of the internal buffering capabilities. This is a non-nominal case.
      */
-    int64 dataDiscarded = 4;  // the number of data discarded due to excessive backlog
+    int64 dataDiscarded = 4;  // The dataDiscarded reports on the number of data discarded due to excessive backlog
 
     /**
-     * The endOfData notification is sent by the CDDS Provider to the CDDS Useri
+     * The endOfData notification is sent by the CDDS Provider to the CDDS User
      * when there is no more data to send. 
      */
-    bool endOfData = 5;  // the provider has no more data to send
+    bool endOfData = 5; 
   }
 }

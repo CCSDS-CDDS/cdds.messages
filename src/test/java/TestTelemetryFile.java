@@ -46,7 +46,7 @@ public class TestTelemetryFile {
      * @param data The data element passed to TelemetryMessage TelemetryData
      * @return the created TelemetryMessage
      */
-    private TelemetryMessage createTelemtryMessage(byte[] data) {
+    private TelemetryMessage createTelemetryMessage(byte[] data) {
 
         TelemetryMessage tmMessage = TelemetryMessage.newBuilder()
             .setTelemetry(
@@ -90,7 +90,7 @@ public class TestTelemetryFile {
         final List<TelemetryMessage> writtenTmMessages = new LinkedList<>();
         try (FileOutputStream output = new FileOutputStream(TELEMETRY_TLM)) {
             for (int idx = 0; idx < NUM_TM_MESSAGES; idx++) {
-                TelemetryMessage tmMessage = createTelemtryMessage(data);
+                TelemetryMessage tmMessage = createTelemetryMessage(data);
                 writtenTmMessages.add(tmMessage);
 
                 if(idx == 0) {

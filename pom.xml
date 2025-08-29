@@ -71,7 +71,7 @@
           <!-- mvn install:install-file -DgroupId=org.pseudomuto -DartifactId=protoc-gen-doc
           -Dversion=1.5.1 -Dclassifier=osx-aarch_64.exe -Dpackaging=exe
           -Dfile=/Users/Shared/tools/homebrew/bin/protoc-gen-doc  -->
-          <pluginArtifact>org.pseudomuto:protoc-gen-doc:1.5.1:exe:${os.detected.classifier}.exe</pluginArtifact>
+          <pluginArtifact>org.pseudomuto:protoc-gen-doc:1.5.2:exe:${os.detected.classifier}.exe</pluginArtifact>
           <outputDirectory>${project.build.directory}/generated-docs</outputDirectory>
 
           <!-- for parameter handling see

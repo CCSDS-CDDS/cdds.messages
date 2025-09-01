@@ -5,9 +5,7 @@ package ccsds.cdds;
 import "types.proto";
 
 /**
- * The Telemetry Message transports
- *
- * Either a Telemtry Data message or a Sync Notity message
+ * The Telemetry Message transports either a Telemtry Data message or a Sync Notity message
  */
 message TelemetryMessage {
   /** 

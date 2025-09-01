@@ -13,6 +13,10 @@
     <maven.compiler.target>11</maven.compiler.target>
     <os.detected.classifier>osx-aarch_64</os.detected.classifier>
     <protoc-version>3.25.8</protoc-version>
+    <!-- Java source encoding -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!-- For site/reports generation -->
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
 
   <build>
@@ -37,54 +41,62 @@
         </executions>
       </plugin>
 
-      <!-- generate documentation -->
+      <!-- generate Documentation from proto files. Use exec-maven-plugin to pass sort=source -->
       <plugin>
-        <groupId>org.xolstice.maven.plugins</groupId>
-        <artifactId>protobuf-maven-plugin</artifactId>
-        <version>0.6.1</version>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.1.0</version>
         <executions>
+          
+          <!-- generate target/generates-docs -->
           <execution>
-            <id>generate-sources</id>
+            <?m2e ignore?>
+            <id>create-generated-dirs</id>
+            <phase>generate-sources</phase>
             <goals>
-              <goal>compile</goal>
-              <goal>test-compile</goal>
+              <goal>exec</goal>
             </goals>
+            <configuration>
+              <executable>sh</executable>
+              <arguments>
+                <argument>-c</argument>
+                <argument>
+                  mkdir -p '${project.build.directory}/generated-docs'
+                </argument>
+              </arguments>
+            </configuration>
           </execution>
 
           <execution>
-            <id>doc</id>
+            <?m2e ignore?>
+            <phase>generate-sources</phase>
             <goals>
-              <!-- mvn protobuf:compile-custom -->
-              <goal>compile-custom</goal>
+              <goal>exec</goal>
             </goals>
-          </execution>
+            <configuration>
+              <executable>protoc</executable>
+              <arguments>
+                <!-- include paths -->
+                <argument>-I${project.basedir}/src/main/protobuf</argument>
 
+                <!-- generate HTML docs -->
+                <argument>--plugin=protoc-gen-doc=/Users/Shared/tools/protoc-gen-doc/1.5.2/protoc-gen-doc</argument>
+                <argument>--doc_out=${project.build.directory}/generated-docs</argument>
+                <!-- Ignore ccsds_schema_ndmxml.proto -->
+                <argument>--doc_opt=src/main/resources/cdds.tmpl,cdds.html:ccsds_schema_ndmxml.proto:sort=source</argument>
+
+                <!-- proto files -->
+                <argument>${project.basedir}/src/main/protobuf/telemetry.proto</argument>
+                <argument>${project.basedir}/src/main/protobuf/telecommand.proto</argument>
+                <argument>${project.basedir}/src/main/protobuf/monitoring.proto</argument>
+                <argument>${project.basedir}/src/main/protobuf/control.proto</argument>
+                <argument>${project.basedir}/src/main/protobuf/tracking.proto</argument>
+                <argument>${project.basedir}/src/main/protobuf/types.proto</argument>
+              </arguments>
+          </configuration>
+          </execution>
         </executions>
-        <configuration>
-          <protocExecutable>protoc</protocExecutable>
-          <protoSourceRoot>${basedir}/src/main/protobuf</protoSourceRoot>
-
-          <protocArtifact>com.google.protobuf:protoc:3.25.8:exe:${os.detected.classifier}</protocArtifact>
-
-          <pluginId>doc</pluginId>
-          <!-- The protoc-gen-doc binary needs to be installed, see the comamnd below: -->
-          <!-- mvn install:install-file -DgroupId=org.pseudomuto -DartifactId=protoc-gen-doc
-          -Dversion=1.5.1 -Dclassifier=osx-aarch_64.exe -Dpackaging=exe
-          -Dfile=/Users/Shared/tools/homebrew/bin/protoc-gen-doc  -->
-          <pluginArtifact>org.pseudomuto:protoc-gen-doc:1.5.2:exe:${os.detected.classifier}.exe</pluginArtifact>
-          <outputDirectory>${project.build.directory}/generated-docs</outputDirectory>
-
-          <!-- for parameter handling see
-          https://github.com/xolstice/protobuf-maven-plugin/blob/master/src/main/java/org/xolstice/maven/plugin/protobuf/Protoc.java -->
-          <!-- <pluginParameter>markdown,cdds.md</pluginParameter>  -->
-          <!-- <pluginParameter>docbook,cdds.docbook</pluginParameter>  -->
-
-          <!-- use a cdds.tmpl to allow html tags like <br/> to go from proto comments to html -->
-          <pluginParameter>src/main/resources/cdds.tmpl,cdds.html</pluginParameter>
-
-        </configuration>
-
-      </plugin>
+      </plugin>       
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

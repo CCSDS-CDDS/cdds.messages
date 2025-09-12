@@ -12,7 +12,7 @@ message TelecommandMessage {
         /**
          * Request the radiation of a Telecommand.
          */
-        TelecommandRadiationRequest raditionRequest = 1;
+        TelecommandRadiationRequest radiationRequest = 1;
 
         /**
          * Request reporting of the general status of the CDDS Provider
@@ -23,7 +23,7 @@ message TelecommandMessage {
 }
 
 /**
- * A Telecommand adiation Request Is sent from CDDS User to a CDDS Provider.
+ * A Telecommand radiation Request Is sent from CDDS User to a CDDS Provider.
  * It transports either a CLTU or an uncoded Telecommand Frame for radiation
  * by the CDDS Provider. 
  */
@@ -41,7 +41,7 @@ message TelecommandRadiationRequest {
     optional ReportRequest reportRequest = 2;
 
     /**
-     * An optional time specifiying the ealriest allowed radiation time of this Telecommand.
+     * An optional time specifying the earliest allowed radiation time of this Telecommand.
      * One of the checks on the Telecommand Radiation Request failed
      */
     optional DateTime earliestRadiationTime = 3;              
@@ -72,7 +72,7 @@ message TelecommandStatusReportRequest {
     /**
      * The Command ID uniquely identifying the telecommand within the one dedicated pass.
      * If command ID is not provided in a Telecommand Report Request, the CDDS Provider
-     * shall respond with a Telcommand Report reporting on the available parameters as
+     * shall respond with a Telecommand Report reporting on the available parameters as
      * specified by the Telecommand Report.
      */
     int64 commandId = 1; 
@@ -102,7 +102,7 @@ message TelecommandReport {
     /**
      * The generation time of this report at the CDDS Provider.
      */
-    DateTime reportGeneratonTime = 6;
+    DateTime reportGenerationTime = 6;
 
     /**
      * The antennaId shall indicate which antenna of the Earth User Node
@@ -209,7 +209,7 @@ message TelecommandProviderStatus {
     UplinkStatus uplinkStatus = 2; 
 
     /**
-     * The totoal number of telecammand messages received during the pass.
+     * The total number of telecommand messages received during the pass.
      */
     uint64 numberOfTelecommandsReceived = 3;
 
@@ -232,7 +232,7 @@ enum UplinkStatus {
     NOT_AVAILABLE = 0;      // No information about the uplink status is available
     NO_RF_AVAILABLE = 1;    // The CLCW indicates no RF available
     NO_BITLOCK = 2;         // The CLCW indicates no bit lock
-    NOMINAL = 3;            // The CLCW indicates RF avialable and bit lock
+    NOMINAL = 3;            // The CLCW indicates RF available and bit lock
 }
 
 /**
@@ -242,8 +242,8 @@ enum Diagnostic {
     DUPLICATE_COMMAND_ID = 0;           // The received Telecommand Radiation Request used a command IDalready used during the pass.
     UNABLE_TO_PROCESS = 1;              // The CDDS Provider cannot process further Telecommands due to a previous fault. TODO: That requires the concept of a blocked service and the capability to clear the fault 
     UNABLE_TO_STORE = 2;                // The CDDS Provider is not able to store the received Telecommand Radiation Request
-    OUT_OF_SEQUENCE = 3;                // The received Telecommand Radiation Request used a command ID not maching the expected sequence number
-    INCOSISTENT_RADIATION_TIMES = 4;    // The earliest or latest radiation times are inconsistent
+    OUT_OF_SEQUENCE = 3;                // The received Telecommand Radiation Request used a command ID not matching the expected sequence number
+    INCONSISTENT_RADIATION_TIMES = 4;    // The earliest or latest radiation times are inconsistent
     INVALID_TIME = 5;                   // The specified radiation time window does not overlap the service period
     LATE_ARRIVAL = 6;                   // The Telecommand Radiation Request arrived after the latest radiation time
     GENERIC_ERROR = 7;                  // One of the checks on the Telecommand Radiation Request failed

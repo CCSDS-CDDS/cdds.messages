@@ -43,7 +43,7 @@ message TdmTypeText {
 }
 
 /**
- * Atomic segements following CCSDS 503.0 Blue Book 
+ * Atomic segments following CCSDS 503.0 Blue Book 
  * Note: The AtomicSegment elements shall be encoded in the same way.
  * Either in KVN/ASCII or XML/UTF-8
  */

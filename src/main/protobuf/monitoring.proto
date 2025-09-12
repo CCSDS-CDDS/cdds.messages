@@ -30,7 +30,7 @@ message GenericMonitoringParameter {
 
   /**
    * A unique identifier of the monitoring parameter.
-   * The identifier has to be nique within the provided monitoring service.
+   * The identifier has to be unique within the provided monitoring service.
    */
   string identifier = 1;
 

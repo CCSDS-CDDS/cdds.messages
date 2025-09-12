@@ -36,7 +36,7 @@ message Value {
     int32 int32Value = 5;
     uint32 uint32Value = 6;
     int64 int64Value = 7;
-    uint64 unint64Value = 8;
+    uint64 uint64Value = 8;
     bool boolValue = 9;
     string stringValue = 10;
     bytes octetStringValue = 11;
@@ -53,7 +53,7 @@ message Value {
   enum FrameSyncStatus {
     IN_LOCK = 0;
     OUT_OF_LOCK = 1;
-    UNKOWN = 3;
+    UNKNOWN = 3;
   }
 
   /**
@@ -62,13 +62,13 @@ message Value {
   message GvcId {
     uint32 spacecraftId = 1;
     FrameVersion version = 2;
-    uint32 virtualChannelId = 3; // optional, if ommitted this is a masger channel
+    uint32 virtualChannelId = 3; // optional, if omitted this is a master channel
     
 
   }
 
   /**
-   * The frame version correspondig to the CCSDS frame versions.
+   * The frame version corresponding to the CCSDS frame versions.
    */
   enum FrameVersion {
     PACKET_TM = 0;  // 0: CCSDS 132.0 TM Space Data Link Protocol  

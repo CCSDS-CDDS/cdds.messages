@@ -71,14 +71,14 @@
       }
 
       /* Table of fields */
-      .field-table td:nth-child(1) { /* Field */
-        width: 4em;
-      }
-      .field-table td:nth-child(2) { /* Type */
+      .field-table td:nth-child(1) { /* Label */
         width: 2em;
       }
-      .field-table td:nth-child(3) { /* Label */
-        width: 3em;
+      .field-table td:nth-child(2) { /* Field */
+        width: 4em;
+      }
+      .field-table td:nth-child(3) { /* Type */
+        width: 4em;
       }
       .field-table td:nth-child(4) { /* Description */
         width: 10em;
@@ -217,21 +217,50 @@
       {{p .Description}}
 
       {{range .Messages}}
+        {{ $parentFields := .Fields }}
         <h3 id="{{.FullName}}">{{.LongName}}</h3>
         {{p .Description}}
 
         {{if .HasFields}}
           <table class="field-table">
             <thead>
-              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+              <tr><td>Label</td><td>Field</td><td>Type</td><td>Description</td></tr>
             </thead>
             <tbody>
               {{range .Fields}}
+                
+                {{/* find out if this field is part of a oneof, count the children and save the first name of the first child */}}
+                {{/* the goal is a <td rowspan = "$count" in the Label column for all children of oneof> */}}            
+                {{ $firstOneofName := "" }}
+                {{ $oneofCount := 0 }}
+                {{ if .IsOneof}}
+                  {{ $decl := .OneofDecl }}
+                  {{ range $parentFields }}
+                    {{ if eq .OneofDecl $decl }}
+                      {{ $oneofCount = add $oneofCount 1 }}
+                      {{ if eq $firstOneofName "" }} 
+                        {{ $firstOneofName = .Name}}
+                      {{end}}
+                    {{ end }}
+                  {{ end }}
+                {{ end }}
+
                 <tr>
+                  {{if and (.IsOneof) (eq $firstOneofName .Name) }} 
+                    {{if eq .Label "optional"}}
+                      <td>optional</td>
+                    {{else if gt $oneofCount 1}}
+                      <td rowspan="{{$oneofCount}}">one of {{.Label}}</td>
+                    {{end}}
+                  {{else if not .IsOneof}}
+                    {{if ne .Label "" }}
+                      <td>{{.Label}}</td> 
+                    {{else}}
+                      <td>required</td>
+                    {{end}}
+                  {{end}}
                   <td>{{.Name}}</td>
                   <td><a href="#{{.FullType}}">{{.LongType}}</a></td>
-                  <td>{{.Label}}</td>
-                  
                   <!-- <td><p>{{if (index .Options "deprecated"|default false)}}<strong>Deprecated.</strong> {{end}}{{.Description}} {{if .DefaultValue}}Default: {{.DefaultValue}}{{end}}</p></td> -->
                   <td>
                     <p>
@@ -245,6 +274,7 @@
               {{end}}
             </tbody>
           </table>
+          <p class="MsoCaption">{{.Name}} Structure</p>
 
           {{$message := .}}
           {{- range .FieldOptions}}

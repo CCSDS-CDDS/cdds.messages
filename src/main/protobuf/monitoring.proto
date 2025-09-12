@@ -24,13 +24,13 @@ message MonitoringMessage {
 /**
  * Generic Monitoring Parameters reports any sort of generic
  * monitoring parameter. Generic monitoring parameters have to be 
- * defined and agreed among a CDDS Provider and the CDDS User.
+ * defined and agreed between the CDDS Provider and the CDDS User.
  */
 message GenericMonitoringParameter {
 
   /**
    * A unique identifier of the monitoring parameter.
-   * The scope of the identifier is within the monitoring services.
+   * The identifier has to be nique within the provided monitoring service.
    */
   string identifier = 1;
 
@@ -63,11 +63,15 @@ message FunctionalResourceParameter {
    * for which the parameter is reported for.
    */
   uint64 functionalResourceInstance = 2;
+
+  /**
+   * The times stamp when the monitoring parameter was generated.
+   */  
   DateTime timeStamp = 3;
 
   /**
    * The value of the of the functional resource parameter is encoded again
-   * as a protobuf type. The protobuf specification is external to this
+   * as a protobuf type. Such a protobuf specification is external to this
    * specification.
    */
   bytes parameterValue = 4;

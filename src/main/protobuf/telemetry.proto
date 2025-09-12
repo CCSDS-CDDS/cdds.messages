@@ -5,7 +5,8 @@ package ccsds.cdds;
 import "types.proto";
 
 /**
- * The Telemetry Message transports either a Telemtry Data message or a Sync Notity message
+ * The Telemetry Message transports either a telemetry Data message or a Sync Notity message
+ * The message shall deliver a telemetry frame from a CDDS Provider to a CDDS User.
  */
 message TelemetryMessage {
   /** 
@@ -15,21 +16,20 @@ message TelemetryMessage {
    * This sequence number is not to be confused with the dataLinkContinuity
    * indicating the data continuity of frames as received from the space link.
    */
-  int64 sequenceNumber = 1; /* @exclude TODO: shall we include a sequence number? */
+  optional int64 sequenceNumber = 1; 
   
   oneof message {
-    TelemetryData telemetry = 2;
-    SyncNotify syncNotify = 3;
+    TelemetryData telemetry = 2;    // Set if the message carries telemetry data
+    SyncNotify syncNotify = 3;      // Set if the message carries a sync notify
   }
 }
 
 /**
- * TelemetryData message shall deliver a telemetry frame from a CDDS Provider 
- * to a CDDS User.
+ * TelemetryData holds the received telemetry frame and associated meta data.
  */
 message TelemetryData {
   /**
-   * For a received telemtry frame, the earthReceiveTime shall
+   * For a received telemetry frame, the earthReceiveTime shall
    * contain the UTC time at which the signal event corresponding to the leading
    * edge of the first bit of the Attached Sync Marker that immediately preceded
    * this encoded or uncoded frame was presented at the phase center of the
@@ -84,7 +84,7 @@ message TelemetryData {
 
   /**
    * 0..N privateAnnotation shall be used to convey additional information that
-   * may be associated with a frame. The content of private annotations must be agreed amon
+   * may be associated with a frame. The content of private annotations must be agreed by the 
    * CDDS user and CDDS provider before use.
    */
   repeated Annotation privateAnnotation = 6;
@@ -93,12 +93,12 @@ message TelemetryData {
    * The data shall be the telemetry frame acquired from the selected 
    * channel for delivery to the CDDS User. It is a TM Transfer Frame, an AOS Transfer Frame, or a
    * USLP Transfer Frame. If the frameQuality is provided and good, or the gvcId is provided, data carries
-   * the uncoded telemtry frame.
+   * the uncoded telemetry frame.
    * <br/><br/> 
-   * For Reed-Solomon, LDPC or turbo encoding, if the the frameQuality is provided and indicates 'ERRED',
+   * For Reed-Solomon, LDPC or turbo encoding, if the frameQuality is provided and indicates 'ERRED',
    *  data carries the full coded block of data 
-   * as identified by the frame synchornization process. For BCH encoded frames failing the decoding,
-   * the result of the BCH decoding including the fill bits for whcih decoding was not possible is delivered.
+   * as identified by the frame synchronization process. For BCH encoded frames failing the decoding,
+   * the result of the BCH decoding including the fill bits for which decoding was not possible is delivered.
    */
   bytes data = 7;
 }
@@ -118,7 +118,7 @@ message SyncNotify {
                         // all relevant fields in each SyncNotify
     /**
      * The frameSyncStatus notification is sent by the CDDS Provider to notify the CDDS user
-     * of a change of the frame synchonization status. 
+     * of a change of the frame synchronization status. 
      */
     FrameSyncStatus frameSyncStatus = 2;
 

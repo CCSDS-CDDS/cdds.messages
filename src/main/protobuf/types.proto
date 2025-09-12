@@ -68,18 +68,12 @@ message Value {
   }
 
   /**
-   * The frame version correspondig to tehe CCSDS frame versions:
-   * <br/><br/>
-   * 0: CCSDS 132.0 TM Space Data Link Protocol 
-   * <br/><br/>
-   * 1: CCSDS 732.0 AOS Space Data Link Protocol  
-   * <br/><br/>
-   * 2: CCSDS 732.1 USLP Space Data Link Protocol   
+   * The frame version correspondig to the CCSDS frame versions.
    */
   enum FrameVersion {
-    PACKET_TM = 0;
-    AOS = 1;
-    USLP = 2;
+    PACKET_TM = 0;  // 0: CCSDS 132.0 TM Space Data Link Protocol  
+    AOS = 1;        // 1: CCSDS 732.0 AOS Space Data Link Protocol
+    USLP = 2;       // 2: CCSDS 732.1 USLP Space Data Link Protocol
   }
 
   /**

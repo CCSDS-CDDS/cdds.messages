@@ -11,7 +11,7 @@ CDDS covers the follwing domains:
 - Ground Station Monitoring and Control
 - Tracking Data
 
-CDDS defines messages in terms of Google Protocol Buffers. While these messsages are primariliy intended to be exchanged
+CDDS defines messages in terms of Google Protocol Buffers, which are maintained in this repository. While these messsages are primariliy intended to be exchanged
 by some implementation technology like message brokers or e.g. gRPC, that is not mandated by CDDS.
 
 To facilitate the definition of file formats, CDDS foresees that the CDDS messages are written to files (Protobuf ‘writeDelimited’ and ‘readDelimited`)

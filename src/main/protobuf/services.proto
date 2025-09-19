@@ -1,0 +1,33 @@
+syntax = "proto3";
+package ccsds.cdds;
+
+import "types.proto";
+import "monitoring.proto";
+import "telecommand.proto";
+import "telemetry.proto";
+ 
+// A response-streaming RPC :  where the client sends a request to the server and gets a stream to read a sequence of messages back
+service monitoringService {
+    rpc receiveMonitoringMessage(MonitoringRequest) returns (stream MonitoringMessage);  
+}
+ 
+// bidirectional stream, for instance for each telecommand message request, individual response will be sent
+service TCService {
+    rpc sendTelecommand(stream TelecommandMessage) returns (stream TelecommandReport); 
+}
+
+// server side streaming
+service TMService {
+    rpc receiveTelemetry(TMRequest) returns (stream TelemetryMessage); 
+}
+
+// Allow user to filter on classifiers and identifiers
+message MonitoringRequest {
+  string classifier = 1; //Antenna or data source
+  repeated string identifiers = 2; //Specific measurement values
+}
+
+message TMRequest {
+    string antennaID = 1; //Optional
+}
+

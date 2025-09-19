@@ -1,4 +1,6 @@
-# CCSDS Cloud Data Delivery Standards (CDDS) - Attention, this is work in progress
+# CCSDS Cloud Data Delivery Standards (CDDS)
+
+**Attention, this is work in progress**
 
 The CDDS context is the data transfer between terrestrial ground stations and mission data systems.
 

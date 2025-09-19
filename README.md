@@ -4,7 +4,7 @@ The CDDS context is the data transfer between terrestrial ground stations and mi
 
 CDDS covers the follwing domains:
 
-- Telemtetry             (data link layer)
+- Telemetry             (data link layer)
 - Telecommand            (data link layer)
 - Ground Station Monitoring and Control
 - Tracking Data

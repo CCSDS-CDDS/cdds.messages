@@ -2,7 +2,7 @@
 
 **Attention, this is work in progress**
 
-The CDDS context is the data transfer between terrestrial ground stations and mission data systems.
+The CDDS context is the data transfer between terrestrial ground stations and mission data systems potantially deployed in a cloud.
 
 CDDS covers the follwing domains:
 

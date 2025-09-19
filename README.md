@@ -19,3 +19,4 @@ To facilitate the definition of file formats, CDDS foresees that the CDDS messag
 Build the project:         mvn install
 
 Generate documentation:    mvn generate-sources
+(target/generated-docs)

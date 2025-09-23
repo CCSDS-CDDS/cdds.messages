@@ -1,0 +1,30 @@
+To have 'constants' like OIDs baked into proto, use extensions. You need to include descriptor.proto from 
+https://github.com/protocolbuffers/protobuf/blob/main/src/google/protobuf/descriptor.proto
+
+In your proto follow the example below:
+
+import "descriptor.proto";
+
+// Extend MessageOptions with a custom string field for OIDs
+extend google.protobuf.FieldOptions {
+  string oid = 50001;
+}
+
+message AntennaId {
+
+  oneof antennaIdForm {
+    string globalForm = 1;
+    bytes localForm = 2;
+  } 
+  
+  string name = 3 [(oid) = "1.2.840.10003"];
+}
+
+in Java:
+        System.out.println("OID: " + AntennaId.getDescriptor().findFieldByName("name").getOptions().getExtension(ccsds.cdds.Types.oid));
+
+gives
+	OID: 1.2.840.10003
+
+
+

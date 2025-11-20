@@ -2,15 +2,26 @@ syntax = "proto3";
 
 package ccsds.cdds;
 
+import "descriptor.proto";
+
+// Extend MessageOptions with a custom string field
+extend google.protobuf.MessageOptions {
+  string oid = 50001;
+}
+
+
+
 message AntennaId {
+  option (oid) = "1.2.840.10003.";
+
   oneof antennaIdForm {
     string globalForm = 1;
     bytes localForm = 2;
-  }
+  } 
 }
 
 enum FrameQuality {
-    GOOD = 0;
+    GOOD = 0 ;
     ERRED = 1;
     UNDETERMINED = 2;
 }
@@ -43,6 +54,60 @@ message Value {
   }  
 }
 
+message QualifiedValue {
+  Value value = 1;
+  ValueQualifier valueQualifier = 2;
+  AlarmQualifier alarmQualifier = 3;
+}
+
+message EncodedQualifiedValue {
+  bytes encodedValue = 1;
+  ValueQualifier valueQualifier = 2;
+  AlarmQualifier alarmQualifier = 3;
+}
+
+enum ValueQualifier {
+    
+  /**
+   * The value is valid
+   */ 
+  VALID_VALUE = 0;
+    
+  /**
+   * The value is now known to the provider
+   */ 
+  UNKNOWN_VALUE = 1;
+
+  /**
+   * The value is in known to the provider, but not defined int eh current context
+   */ 
+   UNDEFINED_VALUE = 2;
+}
+
+enum Alarm {
+  NO_ALARM = 0;
+  WARNING = 1;
+  ALARM = 2;
+}
+
+message AlarmQualifier {
+    
+  /**
+   * Indicates an alarm
+   */
+  Alarm alarm = 1;
+
+  /**
+   * A generic optional reason code for alarms
+   */
+  optional int64 alarmReason = 2;
+
+  /**
+   * An optional message describing the alarm for operators
+   */
+  optional string alarmMessage = 3;
+}
+
   enum ProductionState {
     CONFIGURED = 0;
     OPERATIONAL = 1;
@@ -53,7 +118,7 @@ message Value {
   enum FrameSyncStatus {
     IN_LOCK = 0;
     OUT_OF_LOCK = 1;
-    UNKNOWN = 3;
+    UNKNOWN_LOCK = 2;
   }
 
   /**

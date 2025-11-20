@@ -4,6 +4,23 @@ package ccsds.cdds;
 
 import "types.proto";
 
+
+message ControlDirective {
+
+    oneof directive {
+
+        /**
+         *  Requests the invocation of a generic control directive
+         */
+        GenericControlDirective genericControlDirective = 1;
+
+        /**
+         *  Requests the invocation of a Functional Resource directive
+         */
+        FunctionalResourceDirective functionalResourceControlDirective = 2; 
+    }
+}
+
 /**
  * The generic control directive allows invocation of 
  * control directive identified by an identifier,
@@ -85,19 +102,26 @@ message DirectiveQualifier {
 }
 
 message DirectiveReport {
+    /**
+     * The production state of the CDDS Ground Station Control Service Provider.
+     */
+    ProductionState productionState = 1;
 
     /**
      * The invocation identifier is referring to a previously invoked  
      * control directive.
      */
-    uint32 invocationId = 1;    
+    uint32 invocationId = 2;    
 
     /**
      * The result is informing about the outcome of a directive execution or a rejected directive.
      */
-    DirectiveResult result = 2;
+    DirectiveResult result = 3;
 
-    DirectiveExecutionDiagnostic diagnostic = 3; 
+    /**
+     * In case of a rejected ot execution error, the diagnostic shall provide more information
+     */
+    DirectiveExecutionDiagnostic diagnostic = 4; 
 }
 
 enum DirectiveResult {

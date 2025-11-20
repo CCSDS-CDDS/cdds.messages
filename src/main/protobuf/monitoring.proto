@@ -9,16 +9,21 @@ import "types.proto";
  * FunctionalResourceParameter.
  */
 message MonitoringMessage {
-  
+ 
+  /**
+   * The production state of the CDDS Monitoring Service Provider.
+   */
+  ProductionState productionState = 1;
+
   /**
    * A Monitoring Message can carry generic monitoring parameters.
    */
-  repeated GenericMonitoringParameter genericMonitoringParameters = 1;
+  repeated GenericMonitoringParameter genericMonitoringParameters = 2;
 
   /**
    * A Monitoring Message can carry Functional Resource Parameters. 
    */
-  repeated FunctionalResourceParameter functionalResourceParameters = 2;
+  repeated FunctionalResourceParameter functionalResourceParameters = 3;
 }
 
 /**
@@ -41,8 +46,10 @@ message GenericMonitoringParameter {
 
   /**
    * The value of the monitoring parameter.
+   * The value is qualified to indicate if the value is valid
+   * and has an alarm associated to it.
    */
-  Value value = 3;
+  QualifiedValue qualifiedValue = 3;
 }
 
 
@@ -54,9 +61,9 @@ message GenericMonitoringParameter {
 message FunctionalResourceParameter {
 
   /**
-   * The Object Identifier of the Functional Resource.
+   * The Object Identifier of the Functional Resource Parameter.
    */
-  ObjectIdentifier functionalResourceIdentifier = 1;
+  ObjectIdentifier functionalResourceParameterIdentifier = 1;
 
   /**
    * The instance number of the Functional Resource
@@ -74,5 +81,6 @@ message FunctionalResourceParameter {
    * as a protobuf type. Such a protobuf specification is external to this
    * specification.
    */
-  bytes parameterValue = 4;
+  EncodedQualifiedValue parameterValue = 4;
+
 }

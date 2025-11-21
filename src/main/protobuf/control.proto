@@ -132,8 +132,8 @@ enum DirectiveResult {
 }
 
 enum DirectiveExecutionDiagnostic {
-    UNKOWN_DIRECTIVE = 0;
-    UNKOWN_QUALIFIER = 1;
+    UNKNOWN_DIRECTIVE = 0;
+    UNKNOWN_QUALIFIER = 1;
     QUALIFIER_OUT_OF_RANGE = 2;
     UNAUTHORIZED = 3;
     OTHER = 4;

@@ -1,3 +1,4 @@
+package cdds.tm;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
@@ -22,6 +23,7 @@ import ccsds.cdds.Types.AntennaId;
 import ccsds.cdds.Types.FrameVersion;
 import ccsds.cdds.Types.GvcId;
 import ccsds.cdds.Types.Value;
+import cdds.util.TimeUtil;
 
 /**
  * Test for CDDS TelemetryMessage

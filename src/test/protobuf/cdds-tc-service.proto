@@ -1,11 +1,14 @@
 syntax = "proto3";
 package ccsds.cdds.tc; 
-import "types.proto";
-import "monitoring.proto";
 import "telecommand.proto";
-import "telemetry.proto";
- 
-service TCService {
-    rpc sendTelecommand(stream TelecommandMessage) returns (stream TelecommandReport); 
-}
 
+/**
+ * CDDS TC Service for uplink of Telecommand frames
+ */
+service TcServiceProvider {
+
+    /**
+     * Opens a bi-directional telecommand stream for send TC radiation request carrying TC frame.
+     */ 
+    rpc openTelecommandStream(stream TelecommandMessage) returns (stream TelecommandReport); 
+}

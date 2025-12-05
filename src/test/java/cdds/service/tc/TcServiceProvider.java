@@ -1,5 +1,7 @@
 package cdds.service.tc;
 
+import java.util.logging.Logger;
+
 import ccsds.cdds.Telecommand.TelecommandMessage;
 import ccsds.cdds.Telecommand.TelecommandReport;
 import ccsds.cdds.tc.TcServiceProviderGrpc.TcServiceProviderImplBase;
@@ -11,14 +13,13 @@ import io.grpc.stub.StreamObserver;
  */
 public class TcServiceProvider extends TcServiceProviderImplBase {
 
-    private final TcServiceAuthorization tcAuthorization;
+    private static final Logger LOG = Logger.getLogger("CDDS TC Provider");
 
-    public TcServiceProvider(TcServiceAuthorization tcAuthorization) {
-        this.tcAuthorization = tcAuthorization;
-    }
     @Override
     public StreamObserver<TelecommandMessage> openTelecommandStream(StreamObserver<TelecommandReport> tcUserStream) {
-        return new TcServiceProviderStream(tcUserStream, tcAuthorization);
+        String spacecraft = TcServiceAuthorization.SPACECRAFT_CTX_KEY.get();
+        LOG.info("Open TC stream for TC user " + spacecraft);
+        return new TcServiceProviderStream(tcUserStream);
     }
 
 }

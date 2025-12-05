@@ -16,12 +16,13 @@ import io.grpc.stub.StreamObserver;
 public class TcServiceProviderStream implements StreamObserver<TelecommandMessage> {
 
     private final StreamObserver<TelecommandReport> tcUserStream;
-    private final TcServiceAuthorization tcAuthorization;
     private static final Logger LOG = Logger.getLogger("CDDS TC Provider Stream");
+    
+    // get from teh gRPC call context the meta data SPACECRAFT as provided by the user
+    private String spacecraft = TcServiceAuthorization.SPACECRAFT_CTX_KEY.get();
 
-    public TcServiceProviderStream(StreamObserver<TelecommandReport> tcUserStream, TcServiceAuthorization tcAuthorization) {
+    public TcServiceProviderStream(StreamObserver<TelecommandReport> tcUserStream) {
         this.tcUserStream = tcUserStream;
-        this.tcAuthorization = tcAuthorization;
     }
 
     @Override
@@ -37,7 +38,7 @@ public class TcServiceProviderStream implements StreamObserver<TelecommandMessag
 
     @Override
     public void onNext(TelecommandMessage tc) {
-        LOG.info("Received TC message for '" + tcAuthorization.getSpacecraft() + "'\n" + tc);
+        LOG.info("Received TC message for '" + spacecraft + "'\n" + tc);
 
         if(tc.hasRadiationRequest()) {
 

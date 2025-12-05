@@ -15,14 +15,17 @@ public class TcServiceAuthorization implements ServerInterceptor {
 
     public static final String SPACECRAFT = "SPACECRAFT";
 
+    // used by the TC User to put meta data SPACECRAFT
     public static final Metadata.Key<String> SPACECRAFT_KEY = Metadata.Key.of(SPACECRAFT, Metadata.ASCII_STRING_MARSHALLER);
 
+    // used by the TC Provider to read the intercepted meta data SPACECRAFT from the call context
     public static final Context.Key<String> SPACECRAFT_CTX_KEY = Context.key(SPACECRAFT);
 
     private static final Logger LOG = Logger.getLogger("CDDS Provider");
 
-    private String spacecraft;
-
+    /**
+     * Intercept the TC service call(s), read the SPACECRAFT meta data and store it in the call context
+     */
     @Override
     public <ReqT, RespT> Listener<ReqT> interceptCall(ServerCall<ReqT, RespT> call, Metadata headers,
             ServerCallHandler<ReqT, RespT> next) {
@@ -31,9 +34,6 @@ public class TcServiceAuthorization implements ServerInterceptor {
 
         if(spacecraft != null) {
             LOG.info("TC service meta data: " + SPACECRAFT + ": " + spacecraft);
-            synchronized(this) {
-                this.spacecraft = spacecraft;
-            }
         } else {
             LOG.warning("TC service meta data, no SPACECRAFT provided");
             call.close(Status.PERMISSION_DENIED.withDescription("no SPACECRAFT meta data provided"), new Metadata());
@@ -43,15 +43,4 @@ public class TcServiceAuthorization implements ServerInterceptor {
 
         return Contexts.interceptCall(ctx, call, headers, next);        
     }
-
-    /**
-     * Provides the spacecraft extracted from call metadata SPACECRAFT
-     * @return  The extracted value or null
-     */
-    public String getSpacecraft() {
-        synchronized(this) {
-            return spacecraft;
-        }
-    }
-
 }

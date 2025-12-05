@@ -35,7 +35,7 @@ public class ProviderServer {
         TcServiceAuthorization tcAuthorization = new TcServiceAuthorization(); 
         gRpcServer = serverBuilder
             .intercept(tcAuthorization)
-            .addService(new TcServiceProvider(tcAuthorization))
+            .addService(new TcServiceProvider())
             .build();
     }
 

@@ -3,12 +3,16 @@ package ccsds.cdds.tc;
 import "telecommand.proto";
 
 /**
- * CDDS TC Service for uplink of Telecommand frames
+ * This is the gRPC definition of the CDDS TC Service for uplink of Telecommand frames.
+ * The service requires the following metadata when calling the service method:
+ *      1) SPACECRAFT set to the name of the spacecraft using the service 
  */
 service TcServiceProvider {
 
     /**
-     * Opens a bi-directional telecommand stream for send TC radiation request carrying TC frame.
+     * Opens a bi-directional telecommand stream to send TC radiation request carrying TC frame.
+     * The returned stream will receive the TC reports reporting on radiation, provider states
+     * uplink failures.
      */ 
     rpc openTelecommandStream(stream TelecommandMessage) returns (stream TelecommandReport); 
 }

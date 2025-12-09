@@ -17,6 +17,12 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- For site/reports generation -->
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+    <!-- for the modified plugin putthe path: /Users/Shared/tools/protoc-gen-doc/1.5.2/protoc-gen-doc -->
+    <protoc-gen-doc>protoc-gen-doc</protoc-gen-doc>
+
+    <!-- for protoc-gen-doc 1.5.2 use  :sort=source -->
+    <sort-source></sort-source>
   </properties>
 
   <build>
@@ -129,7 +135,7 @@
                 <argument>--plugin=protoc-gen-doc=/Users/Shared/tools/protoc-gen-doc/1.5.2/protoc-gen-doc</argument>
                 <argument>--doc_out=${project.build.directory}/generated-docs</argument>
                 <!-- Ignore ccsds_schema_ndmxml.proto -->
-                <argument>--doc_opt=src/main/resources/cdds.tmpl,cdds.html:ccsds_schema_ndmxml.proto:sort=source</argument>
+                <argument>--doc_opt=src/main/resources/cdds.tmpl,cdds.html:ccsds_schema_ndmxml.proto${sort-source}</argument>
 
                 <!-- proto files -->
                 <argument>${project.basedir}/src/main/protobuf/telemetry.proto</argument>

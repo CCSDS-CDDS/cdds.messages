@@ -17,8 +17,12 @@ by some implementation technology like message brokers or e.g. gRPC, that is not
 To facilitate the definition of file formats, CDDS foresees that the CDDS messages are written to files (Protobuf ‘writeDelimited’ and ‘readDelimited`)
 
 **Building**
+Prerequisites. The following executables must be installed and in the PATH:
+ protoc             
+ protoc-gen-doc     
+ protoc-gen-grpc-java
 
 Build the project:         mvn install
 
-Generate documentation:    mvn generate-sources
+Generate documentation:    mvn generate-sources or generate-doc.sh
 (target/generated-docs)

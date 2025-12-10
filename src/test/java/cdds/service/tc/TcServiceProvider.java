@@ -2,8 +2,11 @@ package cdds.service.tc;
 
 import java.util.logging.Logger;
 
+import com.google.protobuf.InvalidProtocolBufferException;
+
 import ccsds.cdds.Telecommand.TelecommandMessage;
 import ccsds.cdds.Telecommand.TelecommandReport;
+import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
 import ccsds.cdds.tc.TcServiceProviderGrpc.TcServiceProviderImplBase;
 import io.grpc.stub.StreamObserver;
 
@@ -17,8 +20,15 @@ public class TcServiceProvider extends TcServiceProviderImplBase {
 
     @Override
     public StreamObserver<TelecommandMessage> openTelecommandStream(StreamObserver<TelecommandReport> tcUserStream) {
-        String spacecraft = TcServiceAuthorization.SPACECRAFT_CTX_KEY.get();
-        LOG.info("Open TC stream for TC user " + spacecraft);
+        byte[] endpointBytes = TcServiceAuthorization.TC_ENDPOINT_CTX_KEY.get();
+        TcServiceEndpoint tcEndPoint;
+        try {
+            tcEndPoint = TcServiceEndpoint.parseFrom(endpointBytes);
+            LOG.info("Open TC stream for endpoint\n" + tcEndPoint);
+        } catch (InvalidProtocolBufferException e) {
+            e.printStackTrace();
+        }
+
         return new TcServiceProviderStream(tcUserStream);
     }
 

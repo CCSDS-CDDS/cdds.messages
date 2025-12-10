@@ -1,13 +1,17 @@
 package cdds.service.tc;
 
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
 import javax.naming.TimeLimitExceededException;
 
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.util.JsonFormat;
+
 import ccsds.cdds.Telecommand.TelecommandMessage;
 import ccsds.cdds.Telecommand.TelecommandReport;
-
+import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
 import ccsds.cdds.tc.TcServiceProviderGrpc;
 import ccsds.cdds.tc.TcServiceProviderGrpc.TcServiceProviderStub;
 import io.grpc.Channel;
@@ -28,18 +32,20 @@ public class TcServiceUser {
     private final AtomicLong numReportsReceived = new AtomicLong(0);
     private static final Logger LOG = Logger.getLogger("CDDS TC User");
 
-    
     /** 
      * Constructs and TC service user and connects to the provider.
      * @param host      The host of the TC provider
      * @param port      The port of the TC provider 
+     * @throws InvalidProtocolBufferException In case the endpoint cannot be encoded
      */
-    public TcServiceUser(String host, int port) {
+    public TcServiceUser(String host, int port) throws InvalidProtocolBufferException {
         channel = ManagedChannelBuilder.forAddress(host, port).usePlaintext().build();
 
         // add an interceptor to the client stream to attach the metadata required for the TC service:
-        // - SPACECRAFT=<your spacecraft>
-        ClientInterceptor interceptor = MetadataUtils.newAttachHeadersInterceptor(getSpacecraftHeader("theSpacecraft"));
+        // - tc-endpoint-bin=<TcEndpoint>
+        ClientInterceptor interceptor = MetadataUtils.newAttachHeadersInterceptor(getTcEndpoint("theProvider",
+                "theStation",
+                "theSpacecraft", 1));
         Channel interceptedChannel = ClientInterceptors.intercept(channel, interceptor);
 
         tcProviderStub = TcServiceProviderGrpc.newStub(interceptedChannel);
@@ -73,14 +79,24 @@ public class TcServiceUser {
     }
 
     /**
-     * Creates a meta data header for the gv
-     * @param spacecraft
-     * @return
+     * Creates a meta data header TC endpoint encoded in JSON
+     * @param provider
+     * @param groundStation
+     * @param spacecraft 
+     * @return The meta data with the encoded TC endpoint
+     * @throws InvalidProtocolBufferException 
      */
-    private Metadata getSpacecraftHeader(String spacecraft) {
+    private Metadata getTcEndpoint(String provider, String groundStation, String spacecraft, long tcVcId) throws InvalidProtocolBufferException {
         Metadata spacecraftHeader = new Metadata();
 
-        spacecraftHeader.put(TcServiceAuthorization.SPACECRAFT_KEY, spacecraft);
+        TcServiceEndpoint tcEndpoint = TcServiceEndpoint.newBuilder()
+            .setProvider(provider)
+            .setGroundStation(groundStation)
+            .setSpacecraft(spacecraft)
+            .setTcVcId(tcVcId)
+            .build();
+                    
+        spacecraftHeader.put(TcServiceAuthorization.TC_ENDPOINT_KEY,tcEndpoint.toByteArray());
 
         return spacecraftHeader;
     }
@@ -90,6 +106,7 @@ public class TcServiceUser {
      * @param tc    The TC message to be sent.
      */
     public void sendTelecommand(TelecommandMessage tc) {
+        LOG.info("Send TC with command ID: " + tc.getRadiationRequest().getCommandId());
         tcProviderStream.onNext(tc);
     }
 

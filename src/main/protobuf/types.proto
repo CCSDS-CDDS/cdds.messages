@@ -158,3 +158,24 @@ message AlarmQualifier {
      */
     repeated uint64 arcs = 2;
   }
+
+  /**
+   * The Quality of Service shall nbe delivered exactly once
+   */
+  enum QoS {
+
+    /**
+     * Data shall be delivered 0..1 time
+     */
+    AT_MOST_ONCE = 0;
+
+    /**
+     * Data shall be delivered at least once, but potentially more often.
+     */
+    AT_LEAST_ONCE = 1;
+
+    /**
+     * Data shall be delivered exactly once
+     */
+    EXACTLY_ONCE = 3;
+  }

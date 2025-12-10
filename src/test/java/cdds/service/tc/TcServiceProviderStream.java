@@ -2,6 +2,8 @@ package cdds.service.tc;
 
 import java.util.logging.Logger;
 
+import com.google.protobuf.InvalidProtocolBufferException;
+
 import ccsds.cdds.Telecommand.TelecommandMessage;
 import ccsds.cdds.Telecommand.TelecommandProviderStatus;
 import ccsds.cdds.Telecommand.TelecommandRadiation;
@@ -10,6 +12,7 @@ import ccsds.cdds.Telecommand.TelecommandReport;
 import ccsds.cdds.Telecommand.UplinkStatus;
 import ccsds.cdds.Types.AntennaId;
 import ccsds.cdds.Types.ProductionState;
+import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
 import cdds.util.TimeUtil;
 import io.grpc.stub.StreamObserver;
 
@@ -19,7 +22,7 @@ public class TcServiceProviderStream implements StreamObserver<TelecommandMessag
     private static final Logger LOG = Logger.getLogger("CDDS TC Provider Stream");
     
     // get from teh gRPC call context the meta data SPACECRAFT as provided by the user
-    private String spacecraft = TcServiceAuthorization.SPACECRAFT_CTX_KEY.get();
+    private TcServiceEndpoint tcEndPoint;
 
     public TcServiceProviderStream(StreamObserver<TelecommandReport> tcUserStream) {
         this.tcUserStream = tcUserStream;
@@ -38,7 +41,15 @@ public class TcServiceProviderStream implements StreamObserver<TelecommandMessag
 
     @Override
     public void onNext(TelecommandMessage tc) {
-        LOG.info("Received TC message for '" + spacecraft + "'\n" + tc);
+        byte[] endpointBytes = TcServiceAuthorization.TC_ENDPOINT_CTX_KEY.get();
+        try {
+            tcEndPoint = TcServiceEndpoint.parseFrom(endpointBytes);
+        } catch (InvalidProtocolBufferException e) {
+            tcEndPoint = TcServiceEndpoint.newBuilder().build(); // empty
+            e.printStackTrace();
+        }
+
+        LOG.info("Received TC message for '" + tcEndPoint.getSpacecraft() + "'\n" + tc);
 
         if(tc.hasRadiationRequest()) {
 

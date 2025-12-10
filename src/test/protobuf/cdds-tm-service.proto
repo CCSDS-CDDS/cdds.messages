@@ -1,0 +1,71 @@
+syntax = "proto3";
+package ccsds.cdds.tm; 
+import "telemetry.proto";
+import "types.proto";
+
+
+/**
+ * This is the gRPC definition of the CDDS TM Service returning TM frames received 
+ * from the space link.
+ */
+service TmServiceProvider {
+
+    /**
+     * Opens a stream to receive TM frames according to the provided Quality or GvcId.
+     * The returned stream will receive the TM frames of the provided Quality or GvcId
+     * and synchronous notifications.
+     *
+     * The requested TmQoS is provided by the user per TM stream
+     *
+     * The service requires the following metadata when calling the service method:
+     *      1) tm-endpoint-bin = encoded TmServiceEndpoint
+     *
+     * The tm-endpoint-bin is authorized for the authenticated user. If not authorized,
+     * the method call will fail.
+     */ 
+    rpc openTelemetryStream(TmQoS) returns (stream TelemetryMessage); 
+}
+
+/**
+ * Allows the identification of a service endpoint in terms
+ * of the parameters provided below.
+ */
+message TmServiceEndpoint {
+
+    /**
+     * The name of the provider organization providing the TM service
+     */
+    string provider = 1;
+
+    /**
+     * The name of the ground station providing the TM service
+     */
+    string groundStation = 2;
+
+    /**
+     * The spacecraft for which TM shall be delivered
+     */
+    string spacecraft = 3;
+
+    /**
+     * The Frame quality or the GVCID of the requested TM.
+     */
+    oneof qualityOrGvcId {
+        FrameQuality frameQuality = 4;
+
+        GvcId gvcId = 5;
+    }
+
+    /**
+     * An optional endpoint name to distinguish endpoints;
+     * for instance for spacecrafts supporting multiple bands.
+     */
+    optional string endpointName = 6;
+}
+
+/**
+ * The requested QoS for TM delivery.
+ */
+message TmQoS {
+    QoS qos = 1;
+}

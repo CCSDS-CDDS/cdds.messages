@@ -1,14 +1,11 @@
 package cdds.service.tc;
 
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
 import javax.naming.TimeLimitExceededException;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.google.protobuf.util.JsonFormat;
-
 import ccsds.cdds.Telecommand.TelecommandMessage;
 import ccsds.cdds.Telecommand.TelecommandReport;
 import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;

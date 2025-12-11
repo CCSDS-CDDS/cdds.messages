@@ -30,12 +30,12 @@ message TcServiceEndpoint {
     /**
      * The name of the provider organization providing the TM service
      */
-    string provider = 1;
+    optional string provider = 1;
 
     /**
      * The name of the ground station providing the TM service
      */
-    string groundStation = 2;
+    optional string groundStation = 2;
 
     /**
      * The spacecraft for which TM shall be delivered

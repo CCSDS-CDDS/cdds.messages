@@ -160,7 +160,7 @@ message AlarmQualifier {
   }
 
   /**
-   * The Quality of Service shall nbe delivered exactly once
+   * The Quality of Service definition governs the message delivery 
    */
   enum QoS {
 

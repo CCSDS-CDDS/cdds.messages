@@ -55,7 +55,7 @@ message TelecommandRadiationRequest {
      * The CLTU or Telecommand Frame for radiation. In case of a Telecommand Frame, the encoding 
      * has to be agreed among the CDDS User and the CDDS Provider. 
      */ 
-    oneof message {
+    oneof  data {
         /**
          * A valid CLTU
          */

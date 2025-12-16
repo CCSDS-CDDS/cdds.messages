@@ -13,7 +13,7 @@ service TcServiceProvider {
      * uplink failures.
      
      * The service requires the following metadata when calling the service method:
-     *      1) tc-endpoint-bin = encoded TcServiceEndpoint
+     *      1) tc-endpoint-bin = JSON encoded TcServiceEndpoint using the binary marshaller
      *
      * The tc-endpoint-bin is authorized for the authenticated user. If not authorized,
      * the method call will fail.

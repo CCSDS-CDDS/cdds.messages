@@ -18,8 +18,7 @@ service TmServiceProvider {
      * The requested TmQoS is provided by the user per TM stream
      *
      * The service requires the following metadata when calling the service method:
-     *      1) tm-endpoint-bin = encoded TmServiceEndpoint
-     *
+     *      1) tm-endpoint-bin = JSON encoded TmServiceEndpoint using the binary marshaller
      * The tm-endpoint-bin is authorized for the authenticated user. If not authorized,
      * the method call will fail.
      */ 

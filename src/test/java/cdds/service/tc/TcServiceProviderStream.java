@@ -21,7 +21,7 @@ public class TcServiceProviderStream implements StreamObserver<TelecommandMessag
     private final StreamObserver<TelecommandReport> tcUserStream;
     private static final Logger LOG = Logger.getLogger("CDDS TC Provider Stream");
     
-    // get from teh gRPC call context the meta data SPACECRAFT as provided by the user
+    // get from the gRPC call context the meta data SPACECRAFT as provided by the user
     private TcServiceEndpoint tcEndPoint;
 
     public TcServiceProviderStream(StreamObserver<TelecommandReport> tcUserStream) {
@@ -43,7 +43,7 @@ public class TcServiceProviderStream implements StreamObserver<TelecommandMessag
     public void onNext(TelecommandMessage tc) {
         byte[] endpointBytes = TcServiceAuthorization.TC_ENDPOINT_CTX_KEY.get();
         try {
-            tcEndPoint = TcServiceEndpoint.parseFrom(endpointBytes);
+            tcEndPoint = TcEndpointJson.tcEndpointFromJson(endpointBytes);
         } catch (InvalidProtocolBufferException e) {
             tcEndPoint = TcServiceEndpoint.newBuilder().build(); // empty
             e.printStackTrace();

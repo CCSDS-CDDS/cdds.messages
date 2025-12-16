@@ -1,5 +1,6 @@
 package cdds.service.tc;
 
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
@@ -93,7 +94,7 @@ public class TcServiceUser {
             .setTcVcId(tcVcId)
             .build();
                     
-        spacecraftHeader.put(TcServiceAuthorization.TC_ENDPOINT_KEY,tcEndpoint.toByteArray());
+        spacecraftHeader.put(TcServiceAuthorization.TC_ENDPOINT_KEY, TcEndpointJson.tcEndpointToJsonUtf8(tcEndpoint));
 
         return spacecraftHeader;
     }

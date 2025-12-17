@@ -37,16 +37,18 @@ public class TcServiceAuthorization implements ServerInterceptor {
         TcServiceEndpoint tcEndPoint = TcServiceEndpoint.newBuilder().build(); // empty default
         try {
             tcEndPoint = TcEndpointJson.tcEndpointFromJson(endpointBytes);
-            // At this point the endpoint is known and can be used for authorization
+            
+            // At this point the endpoint is known and can be used for authorization. For testing we allow any endpoint with spacecraft=theSpacecraft
+            if (tcEndPoint != null && tcEndPoint.getSpacecraft().equals("theSpacraft") == false) {
+                LOG.info("TC service meta data: " + TC_ENDPOINT + ":\n" + new String(endpointBytes));
+            } else {
+                LOG.warning("TC service meta data, invalid TC_ENDPOINT provided");
+                call.close(Status.PERMISSION_DENIED.withDescription("Invalid TC_ENDPOINT meta data provided"),
+                        new Metadata());
+            }
+
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
-        }
-
-        if(tcEndPoint != null) {
-            LOG.info("TC service meta data: " + TC_ENDPOINT + ":\n" + new String(endpointBytes));
-        } else {
-            LOG.warning("TC service meta data, no TC_ENDPOINT provided");
-            call.close(Status.PERMISSION_DENIED.withDescription("no TC_ENDPOINT meta data provided"), new Metadata());
         }
 
         Context ctx = Context.current().withValue(TC_ENDPOINT_CTX_KEY, endpointBytes);

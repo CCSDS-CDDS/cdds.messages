@@ -41,9 +41,10 @@ public class TcServiceProviderStream implements StreamObserver<TelecommandMessag
 
     @Override
     public void onNext(TelecommandMessage tc) {
-        byte[] endpointBytes = TcServiceAuthorization.TC_ENDPOINT_CTX_KEY.get();
+        
         try {
-            tcEndPoint = TcEndpointJson.tcEndpointFromJson(endpointBytes);
+            byte[] endpointBytes = TcServiceAuthorization.TC_ENDPOINT_CTX_KEY.get();    // get the tc-endpoint-bin meta data
+            tcEndPoint = TcEndpointJson.tcEndpointFromJson(endpointBytes);              // decode the endpoint from JSON
         } catch (InvalidProtocolBufferException e) {
             tcEndPoint = TcServiceEndpoint.newBuilder().build(); // empty
             e.printStackTrace();

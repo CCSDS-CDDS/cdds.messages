@@ -128,8 +128,13 @@ message AlarmQualifier {
     uint32 spacecraftId = 1;
     FrameVersion version = 2;
     uint32 virtualChannelId = 3; // optional, if omitted this is a master channel
-    
-
+  }
+  
+  /**
+   * A list of global Virtual Channel Identifiers.
+   */
+  message GvcIdList {
+      repeated GvcId gvcId = 1;
   }
 
   /**
@@ -160,9 +165,16 @@ message AlarmQualifier {
   }
 
   /**
+   * The QoS for data exchange.
+   */
+  message QoS {
+      QOS qos = 1;
+  }  
+
+  /**
    * The Quality of Service definition governs the message delivery 
    */
-  enum QoS {
+  enum QOS {
 
     /**
      * Data shall be delivered 0..1 time

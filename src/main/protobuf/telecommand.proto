@@ -30,7 +30,7 @@ message TelecommandMessage {
 message TelecommandRadiationRequest {
 
     /**
-     * The Command ID uniquely identifying the telecommand within the one dedicated pass.
+     * The Command ID uniquely identifying the CLTU or telecommand within the one dedicated pass.
      */
     int64 commandId = 1;
 
@@ -57,12 +57,12 @@ message TelecommandRadiationRequest {
      */ 
     oneof  data {
         /**
-         * A valid CLTU
+         * A valid CLTU as specified in CCSDS 231.0
          */
         bytes cltu = 5;
 
         /**
-         * A valid telecommand frame
+         * A valid telecommand frame as specified in CCSDS 232.0 (TC Frame), CCSDS 732.0 (AOS), CCSDS 732.1 (USLP) or a private specification
          */
         bytes telecommandFrame = 6;
     }

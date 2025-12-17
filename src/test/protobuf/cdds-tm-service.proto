@@ -22,7 +22,7 @@ service TmServiceProvider {
      * The tm-endpoint-bin is authorized for the authenticated user. If not authorized,
      * the method call will fail.
      */ 
-    rpc openTelemetryStream(TmQoS) returns (stream TelemetryMessage); 
+    rpc openTelemetryStream(QoS) returns (stream TelemetryMessage); 
 }
 
 /**
@@ -47,12 +47,14 @@ message TmServiceEndpoint {
     string spacecraft = 3;
 
     /**
-     * The Frame quality or the GVCID of the requested TM.
+     * The Frame quality or the GVCID of the exchanged TM.
+     * Requested GVCIDs shall be checked against provided GSVIDs.
+     * If the check is successful, the requested GVCID(s) shall be provided.
      */
     oneof qualityOrGvcId {
         FrameQuality frameQuality = 4;
 
-        GvcId gvcId = 5;
+        GvcIdList gvcId = 5;
     }
 
     /**
@@ -60,11 +62,4 @@ message TmServiceEndpoint {
      * for instance for spacecrafts supporting multiple bands.
      */
     optional string endpointName = 6;
-}
-
-/**
- * The requested QoS for TM delivery.
- */
-message TmQoS {
-    QoS qos = 1;
 }

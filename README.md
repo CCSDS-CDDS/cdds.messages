@@ -26,3 +26,6 @@ Build the project:         mvn install
 
 Generate documentation:    mvn generate-sources or generate-doc.sh
 (target/generated-docs)
+
+Debug mTLS:
+mvn test -Djavax.net.debug=ssl,handshake,trustmanager -Dtest=TcServiceTest#testSecureTcService

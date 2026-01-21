@@ -13,9 +13,9 @@ public class TcEndpointJsonTest {
     @Test
     public void testJsonEndpoint() throws InvalidProtocolBufferException {
         final TcServiceEndpoint tcEndpointOne = TcServiceEndpoint.newBuilder()
-            .setProvider("myProvider")
-            .setGroundStation("myGroundStation")
-            .setSpacecraft("mySpacecraft")
+            .setServiceProvider("myProvider")
+            .setTerminal("myGroundStation")
+            .setServiceUser("mySpacecraft")
             .setTcVcId(0)
             .build();   
             

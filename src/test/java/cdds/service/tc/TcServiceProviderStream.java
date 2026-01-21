@@ -50,7 +50,7 @@ public class TcServiceProviderStream implements StreamObserver<TelecommandMessag
             e.printStackTrace();
         }
 
-        LOG.info("Received TC message for '" + tcEndPoint.getSpacecraft() + "'\n" + tc);
+        LOG.info("Received TC message for '" + tcEndPoint.getServiceUser() + "'\n" + tc);
 
         if(tc.hasRadiationRequest()) {
 

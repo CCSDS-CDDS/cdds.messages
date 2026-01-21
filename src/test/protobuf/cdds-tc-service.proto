@@ -3,15 +3,17 @@ package ccsds.cdds.tc;
 import "telecommand.proto";
 
 /**
- * This is the gRPC definition of the CDDS TC Service for uplink of Telecommand frames.
+ * This is the gRPC definition of the CDDS TC Service for uplink of 
+ * CLTUs or Telecommand frames.
  */
 service TcServiceProvider {
 
     /**
-     * Opens a bi-directional telecommand stream to send TC radiation request carrying TC frame.
-     * The returned stream will receive the TC reports reporting on radiation, provider states
-     * uplink failures.
-     
+     * Opens a bi-directional telecommand stream to send TC radiation request
+     * carrying a CLTU or a TC frame.
+     * The returned stream will receive the TC reports reporting on radiation, 
+     * provider states uplink failures.
+     * 
      * The service requires the following metadata when calling the service method:
      *      1) tc-endpoint-bin = JSON encoded TcServiceEndpoint using the binary marshaller
      *
@@ -28,23 +30,23 @@ service TcServiceProvider {
 message TcServiceEndpoint {
 
     /**
-     * The name of the provider organization providing the TM service
+     * The name of the service provider organization providing the TM service
      */
-    optional string provider = 1;
+    optional string serviceProvider = 1;
 
     /**
-     * The name of the ground station providing the TM service
+     * The service user (spacecraft) for which TC shall be delivered
      */
-    optional string groundStation = 2;
+    string serviceUser = 2;
 
     /**
-     * The spacecraft for which TM shall be delivered
+     * The name of the terminal providing the TC service
      */
-    string spacecraft = 3;
+    optional string terminal = 3;
 
     /**
      * Indicates the use of the endpoint for uplink of CLTU,
-     * or a TC VC when teh TC User provides TC frames for radiation.
+     * or a TC VC when the TC User provides TC frames for radiation.
      */
     oneof type {
         bool    cltu = 4;

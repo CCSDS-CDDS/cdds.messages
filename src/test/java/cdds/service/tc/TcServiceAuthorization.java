@@ -38,8 +38,8 @@ public class TcServiceAuthorization implements ServerInterceptor {
         try {
             tcEndPoint = TcEndpointJson.tcEndpointFromJson(endpointBytes);
             
-            // At this point the endpoint is known and can be used for authorization. For testing we allow any endpoint with spacecraft=theSpacecraft
-            if (tcEndPoint != null && tcEndPoint.getSpacecraft().equals("theSpacraft") == false) {
+            // At this point the endpoint is known and can be used for authorization. For testing we allow any endpoint with serviceUser=theSpacecraft
+            if (tcEndPoint != null && tcEndPoint.getServiceUser().equals("theSpacraft") == false) {
                 LOG.info("TC service meta data: " + TC_ENDPOINT + ":\n" + new String(endpointBytes));
             } else {
                 LOG.warning("TC service meta data, invalid TC_ENDPOINT provided");

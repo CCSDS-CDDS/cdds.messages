@@ -32,23 +32,23 @@ service TmServiceProvider {
 message TmServiceEndpoint {
 
     /**
-     * The name of the provider organization providing the TM service
+     * The name of the service provider organization providing the TM service
      */
-    optional string provider = 1;
+    optional string serviceProvider = 1;
 
     /**
-     * The name of the ground station providing the TM service
+     * The serviceUser (spacecraft) for which TM shall be delivered
      */
-    optional string groundStation = 2;
-
+    string serviceUser = 2;
+    
     /**
-     * The spacecraft for which TM shall be delivered
+     * The terminal providing the TM service
      */
-    string spacecraft = 3;
+    optional string terminal = 3;
 
     /**
      * The Frame quality or the GVCID of the exchanged TM.
-     * Requested GVCIDs shall be checked against provided GSVIDs.
+     * Requested GVCIDs shall be checked against provided GVCIDs.
      * If the check is successful, the requested GVCID(s) shall be provided.
      */
     oneof qualityOrGvcId {

@@ -168,13 +168,13 @@ message AlarmQualifier {
    * The QoS for data exchange.
    */
   message QoS {
-      QOS qos = 1;
+      EnumQoS qos = 1;
   }  
 
   /**
    * The Quality of Service definition governs the message delivery 
    */
-  enum QOS {
+  enum EnumQoS {
 
     /**
      * Data shall be delivered 0..1 time

@@ -73,7 +73,11 @@ message TelecommandStatusReportRequest {
      * The Command ID uniquely identifying the telecommand within the one dedicated pass.
      * If command ID is not provided in a Telecommand Report Request, the CDDS Provider
      * shall respond with a Telecommand Report reporting on the available parameters as
-     * specified by the Telecommand Report.
+     * specified by the Telecommand Report. If a report for a valid commandId requested,
+     * the following report is generated:
+     *      a) ack        for buffered, bot not yet radiated radiation requests
+     *      b) failure    for radiation request failing to radiate
+     *      c) radiation  for successfully radiated radiation requests
      */
     int64 commandId = 1; 
 }
@@ -239,7 +243,7 @@ enum UplinkStatus {
  * The diagnostic enumeration reports errors and failures of Telecommand processing.
  */ 
 enum Diagnostic {
-    DUPLICATE_COMMAND_ID = 0;           // The received Telecommand Radiation Request used a command IDalready used during the pass.
+    DUPLICATE_COMMAND_ID = 0;           // The received Telecommand Radiation Request used a command ID already used during the pass.
     UNABLE_TO_PROCESS = 1;              // The CDDS Provider cannot process further Telecommands due to a previous fault. TODO: That requires the concept of a blocked service and the capability to clear the fault 
     UNABLE_TO_STORE = 2;                // The CDDS Provider is not able to store the received Telecommand Radiation Request
     OUT_OF_SEQUENCE = 3;                // The received Telecommand Radiation Request used a command ID not matching the expected sequence number

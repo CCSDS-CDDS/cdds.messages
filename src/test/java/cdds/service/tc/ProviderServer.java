@@ -1,13 +1,21 @@
 package cdds.service.tc;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
+
+import javax.net.ssl.SSLException;
 
 import io.grpc.Grpc;
 import io.grpc.InsecureServerCredentials;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
+import io.grpc.netty.shaded.io.grpc.netty.GrpcSslContexts;
+import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder;
+import io.grpc.netty.shaded.io.netty.handler.ssl.ClientAuth;
+import io.grpc.netty.shaded.io.netty.handler.ssl.SslContext;
+
 
 /**
  * Test service for TC service. Created one TC service.
@@ -23,6 +31,55 @@ public class ProviderServer {
      */
     public ProviderServer(int port) {
         this(Grpc.newServerBuilderForPort(port, InsecureServerCredentials.create()), port);
+    }
+
+    /**
+     * Creates a TC server running one TC service on the given port using mTLS and SSL .
+     * @param port
+     * @param caCertificateFile
+     * @param providerCertificateFile
+     * @param providerKeyFile
+     * @throws IOException 
+     */
+    public ProviderServer(int port, File caCertificateFile, File providerCertificateFile, File providerKeyFile)
+            throws IOException {
+        this.port = port;
+        
+        if(caCertificateFile.exists() == false) {
+            throw new IOException("CA certificate file not found: " + caCertificateFile);
+        }
+
+        if(providerCertificateFile.exists() == false) {
+            throw new IOException("Provider certificate file not found: " + providerCertificateFile);
+        }
+
+        if(providerKeyFile.exists() == false) {
+            throw new IOException("Provider key file not found: " + providerKeyFile);
+        }
+
+        try {
+                SslContext sslContext = GrpcSslContexts.forServer(
+                    providerCertificateFile,
+                    providerKeyFile)
+                    .trustManager(caCertificateFile) // Trust client certs
+                    .clientAuth(ClientAuth.REQUIRE) // Enforce mTLS
+                    .build();
+            
+        TcServiceAuthorization tcAuthorization = new TcServiceAuthorization(); 
+                
+        gRpcServer = NettyServerBuilder.forPort(port)
+                .sslContext(sslContext)
+                .intercept(tcAuthorization)
+                .addService(new TcServiceProvider())
+                .build();
+        } catch(SSLException sslEx) {
+            LOG.warning("Exception creating secure server: " + sslEx);
+            throw sslEx;
+        }
+    
+        LOG.info("Secure Server started, listening on " + port + "\n\tCA: " + caCertificateFile + "\n\tserver cert: " + providerCertificateFile
+            + "\n\tserver key: " + providerKeyFile);
+    
     }
 
     /**
@@ -61,6 +118,10 @@ public class ProviderServer {
         });
     }
 
+    /**
+     * Stops the gRPC server within 30s.
+     * @throws InterruptedException
+     */
     public void stop() throws InterruptedException {
         if (gRpcServer != null) {
             gRpcServer.shutdown().awaitTermination(30, TimeUnit.SECONDS);

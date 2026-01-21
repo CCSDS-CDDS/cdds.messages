@@ -5,14 +5,14 @@ package ccsds.cdds;
 import "ccsds_schema_ndmxml.proto";
 
 /**
- * The Tracking data message provides either a text TDM (KVM or XML)
+ * The Tracking data message provides either a text TDM (KVN or XML)
  * or a protobuf encoded TDM.
  */ 
 message TrackingDataMessage {
     oneof message {
 
         /**
-         * A text TDM (KVM or XML) 
+         * A text TDM (KVN or XML) 
          */ 
         TdmTypeText tdmText = 1;
 

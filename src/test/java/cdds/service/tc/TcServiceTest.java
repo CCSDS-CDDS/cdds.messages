@@ -1,6 +1,9 @@
 package cdds.service.tc;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 import javax.naming.TimeLimitExceededException;
 
@@ -22,12 +25,12 @@ public class TcServiceTest {
     private static final int PROVIDER_PORT = 6666;
 
     @Test
-    public void testTcService() throws IOException, InterruptedException, TimeLimitExceededException {
+    public void testUnsecureTcService() throws IOException, InterruptedException, TimeLimitExceededException {
 
         ProviderServer server = new ProviderServer(PROVIDER_PORT);
         server.start();
 
-        TcServiceUser tcServiceUser = new TcServiceUser("localhost", PROVIDER_PORT);
+        final TcServiceUser tcServiceUser = TcServiceUser.buildUnsecureTcServiceUser("localhost", PROVIDER_PORT);
 
         TelecommandMessage tc = getTcRadiationRequestMessage(1);
 
@@ -37,6 +40,31 @@ public class TcServiceTest {
 
         tcServiceUser.stop();
 
+        server.stop();
+    }
+
+    @Test
+    public void testSecureTcService() throws IOException, InterruptedException, TimeLimitExceededException {
+        final ProviderServer server = new ProviderServer(PROVIDER_PORT, 
+                                                        resourceToFile("cert/cdds-ca.pem"),
+                                                        resourceToFile("cert/cdds-provider.pem"), 
+                                                        resourceToFile("cert/cdds-provider.key"));
+
+        server.start();
+
+        final TcServiceUser tcServiceUser = TcServiceUser.buildSecureTcService("localhost", PROVIDER_PORT, 
+                                                                                resourceToFile("cert/cdds-ca.pem"), 
+                                                                                resourceToFile("cert/cdds-user.pem"), 
+                                                                                resourceToFile("cert/cdds-user.key"));
+
+        TelecommandMessage tc = getTcRadiationRequestMessage(1);
+
+        tcServiceUser.sendTelecommand(tc);
+
+        tcServiceUser.waitForTcReports(2);
+
+        tcServiceUser.stop();
+        
         server.stop();
     }
 
@@ -63,5 +91,22 @@ public class TcServiceTest {
      */
     private static ByteString getTcDummy() {
         return ByteString.copyFromUtf8("Hello TC provider");
+    }
+
+        public static File resourceToFile(String resourcePath) {
+        URL url = Thread.currentThread()
+                .getContextClassLoader()
+                .getResource(resourcePath);
+
+        if (url == null) {
+            throw new IllegalArgumentException(
+                "Resource not found: " + resourcePath);
+        }
+
+        try {
+            return new File(url.toURI());
+        } catch (URISyntaxException e) {
+            throw new RuntimeException("Invalid URI for resource: " + resourcePath, e);
+        }
     }
 }

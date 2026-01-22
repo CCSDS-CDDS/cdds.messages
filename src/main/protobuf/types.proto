@@ -10,20 +10,26 @@ extend google.protobuf.MessageOptions {
 }
 
 
-
+/**
+ * Denotes an antenna involved in service production.
+ */ 
 message AntennaId {
   option (oid) = "1.2.840.10003.";
 
   oneof antennaIdForm {
-    string globalForm = 1;
-    bytes localForm = 2;
+    ObjectIdentifier globalForm = 1;  // The object identifier of the antenna as per SANA Service Site and Aperture registry
+    string localForm = 2;             // A string to identify the antenna. Use a hex representation to encode octets
   } 
 }
 
+/**
+ * An enum indicating the frame quality.
+ */ 
 enum FrameQuality {
-    GOOD = 0 ;
-    ERRED = 1;
-    UNDETERMINED = 2;
+    INVALID_FRAME_QUALITY = 0;  // not initialized
+    GOOD = 1;                   // The frame decoded successfully
+    ERRED = 2;                  // The frame is undecodable
+    UNDETERMINED = 3;           // Frame decoding was not performed
 }
 
 /**
@@ -35,59 +41,67 @@ message DateTime {
   uint32 picoSecsOfMs = 3;  // sub pico seconds of the milliseconds
 }
 
+/**
+ * An annotation composed out of a name and a value.
+ */
 message Annotation {
-  string name = 1;
-  Value value = 2;
+  string name = 1;          // The name of the annotation
+  Value value = 2;          // The value of the annotation
 }
 
+/**
+ * A value composed out of a particular type. For more details see https://protobuf.dev/programming-guides/proto3/#scalar
+ */ 
 message Value {
   oneof value {
-    double doubleValue = 3;
-    float floatValue = 4;
-    int32 int32Value = 5;
-    uint32 uint32Value = 6;
-    int64 int64Value = 7;
-    uint64 uint64Value = 8;
-    bool boolValue = 9;
-    string stringValue = 10;
-    bytes octetStringValue = 11;
+    double doubleValue = 1;       // Double value. Uses IEEE 754 double-precision format
+    float floatValue = 2;         // Float value. Uses IEEE 754 single-precision format
+    int32 int32Value = 3;         // 32 bit signed int. Uses variable-length encoding
+    uint32 uint32Value = 4;       // Unsigned 32 bit int. Uses variable-length encoding
+    int64 int64Value = 5;         // 64 bit signed int 
+    uint64 uint64Value = 6;       // 64 bit unsigned int 
+    bool boolValue = 7;           // boolean (true/false)
+    string stringValue = 8;       // A string must always contain UTF-8 encoded or 7-bit ASCII text, and cannot be longer than 2^32
+    bytes octetStringValue = 9;   // May contain any arbitrary sequence of bytes no longer than 2^32
   }  
 }
 
+/**
+ * A qualified value has a value and is qualified to indicate validity and alarm states.
+ */ 
 message QualifiedValue {
-  Value value = 1;
-  ValueQualifier valueQualifier = 2;
-  AlarmQualifier alarmQualifier = 3;
+  Value value = 1;                    // The value
+  ValueQualifier valueQualifier = 2;  // The value qualifier indicating the validity
+  AlarmQualifier alarmQualifier = 3;  // The alarm qualifier indicating alarms associated to the value
 }
 
+/**
+ * A qualified value for encoded values. An encoded value (e.g. in Protobuf) must be encoded and decoded.
+ */
 message EncodedQualifiedValue {
-  bytes encodedValue = 1;
-  ValueQualifier valueQualifier = 2;
-  AlarmQualifier alarmQualifier = 3;
+  bytes encodedValue = 1;             // The value
+  ValueQualifier valueQualifier = 2;  // The value qualifier indicating the validity
+  AlarmQualifier alarmQualifier = 3;  // The alarm qualifier indicating alarms associated to the value
 }
 
+/**
+ * A value qualifier qualifies values with respect to the validity of the value.
+ */
 enum ValueQualifier {
-    
-  /**
-   * The value is valid
-   */ 
-  VALID_VALUE = 0;
-    
-  /**
-   * The value is now known to the provider
-   */ 
-  UNKNOWN_VALUE = 1;
-
-  /**
-   * The value is in known to the provider, but not defined int eh current context
-   */ 
-   UNDEFINED_VALUE = 2;
+  INVALID_VALUE_QUALIFIER = 0;      // not initialized     
+  VALID_VALUE = 1;                  // The value is valid
+  UNKNOWN_VALUE = 2;                // The value is now known to the provider
+  UNDEFINED_VALUE = 3;              // The value is in known to the provider, but not defined in the current context
 }
 
+/**
+ * An enum to report on alarms and warnings
+ */ 
 enum Alarm {
-  NO_ALARM = 0;
-  WARNING = 1;
-  ALARM = 2;
+  INVALID_ALARM = 0;           // not initialized 
+  NO_ALARM = 1;                // No alarm present
+  WARNING = 2;                 // A warning is present
+  ALARM = 3;                   // An alarm is present 
 }
 
 message AlarmQualifier {
@@ -95,7 +109,7 @@ message AlarmQualifier {
   /**
    * Indicates an alarm
    */
-  Alarm alarm = 1;
+  Alarm alarm = 1; 
 
   /**
    * A generic optional reason code for alarms
@@ -108,42 +122,50 @@ message AlarmQualifier {
   optional string alarmMessage = 3;
 }
 
+  /**
+   * The state of the service production.
+   * Note: CDDS Services can refine the meaning of the service production.
+   */
   enum ProductionState {
-    CONFIGURED = 0;
-    OPERATIONAL = 1;
-    HALTED = 2;
-    INTERRUPTED = 3;
+    INVALID_PRODUCTION_STATE = 0;    // not initialized
+    CONFIGURED = 1;                  // The service is configured but is not yet operational
+    OPERATIONAL = 2;                 // The service is operating and functioning
+    HALTED = 3;                      // The service has been halted by a management action
+    INTERRUPTED = 4;                 // The service has encountered a fault and is interrupted
   }
 
-  enum FrameSyncStatus {
-    IN_LOCK = 0;
-    OUT_OF_LOCK = 1;
-    UNKNOWN_LOCK = 2;
+  enum LockStatus {
+    INVALID_LOCK_STATE = 0; // not initialized
+    IN_LOCK = 1;            // In lock
+    OUT_OF_LOCK = 2;        // Out of lock
+    UNKNOWN_LOCK = 3;       // Unknown
   }
 
   /**
    * The Global Virtual Channel identifier
    */
   message GvcId {
-    uint32 spacecraftId = 1;
-    FrameVersion version = 2;
-    uint32 virtualChannelId = 3; // optional, if omitted this is a master channel
+    uint32 spacecraftId = 1;              // The spacecraft identifier (SCID)
+    FrameVersion version = 2;             // The transfer frame version as per USLP, AOS or packet TM
+    optional uint32 virtualChannelId = 3; // optional, if omitted this is a master channel
   }
   
   /**
-   * A list of global Virtual Channel Identifiers.
+   * A list of Global Virtual Channel Identifiers.
    */
   message GvcIdList {
-      repeated GvcId gvcId = 1;
+      repeated GvcId gvcId = 1; // Global Virtual Channel Identifiers 
   }
 
   /**
    * The frame version corresponding to the CCSDS frame versions.
    */
   enum FrameVersion {
-    PACKET_TM = 0;  // 0: CCSDS 132.0 TM Space Data Link Protocol  
-    AOS = 1;        // 1: CCSDS 732.0 AOS Space Data Link Protocol
-    USLP = 2;       // 2: CCSDS 732.1 USLP Space Data Link Protocol
+    INVALID_FRAME_VERSION = 0;  // not initialized
+    PACKET_TM = 1;              // 0: CCSDS 132.0 TM Space Data Link Protocol  
+    AOS = 2;                    // 1: CCSDS 732.0 AOS Space Data Link Protocol
+    USLP = 3;                   // 2: CCSDS 732.1 USLP Space Data Link Protocol
+    UNKNOWN = 4;                // Unknown frame version (non CCSDS)     
   }
 
   /**
@@ -168,26 +190,15 @@ message AlarmQualifier {
    * The QoS for data exchange.
    */
   message QoS {
-      EnumQoS qos = 1;
+      EnumQoS qos = 1;    // The QoS value
   }  
 
   /**
    * The Quality of Service definition governs the message delivery 
    */
   enum EnumQoS {
-
-    /**
-     * Data shall be delivered 0..1 time
-     */
-    AT_MOST_ONCE = 0;
-
-    /**
-     * Data shall be delivered at least once, but potentially more often.
-     */
-    AT_LEAST_ONCE = 1;
-
-    /**
-     * Data shall be delivered exactly once
-     */
-    EXACTLY_ONCE = 3;
+    INVALID_QOS = 0;        // not initialized
+    AT_MOST_ONCE = 1;       // Data shall be delivered 0..1 time
+    AT_LEAST_ONCE = 2;      // Data shall be delivered at least once, but potentially more often
+    EXACTLY_ONCE = 4;       // Data shall be delivered exactly once
   }

@@ -233,33 +233,38 @@ message TelecommandProviderStatus {
  * The state is obtained from the CLCW present in the return telemetry stream from the spacecraft.
  */
 enum UplinkStatus {
-    NOT_AVAILABLE = 0;      // No information about the uplink status is available
-    NO_RF_AVAILABLE = 1;    // The CLCW indicates no RF available
-    NO_BITLOCK = 2;         // The CLCW indicates no bit lock
-    NOMINAL = 3;            // The CLCW indicates RF available and bit lock
+    INVALID_UPLINK_STATUS = 0;  // not initialized
+    NOT_AVAILABLE = 1;          // No information about the uplink status is available
+    NO_RF_AVAILABLE = 2;        // The CLCW indicates no RF available
+    NO_BITLOCK = 3;             // The CLCW indicates no bit lock
+    NOMINAL = 4;                // The CLCW indicates RF available and bit lock
 }
 
 /**
  * The diagnostic enumeration reports errors and failures of Telecommand processing.
  */ 
 enum Diagnostic {
-    DUPLICATE_COMMAND_ID = 0;           // The received Telecommand Radiation Request used a command ID already used during the pass.
-    UNABLE_TO_PROCESS = 1;              // The CDDS Provider cannot process further Telecommands due to a previous fault. TODO: That requires the concept of a blocked service and the capability to clear the fault 
-    UNABLE_TO_STORE = 2;                // The CDDS Provider is not able to store the received Telecommand Radiation Request
-    OUT_OF_SEQUENCE = 3;                // The received Telecommand Radiation Request used a command ID not matching the expected sequence number
-    INCONSISTENT_RADIATION_TIMES = 4;    // The earliest or latest radiation times are inconsistent
-    INVALID_TIME = 5;                   // The specified radiation time window does not overlap the service period
-    LATE_ARRIVAL = 6;                   // The Telecommand Radiation Request arrived after the latest radiation time
-    GENERIC_ERROR = 7;                  // One of the checks on the Telecommand Radiation Request failed
-    OTHER_REASON = 8;                   // A not further specified error happened when processing the Telecommand Radiation Request
-    RADIATION_FAILURE = 9;              // A failure happened during radiation
-    EXPIRED = 10;                       // The radiation could not be done before the latest radiation time
+    INVALID = 0;                        // not initialized
+    DUPLICATE_COMMAND_ID = 1;           // The received Telecommand Radiation Request used a command ID already used during the pass.
+    UNABLE_TO_PROCESS = 2;              // The CDDS Provider cannot process further Telecommands due to a previous fault. TODO: That requires the concept of a blocked service and the capability to clear the fault 
+    UNABLE_TO_STORE = 3;                // The CDDS Provider is not able to store the received Telecommand Radiation Request
+    OUT_OF_SEQUENCE = 4;                // The received Telecommand Radiation Request used a command ID not matching the expected sequence number
+    INCONSISTENT_RADIATION_TIMES = 5;   // The earliest or latest radiation times are inconsistent
+    INVALID_TIME = 6;                   // The specified radiation time window does not overlap the service period
+    LATE_ARRIVAL = 7;                   // The Telecommand Radiation Request arrived after the latest radiation time
+    GENERIC_ERROR = 8;                  // One of the checks on the Telecommand Radiation Request failed
+    OTHER_REASON = 9;                   // A not further specified error happened when processing the Telecommand Radiation Request
+    RADIATION_FAILURE = 10;             // A failure happened during radiation
+    EXPIRED = 11;                       // The radiation could not be done before the latest radiation time
 }
 
-// TODO: decide on the granularity of reporting: All, only radiation , only failures?
+/**
+ * Enum to request reports for TelecommandRadiationRequest
+ */
 enum ReportRequest {
-    PRODUCE_REPORT = 0;
-    NO_REPORT = 1;
+    INVALID_REPORT_REQUEST = 0; // not initialized
+    PRODUCE_REPORT = 1;         // Produce a report for a TelecommandRadiationRequest 
+    NO_REPORT = 2;              // Do not produce a report for a TelecommandRadiationRequest
 }
 
 

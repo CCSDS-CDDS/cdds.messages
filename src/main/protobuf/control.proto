@@ -4,7 +4,9 @@ package ccsds.cdds;
 
 import "types.proto";
 
-
+/**
+ * The control directive is either of generic type or compliant to a functional resource.
+ */
 message ControlDirective {
 
     oneof directive {
@@ -53,7 +55,7 @@ message GenericControlDirective {
 message GenericQualifier {
 
     /**
-     * Identfies the qulifier for a given directive.
+     * Identifies the qualifier for a given directive.
      * Scope: Within one given directive 
      */ 
     string qualifierId = 1;
@@ -94,10 +96,19 @@ message FunctionalResourceDirective {
     repeated DirectiveQualifier directiveQualifiers = 5;
 }
 
+/**
+ * A directive qualifier further qualifies directives.
+ */
 message DirectiveQualifier {
     
+    /**
+     * The OID of the directive qualifier as specified by the functional resource
+     */ 
     ObjectIdentifier qualifierId = 1;
 
+    /**
+     * The value of the directive qualifier
+     */
     Value qualifierValue = 2;
 }
 
@@ -124,17 +135,26 @@ message DirectiveReport {
     DirectiveExecutionDiagnostic diagnostic = 4; 
 }
 
+/**
+ * The directive result is used to report on the execution of directives.
+ */ 
 enum DirectiveResult {
-    ACCEPTED = 0;
-    REJECTED = 1;
-    EXECUTED = 2;
-    EXECUTION_ERROR = 4;
+    INVALID_DIRECTIVE_RESULT = 0;       // not initialized
+    ACCEPTED = 1;                       // The directive has been accepted for execution
+    REJECTED = 2;                       // The directive has been rejected for execution
+    EXECUTED = 3;                       // The directive has been successfully executed
+    EXECUTION_ERROR = 4;                // The directive execution had an error
 }
 
+/**
+ * The directive execution diagnostic provides diagnostic information
+ * for diagnostic rejected directives or directive execution errors.
+ */
 enum DirectiveExecutionDiagnostic {
-    UNKNOWN_DIRECTIVE = 0;
-    UNKNOWN_QUALIFIER = 1;
-    QUALIFIER_OUT_OF_RANGE = 2;
-    UNAUTHORIZED = 3;
-    OTHER = 4;
+    INVALID_DIRECTIVE_DIAGNOSTIC = 0;   // not initialized
+    UNKNOWN_DIRECTIVE = 1;              // The directive is not known to the provider
+    UNKNOWN_QUALIFIER = 2;              // The directive has an unknown directive qualifier
+    QUALIFIER_OUT_OF_RANGE = 3;         // At least one directive qualifier was out of range    
+    UNAUTHORIZED = 4;                   // The directive execution was not authorized to the service user
+    OTHER = 5;                          // Any other error preventing successful directive execution
 }

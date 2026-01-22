@@ -39,6 +39,9 @@ message TdmTypeText {
      */ 
     repeated AtomicSegment atomicSegments = 2;
 
+    /**
+     * The format of the provided TDM
+     */
     Format format  = 3;
 }
 
@@ -60,7 +63,11 @@ message AtomicSegment {
     string data = 2;
 }
 
+/**
+ * The format of the TDM text message
+ */
 enum Format {
-    KVN = 0;
-    XML = 1;
+    INVALID_FORMAT = 0;     // not initialized
+    KVN = 1;                // Key Value Notation format
+    XML = 2;                // XML format
 }

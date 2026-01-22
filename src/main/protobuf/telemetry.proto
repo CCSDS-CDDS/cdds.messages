@@ -18,7 +18,7 @@ message TelemetryMessage {
    */
   optional int64 sequenceNumber = 1; 
   
-  oneof message {
+  oneof data {
     TelemetryData telemetry = 2;    // Set if the message carries telemetry data
     SyncNotify syncNotify = 3;      // Set if the message carries a sync notify
   }
@@ -120,7 +120,7 @@ message SyncNotify {
      * The frameSyncStatus notification is sent by the CDDS Provider to notify the CDDS user
      * of a change of the frame synchronization status. 
      */
-    FrameSyncStatus frameSyncStatus = 2;
+    LockStatus frameSyncStatus = 2;
 
     /**
      * The productionState notification is sent by the CDDS Provider to notify the CDDS user

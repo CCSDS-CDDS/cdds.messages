@@ -32,6 +32,8 @@ public class TcServiceTest {
 
         final TcServiceUser tcServiceUser = TcServiceUser.buildUnsecureTcServiceUser("localhost", PROVIDER_PORT);
 
+        tcServiceUser.openTelecommandStream();
+
         TelecommandMessage tc = getTcRadiationRequestMessage(1);
 
         tcServiceUser.sendTelecommand(tc);
@@ -57,14 +59,19 @@ public class TcServiceTest {
                                                                                 resourceToFile("cert/cdds-user.pem"), 
                                                                                 resourceToFile("cert/cdds-user.key"));
 
-        TelecommandMessage tc = getTcRadiationRequestMessage(1);
+        // Do two runs using the TC endpoint                                                                        
+        for(int idx=1; idx<=2; idx++) {                                                                                
+            tcServiceUser.openTelecommandStream();                                                                                    
+            
+            TelecommandMessage tc = getTcRadiationRequestMessage(idx);
 
-        tcServiceUser.sendTelecommand(tc);
+            tcServiceUser.sendTelecommand(tc);
 
-        tcServiceUser.waitForTcReports(2);
+            tcServiceUser.waitForTcReports(2);
 
-        tcServiceUser.stop();
-        
+            tcServiceUser.stop();
+        }
+
         server.stop();
     }
 

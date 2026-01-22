@@ -69,7 +69,7 @@ public class ProviderServer {
                 
         gRpcServer = NettyServerBuilder.forPort(port)
                 .sslContext(sslContext)
-                .intercept(tcAuthorization)
+                .intercept(tcAuthorization)           /* call before adding the service to intercept */
                 .addService(new TcServiceProvider())
                 .build();
         } catch(SSLException sslEx) {

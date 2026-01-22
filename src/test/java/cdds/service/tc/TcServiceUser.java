@@ -27,28 +27,71 @@ import io.grpc.stub.StreamObserver;
 
 public class TcServiceUser {
 
-    private final TcServiceProviderStub tcProviderStub;
-    private final StreamObserver<TelecommandReport> tcUserStream;
-    private final StreamObserver<TelecommandMessage> tcProviderStream;
+    private final TcServiceProviderStub tcProviderStub;             // the provider stub to open TC streams
+    private final StreamObserver<TelecommandReport> tcUserStream;   // the stream to observer TC responses
+    private StreamObserver<TelecommandMessage> tcProviderStream;    // the stream to send TCs
 
     private final AtomicLong numReportsReceived = new AtomicLong(0);
     private static final Logger LOG = Logger.getLogger("CDDS TC User");
 
+    /**
+     * Constructs and TC service user and connects to the provider, w/o security.
+     * @param host      The host of the TC provider
+     * @param port      The port of the TC provider * @throws InvalidProtocolBufferException
+     */
+    public static TcServiceUser buildUnsecureTcServiceUser(String host, int port) throws InvalidProtocolBufferException {
+        return new TcServiceUser(ManagedChannelBuilder.forAddress(host, port).usePlaintext().build());
+    } 
+
+    /**
+     * Created a TC User using an mTLS channel with the given arguments
+     * @param host                  The host of the TC provider service
+     * @param port                  The port of the TC provider service
+     * @param caCertificateFile     The CA certificate to verify the provider certificate
+     * @param userCertificateFile   The user certificate presented to the provider
+     * @param userKeyFile           The private user key for the mTLS handshake
+     * @return                      The created TcServiceUser object.
+     * @throws SSLException
+     * @throws InvalidProtocolBufferException 
+     */
+    public static TcServiceUser buildSecureTcService(String host, int port, File caCertificateFile, File userCertificateFile, File userKeyFile) throws SSLException, InvalidProtocolBufferException {
+        
+        SslContext sslContext =
+            GrpcSslContexts.forClient()
+                .keyManager(
+                    userCertificateFile,
+                    userKeyFile)                    // Client cert
+                .trustManager(caCertificateFile)    // Trust server cert
+                .build();
+
+        ManagedChannel channel =
+            NettyChannelBuilder.forAddress(host, port)
+                .sslContext(sslContext)
+                .build();
+    
+        LOG.info("Secure TC Service User, host: " + host + " port: " + port + 
+            " created using \n\tCA: " + caCertificateFile + "\n\tuser cert: " + userCertificateFile + "\n\tuser key: " + userKeyFile);
+
+        return new TcServiceUser(channel);            
+    }
+
     /** 
      * Constructs and TC service user and opens a TC stream.
+     * Attaches the TC endpoint meta data to the channel.
      * @param channel   The channel to use to access the CDDS TC provider
      * @throws InvalidProtocolBufferException In case the endpoint cannot be encoded
      */
     private TcServiceUser(Channel channel) throws InvalidProtocolBufferException {
+        
         // add an interceptor to the client stream to attach the metadata required for the TC service:
         // - tc-endpoint-bin=<TcEndpoint>
         ClientInterceptor interceptor = MetadataUtils.newAttachHeadersInterceptor(getTcEndpoint("theProvider",
                 "theStation",
                 "theSpacecraft", 1));
+        
         Channel interceptedChannel = ClientInterceptors.intercept(channel, interceptor);
-
+        
         tcProviderStub = TcServiceProviderGrpc.newStub(interceptedChannel);
-
         tcUserStream = new StreamObserver<TelecommandReport>() {
 
             @Override
@@ -69,51 +112,16 @@ public class TcServiceUser {
                     TcServiceUser.this.numReportsReceived.notifyAll();
                 }
             }
-            
         };
-        
-        tcProviderStream = tcProviderStub.openTelecommandStream(tcUserStream);
-        LOG.info("Opened telecommand stream");
     }
 
     /**
-     * Constructs and TC service user and connects to the provider, w/o security.
-     * @param host      The host of the TC provider
-     * @param port      The port of the TC provider * @throws InvalidProtocolBufferException
+     * Open a telecommand stream to the connected CDDS TC Provider.
+     * Errors are reported by calls to onError of the tcUserStream.
      */
-    public static TcServiceUser buildUnsecureTcServiceUser(String host, int port) throws InvalidProtocolBufferException {
-        return new TcServiceUser(ManagedChannelBuilder.forAddress(host, port).usePlaintext().build());
-    } 
-
-    /**
-     * Created an mTLS channel with the given arguments
-     * @param host
-     * @param port
-     * @param caCertificateFile
-     * @param userCertificateFile
-     * @param userKeyFile
-     * @return
-     * @throws SSLException
-     * @throws InvalidProtocolBufferException 
-     */
-    public static TcServiceUser buildSecureTcService(String host, int port, File caCertificateFile, File userCertificateFile, File userKeyFile) throws SSLException, InvalidProtocolBufferException {
-        SslContext sslContext =
-            GrpcSslContexts.forClient()
-                .keyManager(
-                    userCertificateFile,
-                    userKeyFile)     // Client cert
-                .trustManager(caCertificateFile) // Trust server cert
-                .build();
-
-        ManagedChannel channel =
-            NettyChannelBuilder.forAddress(host, port)
-                .sslContext(sslContext)
-                .build();
-    
-        LOG.info("Secure TC Service User, host: " + host + " port: " + port + 
-            " created using \n\tCA: " + caCertificateFile + "\n\tuser cert: " + userCertificateFile + "\n\tuser key: " + userKeyFile);
-
-        return new TcServiceUser(channel);            
+    public void openTelecommandStream() {
+        tcProviderStream = tcProviderStub.openTelecommandStream(tcUserStream);
+        LOG.info("Opened telecommand stream called");
     }
 
     /**

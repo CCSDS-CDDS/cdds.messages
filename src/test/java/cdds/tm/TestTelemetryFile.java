@@ -55,7 +55,7 @@ public class TestTelemetryFile {
                 TelemetryData.newBuilder()
                     .setEarthReceiveTime(TimeUtil.now())
                     .setAntennaId(AntennaId.newBuilder()
-                        .setGlobalForm("NNO1")
+                        .setLocalForm("NNO1")
                         .build()
                     )
                     .setDataLinkContinuity(0)

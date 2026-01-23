@@ -140,6 +140,7 @@ public class TcServiceUser {
             .setTerminal(terminal)
             .setServiceUser(serviceUser)
             .setTcVcId(tcVcId)
+            .setServiceVersion(1)
             .build();
                     
         spacecraftHeader.put(TcServiceAuthorization.TC_ENDPOINT_KEY, TcEndpointJson.tcEndpointToJsonUtf8(tcEndpoint));

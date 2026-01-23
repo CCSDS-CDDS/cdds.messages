@@ -62,4 +62,9 @@ message TmServiceEndpoint {
      * for instance for spacecrafts supporting multiple bands.
      */
     optional string endpointName = 6;
+
+    /**
+     * The CDDS service version of this service
+     */
+    uint32 serviceVersion = 7;
 }

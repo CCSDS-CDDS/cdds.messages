@@ -17,6 +17,7 @@ public class TcEndpointJsonTest {
             .setTerminal("myGroundStation")
             .setServiceUser("mySpacecraft")
             .setTcVcId(0)
+            .setServiceVersion(1)
             .build();   
             
         String tcEndpointJson = TcEndpointJson.tcEndpointToJson(tcEndpointOne);

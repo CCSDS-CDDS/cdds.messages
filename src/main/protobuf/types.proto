@@ -202,3 +202,8 @@ message AlarmQualifier {
     AT_LEAST_ONCE = 2;      // Data shall be delivered at least once, but potentially more often
     EXACTLY_ONCE = 4;       // Data shall be delivered exactly once
   }
+
+  /**
+   * Used for gRPC methods without argument
+   */
+  message NoArg {}

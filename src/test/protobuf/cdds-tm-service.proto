@@ -22,7 +22,7 @@ service TmServiceProvider {
      * The tm-endpoint-bin is authorized for the authenticated user. If not authorized,
      * the method call will fail.
      */ 
-    rpc openTelemetryStream(QoS) returns (stream TelemetryMessage); 
+    rpc openTelemetryStream(NoArg) returns (stream TelemetryMessage); 
 }
 
 /**
@@ -58,13 +58,18 @@ message TmServiceEndpoint {
     }
 
     /**
+     * The QoS used for the provisioning of telemetry messages
+     */
+    EnumQoS qos = 6;
+
+    /**
      * An optional endpoint name to distinguish endpoints;
      * for instance for spacecrafts supporting multiple bands.
      */
-    optional string endpointName = 6;
+    optional string endpointName = 7;
 
     /**
      * The CDDS service version of this service
      */
-    uint32 serviceVersion = 7;
+    uint32 serviceVersion = 8;
 }

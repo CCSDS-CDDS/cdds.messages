@@ -19,7 +19,7 @@ import io.grpc.stub.StreamObserver;
 public class TcServiceEndpointStream implements StreamObserver<TelecommandMessage> {
 
     private final StreamObserver<TelecommandReport> tcUserStream;
-    private static final Logger LOG = Logger.getLogger("CDDS TC Provider Stream");
+    private static final Logger LOG = Logger.getLogger("CDDS TC Provider Endpoint Stream");
     
     // get from the gRPC call context the meta data SPACECRAFT as provided by the user
     private TcServiceEndpoint tcEndPoint;

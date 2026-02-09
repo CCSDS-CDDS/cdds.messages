@@ -19,7 +19,7 @@ public class TcServiceProvider extends TcServiceProviderImplBase {
     private static final Logger LOG = Logger.getLogger("CDDS TC Provider");
 
     @Override
-    public StreamObserver<TelecommandMessage> openTelecommandStream(StreamObserver<TelecommandReport> tcUserStream) {
+    public StreamObserver<TelecommandMessage> openTelecommandEndpoint(StreamObserver<TelecommandReport> tcUserStream) {
         
         try {
             byte[] endpointBytes = TcServiceAuthorization.TC_ENDPOINT_CTX_KEY.get();            // get the tc-endpoint-bin meta data

@@ -121,8 +121,8 @@ public class TcServiceUser {
      * Open a telecommand stream to the connected CDDS TC Provider.
      * Errors are reported by calls to onError of the tcUserStream.
      */
-    public void openTelecommandStream() {
-        tcProviderStream = tcProviderStub.openTelecommandStream(tcUserStream);
+    public void openTelecommandEndpoint() {
+        tcProviderStream = tcProviderStub.openTelecommandEndpoint(tcUserStream);
         LOG.info("Opened telecommand stream called");
     }
 

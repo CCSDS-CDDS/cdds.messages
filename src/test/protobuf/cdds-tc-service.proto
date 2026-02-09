@@ -10,7 +10,7 @@ import "telecommand.proto";
 service TcServiceProvider {
 
     /**
-     * Opens a bi-directional telecommand stream to send TC radiation request
+     * Opens a TC endpoint: a bi-directional telecommand stream to send TC radiation request
      * carrying a CLTU or a TC frame.
      * The returned stream will receive the TC reports reporting on radiation, 
      * provider states uplink failures.
@@ -21,7 +21,7 @@ service TcServiceProvider {
      * The tc-endpoint-bin is authorized for the authenticated user. If not authorized,
      * the method call will fail.
      */ 
-    rpc openTelecommandStream(stream TelecommandMessage) returns (stream TelecommandReport); 
+    rpc openTelecommandEndpoint(stream TelecommandMessage) returns (stream TelecommandReport); 
 }
 
 /**

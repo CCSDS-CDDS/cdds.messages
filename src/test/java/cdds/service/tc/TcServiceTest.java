@@ -32,7 +32,7 @@ public class TcServiceTest {
 
         final TcServiceUser tcServiceUser = TcServiceUser.buildUnsecureTcServiceUser("localhost", PROVIDER_PORT);
 
-        tcServiceUser.openTelecommandStream();
+        tcServiceUser.openTelecommandEndpoint();
 
         TelecommandMessage tc = getTcRadiationRequestMessage(1);
 
@@ -61,7 +61,7 @@ public class TcServiceTest {
 
         // Do two runs using the TC endpoint                                                                        
         for(int idx=1; idx<=2; idx++) {                                                                                
-            tcServiceUser.openTelecommandStream();                                                                                    
+            tcServiceUser.openTelecommandEndpoint();                                                                                    
             
             TelecommandMessage tc = getTcRadiationRequestMessage(idx);
 

@@ -11,7 +11,8 @@ import "types.proto";
 service TmServiceProvider {
 
     /**
-     * Opens a stream to receive TM frames according to the provided Quality or GvcId.
+     * Opens a TM endpoint: A stream to receive TM frames according to the
+     *  provided Quality or GvcId.
      * The returned stream will receive the TM frames of the provided Quality or GvcId
      * and synchronous notifications.
      *
@@ -22,7 +23,7 @@ service TmServiceProvider {
      * The tm-endpoint-bin is authorized for the authenticated user. If not authorized,
      * the method call will fail.
      */ 
-    rpc openTelemetryStream(NoArg) returns (stream TelemetryMessage); 
+    rpc openTelemetryEndpoint(NoArg) returns (stream TelemetryMessage); 
 }
 
 /**

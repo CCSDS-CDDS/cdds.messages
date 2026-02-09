@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import javax.net.ssl.SSLException;
 
+import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
 import io.grpc.Grpc;
 import io.grpc.InsecureServerCredentials;
 import io.grpc.Server;
@@ -24,6 +25,7 @@ public class ProviderServer {
     private final int port;
     private final Server gRpcServer;
     private static final Logger LOG = Logger.getLogger("CDDS Provider Server");
+    private final TcServiceAuthorization tcAuthorization = new TcServiceAuthorization();
 
     /**
      * Creates a TC server running one TC service on the given port.
@@ -65,8 +67,6 @@ public class ProviderServer {
                     .clientAuth(ClientAuth.REQUIRE) // Enforce mTLS
                     .build();
             
-        TcServiceAuthorization tcAuthorization = new TcServiceAuthorization(); 
-                
         gRpcServer = NettyServerBuilder.forPort(port)
                 .sslContext(sslContext)
                 .intercept(tcAuthorization)           /* call before adding the service to intercept */
@@ -88,8 +88,7 @@ public class ProviderServer {
      * @param port          The port to use
      */
     public ProviderServer(ServerBuilder<?> serverBuilder, int port) {
-        this.port = port;
-        TcServiceAuthorization tcAuthorization = new TcServiceAuthorization(); 
+        this.port = port;        
         gRpcServer = serverBuilder
             .intercept(tcAuthorization)
             .addService(new TcServiceProvider())
@@ -126,6 +125,22 @@ public class ProviderServer {
         if (gRpcServer != null) {
             gRpcServer.shutdown().awaitTermination(30, TimeUnit.SECONDS);
         }
+    }
+
+    /**
+     * Add an allowed TC endpoint
+     * @param tcEndpoint
+     */
+    public void addAuthorizedTcEndpoint(TcServiceEndpoint tcEndpoint) {
+        tcAuthorization.addAuthorizedTcEndpoint(tcEndpoint);
+    }
+
+    /**
+     * Removes an allowd TC endpoint
+     * @param tcEndpoint
+     */
+    public void removeAuthorizedTcEndpoint(TcServiceEndpoint tcEndpoint) {
+       tcAuthorization.removeAuthorizedTcEndpoint(tcEndpoint);
     }
 
 }

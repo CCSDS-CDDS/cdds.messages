@@ -14,6 +14,7 @@ import com.google.protobuf.ByteString;
 import ccsds.cdds.Telecommand.ReportRequest;
 import ccsds.cdds.Telecommand.TelecommandMessage;
 import ccsds.cdds.Telecommand.TelecommandRadiationRequest;
+import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
 
 /**
  * Test the communication among a TC service user and a TC service provider
@@ -23,15 +24,24 @@ import ccsds.cdds.Telecommand.TelecommandRadiationRequest;
 public class TcServiceTest {
 
     private static final int PROVIDER_PORT = 6666;
+    
+    final TcServiceEndpoint authorizedTcEndpoint = TcServiceUser.getTcEndpoint("myProvider",
+                        "myGroundStation",
+                        "theSpacecraft",
+                        4711,
+                        1);
 
     @Test
     public void testUnsecureTcService() throws IOException, InterruptedException, TimeLimitExceededException {
 
         ProviderServer server = new ProviderServer(PROVIDER_PORT);
+        
         server.start();
 
-        final TcServiceUser tcServiceUser = TcServiceUser.buildUnsecureTcServiceUser("localhost", PROVIDER_PORT);
+        server.addAuthorizedTcEndpoint(authorizedTcEndpoint);
 
+        final TcServiceUser tcServiceUser = TcServiceUser.buildUnsecureTcServiceUser("localhost", PROVIDER_PORT, authorizedTcEndpoint);
+                
         tcServiceUser.openTelecommandEndpoint();
 
         TelecommandMessage tc = getTcRadiationRequestMessage(1);
@@ -53,8 +63,11 @@ public class TcServiceTest {
                                                         resourceToFile("cert/cdds-provider.key"));
 
         server.start();
+        
+        server.addAuthorizedTcEndpoint(authorizedTcEndpoint);
 
-        final TcServiceUser tcServiceUser = TcServiceUser.buildSecureTcService("localhost", PROVIDER_PORT, 
+        final TcServiceUser tcServiceUser = TcServiceUser.buildSecureTcService("localhost", PROVIDER_PORT,
+                                                                                authorizedTcEndpoint,
                                                                                 resourceToFile("cert/cdds-ca.pem"), 
                                                                                 resourceToFile("cert/cdds-user.pem"), 
                                                                                 resourceToFile("cert/cdds-user.key"));

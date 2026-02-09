@@ -38,20 +38,20 @@ message TelemetryData {
   repeated ReceptionMetaData metaData = 1;
 
   /**
-    * The frameQuality shall indicate the result of the forward error correction decoding
-    * Default: good
-    * Note: The frame quality is always good for frames delivered for a service endpoints with 
-    * a defined Global Virtual Channel Identifier. 
-    * or Frame Error Control Field evaluation and shall contain one of the
-    * following values:
-    * <br/><br/>
-    * a) ‘good’ No error was detected by the decoder
-    * <br/><br/>
-    * b) ‘erred’ An error was detected by the decoder
-    * <br/><br/>
-    * c) ‘undetermined’ – the results of the decoding process for this frame are not specified or no decoding was performed.
-    * <br/><br/>
-    */
+   * The frameQuality shall indicate the result of the forward error correction decoding
+   * Default: good
+   * Note: The frame quality is always good for frames delivered for a service endpoints with 
+   * a defined Global Virtual Channel Identifier. 
+   * or Frame Error Control Field evaluation and shall contain one of the
+   * following values:
+   * <br/><br/>
+   * a) ‘good’ No error was detected by the decoder
+   * <br/><br/>
+   * b) ‘erred’ An error was detected by the decoder
+   * <br/><br/>
+   * c) ‘undetermined’ – the results of the decoding process for this frame are not specified or no decoding was performed.
+   * <br/><br/>
+   */
   optional FrameQuality frameQuality = 2;
 
   /**
@@ -65,7 +65,7 @@ message TelemetryData {
    * The data shall be the telemetry frame acquired from the selected 
    * channel for delivery to the CDDS User. It is a TM Transfer Frame, an AOS Transfer Frame, or a
    * USLP Transfer Frame. If the frameQuality is provided and good, or the gvcId is provided, data carries
-   * the uncoded telemetry frame.
+   * the un-coded telemetry frame.
    * <br/><br/> 
    * For Reed-Solomon, LDPC or turbo encoding, if the frameQuality is provided and indicates 'ERRED',
    *  data carries the full coded block of data 

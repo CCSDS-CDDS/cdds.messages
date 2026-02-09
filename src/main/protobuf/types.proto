@@ -76,7 +76,7 @@ enum FrameQuality {
  * Date / Time definition for epoch 1958 with pico second precision
  */
 message DateTime {
-  uint32 days = 1;          // days since Jab 1st 1958
+  uint32 days = 1;          // days since Jan 1st 1958 (01/01/1958 to 01/01/1970: 4383 days)
   uint32 msOfDay = 2;       // mill seconds of the day
   uint32 picoSecsOfMs = 3;  // sub pico seconds of the milliseconds
 }

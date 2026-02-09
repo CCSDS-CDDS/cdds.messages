@@ -1,5 +1,7 @@
 package cdds.service.tc;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -26,6 +28,8 @@ public class TcServiceAuthorization implements ServerInterceptor {
 
     private static final Logger LOG = Logger.getLogger("CDDS Provider");
 
+    private final Set<TcServiceEndpoint> authorizedTcEndpoints = new LinkedHashSet<>();
+
     /**
      * Intercept the TC service call(s), read the TC_ENDPOINT meta data and store it in the call context
      */
@@ -39,11 +43,12 @@ public class TcServiceAuthorization implements ServerInterceptor {
             tcEndPoint = TcEndpointJson.tcEndpointFromJson(endpointBytes);
             
             // At this point the endpoint is known and can be used for authorization. 
-            // For testing we allow any endpoint with serviceUser=theSpacecraft
-            if (tcEndPoint != null && tcEndPoint.getServiceUser().equals("theSpacecraft") == true) {
-                LOG.info("TC service meta data: " + TC_ENDPOINT + ":\n" + new String(endpointBytes));
+            if (authorizedTcEndpoints.contains(tcEndPoint) == true) {
+                LOG.info("Authorize TC service meta data from \n'" + TC_ENDPOINT + "':\n" + new String(endpointBytes));
             } else {
-                LOG.warning("TC service meta data, invalid TC_ENDPOINT provided");
+                LOG.warning("TC service meta data, invalid TC_ENDPOINT provided: " + tcEndPoint 
+                    + "\nauthorized endpoints: " + authorizedTcEndpoints);
+                
                 call.close(Status.PERMISSION_DENIED.withDescription("Invalid TC_ENDPOINT meta data provided"),
                         new Metadata());
             }
@@ -55,5 +60,21 @@ public class TcServiceAuthorization implements ServerInterceptor {
         Context ctx = Context.current().withValue(TC_ENDPOINT_CTX_KEY, endpointBytes);
 
         return Contexts.interceptCall(ctx, call, headers, next);        
+    }
+
+    /**
+     * Add an allowed TC endpoint
+     * @param tcEndpoint
+     */
+    public void addAuthorizedTcEndpoint(TcServiceEndpoint tcEndpoint) {
+        authorizedTcEndpoints.add(tcEndpoint);
+    }
+
+    /**
+     * Removes an allowed TC endpoint
+     * @param tcEndpoint
+     */
+    public void removeAuthorizedTcEndpoint(TcServiceEndpoint tcEndpoint) {
+       authorizedTcEndpoints.remove(tcEndpoint);
     }
 }

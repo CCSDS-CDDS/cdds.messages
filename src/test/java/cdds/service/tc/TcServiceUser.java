@@ -41,14 +41,15 @@ public class TcServiceUser {
      * @param host      The host of the TC provider
      * @param port      The port of the TC provider * @throws InvalidProtocolBufferException
      */
-    public static TcServiceUser buildUnsecureTcServiceUser(String host, int port) throws InvalidProtocolBufferException {
-        return new TcServiceUser(ManagedChannelBuilder.forAddress(host, port).usePlaintext().build());
+    public static TcServiceUser buildUnsecureTcServiceUser(String host, int port, TcServiceEndpoint tcEndpoint) throws InvalidProtocolBufferException {
+        return new TcServiceUser(ManagedChannelBuilder.forAddress(host, port).usePlaintext().build(), tcEndpoint);
     } 
 
     /**
      * Created a TC User using an mTLS channel with the given arguments
      * @param host                  The host of the TC provider service
      * @param port                  The port of the TC provider service
+     * @param tcEndpoint            The TC endpoint for this TC service user
      * @param caCertificateFile     The CA certificate to verify the provider certificate
      * @param userCertificateFile   The user certificate presented to the provider
      * @param userKeyFile           The private user key for the mTLS handshake
@@ -56,7 +57,8 @@ public class TcServiceUser {
      * @throws SSLException
      * @throws InvalidProtocolBufferException 
      */
-    public static TcServiceUser buildSecureTcService(String host, int port, File caCertificateFile, File userCertificateFile, File userKeyFile) throws SSLException, InvalidProtocolBufferException {
+    public static TcServiceUser buildSecureTcService(String host, int port, TcServiceEndpoint tcEndpoint
+        , File caCertificateFile, File userCertificateFile, File userKeyFile) throws SSLException, InvalidProtocolBufferException {
         
         SslContext sslContext =
             GrpcSslContexts.forClient()
@@ -74,22 +76,21 @@ public class TcServiceUser {
         LOG.info("Secure TC Service User, host: " + host + " port: " + port + 
             " created using \n\tCA: " + caCertificateFile + "\n\tuser cert: " + userCertificateFile + "\n\tuser key: " + userKeyFile);
 
-        return new TcServiceUser(channel);            
+        return new TcServiceUser(channel, tcEndpoint);            
     }
 
     /** 
      * Constructs and TC service user and opens a TC stream.
      * Attaches the TC endpoint meta data to the channel.
-     * @param channel   The channel to use to access the CDDS TC provider
+     * @param channel       The channel to use to access the CDDS TC provider
+     * @param tcEndpoint    The TC endpoint for which the stream is created
      * @throws InvalidProtocolBufferException In case the endpoint cannot be encoded
      */
-    private TcServiceUser(Channel channel) throws InvalidProtocolBufferException {
+    private TcServiceUser(Channel channel, TcServiceEndpoint tcEndpoint) throws InvalidProtocolBufferException {
         
         // add an interceptor to the client stream to attach the metadata required for the TC service:
         // - tc-endpoint-bin=<TcEndpoint>
-        ClientInterceptor interceptor = MetadataUtils.newAttachHeadersInterceptor(getTcEndpoint("theProvider",
-                "theStation",
-                "theSpacecraft", 4711, 1));
+        ClientInterceptor interceptor = MetadataUtils.newAttachHeadersInterceptor(getTcEndpointMetaData(tcEndpoint));
         
         Channel interceptedChannel = ClientInterceptors.intercept(channel, interceptor);
         
@@ -133,24 +134,38 @@ public class TcServiceUser {
      * @param serviceUser       The service user using the service endpoint
      * @param scId              The spacecraft ID 
      * @param tcVcId            The TC VC ID
+     * 
+     * @return                  The created TcServiceEndpoint
+     */
+    public static TcServiceEndpoint getTcEndpoint(String serviceProvider, String terminal, String serviceUser, int scId,
+            int tcVcId) {
+
+        return TcServiceEndpoint.newBuilder()
+                .setServiceProvider(serviceProvider)
+                .setTerminal(terminal)
+                .setServiceUser(serviceUser)
+                .setGvcId(GvcId.newBuilder()
+                        .setSpacecraftId(scId)
+                        .setVersion(FrameVersion.USLP)
+                        .setVirtualChannelId(tcVcId)
+                        .build())
+                .setServiceVersion(1)
+                .build();
+    }
+
+    /**
+     * Creates a meta data header TC endpoint encoded in JSON
+     * @param serviceProvider   The service provider
+     * @param terminal          The terminal supporting the endpoint
+     * @param serviceUser       The service user using the service endpoint
+     * @param scId              The spacecraft ID 
+     * @param tcVcId            The TC VC ID
      * @return The meta data with the encoded TC endpoint
      * @throws InvalidProtocolBufferException 
      */
-    private Metadata getTcEndpoint(String serviceProvider, String terminal, String serviceUser, int scId, int tcVcId) throws InvalidProtocolBufferException {
+    private Metadata getTcEndpointMetaData(TcServiceEndpoint tcEndpoint) throws InvalidProtocolBufferException {
         Metadata spacecraftHeader = new Metadata();
 
-        TcServiceEndpoint tcEndpoint = TcServiceEndpoint.newBuilder()
-            .setServiceProvider(serviceProvider)
-            .setTerminal(terminal)
-            .setServiceUser(serviceUser)
-            .setGvcId(GvcId.newBuilder()
-                .setSpacecraftId(scId)
-                .setVersion(FrameVersion.USLP)
-                .setVirtualChannelId(tcVcId)
-                .build())
-            .setServiceVersion(1)
-            .build();
-                    
         spacecraftHeader.put(TcServiceAuthorization.TC_ENDPOINT_KEY, TcEndpointJson.tcEndpointToJsonUtf8(tcEndpoint));
 
         return spacecraftHeader;

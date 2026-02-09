@@ -10,6 +10,8 @@ import javax.net.ssl.SSLException;
 import com.google.protobuf.InvalidProtocolBufferException;
 import ccsds.cdds.Telecommand.TelecommandMessage;
 import ccsds.cdds.Telecommand.TelecommandReport;
+import ccsds.cdds.Types.FrameVersion;
+import ccsds.cdds.Types.GvcId;
 import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
 import ccsds.cdds.tc.TcServiceProviderGrpc;
 import ccsds.cdds.tc.TcServiceProviderGrpc.TcServiceProviderStub;
@@ -87,7 +89,7 @@ public class TcServiceUser {
         // - tc-endpoint-bin=<TcEndpoint>
         ClientInterceptor interceptor = MetadataUtils.newAttachHeadersInterceptor(getTcEndpoint("theProvider",
                 "theStation",
-                "theSpacecraft", 1));
+                "theSpacecraft", 4711, 1));
         
         Channel interceptedChannel = ClientInterceptors.intercept(channel, interceptor);
         
@@ -126,20 +128,26 @@ public class TcServiceUser {
 
     /**
      * Creates a meta data header TC endpoint encoded in JSON
-     * @param serviceProvider
-     * @param terminal
-     * @param serviceUser 
+     * @param serviceProvider   The service provider
+     * @param terminal          The terminal supporting the endpoint
+     * @param serviceUser       The service user using the service endpoint
+     * @param scId              The spacecraft ID 
+     * @param tcVcId            The TC VC ID
      * @return The meta data with the encoded TC endpoint
      * @throws InvalidProtocolBufferException 
      */
-    private Metadata getTcEndpoint(String serviceProvider, String terminal, String serviceUser, long tcVcId) throws InvalidProtocolBufferException {
+    private Metadata getTcEndpoint(String serviceProvider, String terminal, String serviceUser, int scId, int tcVcId) throws InvalidProtocolBufferException {
         Metadata spacecraftHeader = new Metadata();
 
         TcServiceEndpoint tcEndpoint = TcServiceEndpoint.newBuilder()
             .setServiceProvider(serviceProvider)
             .setTerminal(terminal)
             .setServiceUser(serviceUser)
-            .setTcVcId(tcVcId)
+            .setGvcId(GvcId.newBuilder()
+                .setSpacecraftId(scId)
+                .setVersion(FrameVersion.USLP)
+                .setVirtualChannelId(tcVcId)
+                .build())
             .setServiceVersion(1)
             .build();
                     

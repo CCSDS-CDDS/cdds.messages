@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
+import ccsds.cdds.Types.FrameVersion;
+import ccsds.cdds.Types.GvcId;
 import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
 
 public class TcEndpointJsonTest {
@@ -16,7 +18,11 @@ public class TcEndpointJsonTest {
             .setServiceProvider("myProvider")
             .setTerminal("myGroundStation")
             .setServiceUser("mySpacecraft")
-            .setTcVcId(0)
+            .setGvcId(GvcId.newBuilder()
+                .setSpacecraftId(4711)
+                .setVersion(FrameVersion.PACKET_TM)
+                .setVirtualChannelId(0)
+                .build())
             .setServiceVersion(1)
             .build();   
             

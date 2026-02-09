@@ -10,13 +10,13 @@ import ccsds.cdds.Telecommand.TelecommandRadiation;
 import ccsds.cdds.Telecommand.TelecommandRadiationRequestAck;
 import ccsds.cdds.Telecommand.TelecommandReport;
 import ccsds.cdds.Telecommand.UplinkStatus;
-import ccsds.cdds.Types.AntennaId;
+import ccsds.cdds.Types.ApertureId;
 import ccsds.cdds.Types.ProductionState;
 import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
 import cdds.util.TimeUtil;
 import io.grpc.stub.StreamObserver;
 
-public class TcServiceProviderStream implements StreamObserver<TelecommandMessage> {
+public class TcServiceEndpointStream implements StreamObserver<TelecommandMessage> {
 
     private final StreamObserver<TelecommandReport> tcUserStream;
     private static final Logger LOG = Logger.getLogger("CDDS TC Provider Stream");
@@ -24,7 +24,7 @@ public class TcServiceProviderStream implements StreamObserver<TelecommandMessag
     // get from the gRPC call context the meta data SPACECRAFT as provided by the user
     private TcServiceEndpoint tcEndPoint;
 
-    public TcServiceProviderStream(StreamObserver<TelecommandReport> tcUserStream) {
+    public TcServiceEndpointStream(StreamObserver<TelecommandReport> tcUserStream) {
         this.tcUserStream = tcUserStream;
     }
 
@@ -59,7 +59,7 @@ public class TcServiceProviderStream implements StreamObserver<TelecommandMessag
             .setProductionState(ProductionState.OPERATIONAL)
             .setBufferAvailable(4711)
             .setReportGenerationTime(TimeUtil.now())
-            .setAntennaId(AntennaId.newBuilder()
+            .setApertureId(ApertureId.newBuilder()
                 .setLocalForm("NNO1")
                 .build())
             .setAck(TelecommandRadiationRequestAck.newBuilder().build())
@@ -71,7 +71,7 @@ public class TcServiceProviderStream implements StreamObserver<TelecommandMessag
             .setProductionState(ProductionState.OPERATIONAL)
             .setBufferAvailable(4711)
             .setReportGenerationTime(TimeUtil.now())
-            .setAntennaId(AntennaId.newBuilder()
+            .setApertureId(ApertureId.newBuilder()
                 .setLocalForm("NNO1")
                 .build())
             .setRadiation(TelecommandRadiation.newBuilder()
@@ -87,7 +87,7 @@ public class TcServiceProviderStream implements StreamObserver<TelecommandMessag
             .setProductionState(ProductionState.OPERATIONAL)
             .setBufferAvailable(4711)
             .setReportGenerationTime(TimeUtil.now())
-            .setAntennaId(AntennaId.newBuilder()
+            .setApertureId(ApertureId.newBuilder()
                 .setLocalForm("NNO1")
                 .build())
             .setProviderStatus(TelecommandProviderStatus.newBuilder()

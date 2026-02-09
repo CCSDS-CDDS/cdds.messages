@@ -29,7 +29,8 @@ public class TcServiceProvider extends TcServiceProviderImplBase {
             e.printStackTrace();
         }
 
-        return new TcServiceProviderStream(tcUserStream);
+        // in this simple example the TC Provider has only one (static) endpoint.
+        return new TcServiceEndpointStream(tcUserStream);
     }
 
 }

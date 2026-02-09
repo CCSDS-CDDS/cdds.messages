@@ -19,9 +19,10 @@ import com.google.protobuf.ByteString;
 import ccsds.cdds.Telemetry.TelemetryData;
 import ccsds.cdds.Telemetry.TelemetryMessage;
 import ccsds.cdds.Types.Annotation;
-import ccsds.cdds.Types.AntennaId;
+import ccsds.cdds.Types.ApertureId;
 import ccsds.cdds.Types.FrameVersion;
 import ccsds.cdds.Types.GvcId;
+import ccsds.cdds.Types.ReceptionMetaData;
 import ccsds.cdds.Types.Value;
 import cdds.util.TimeUtil;
 
@@ -53,12 +54,13 @@ public class TestTelemetryFile {
         TelemetryMessage tmMessage = TelemetryMessage.newBuilder()
             .setTelemetry(
                 TelemetryData.newBuilder()
-                    .setEarthReceiveTime(TimeUtil.now())
-                    .setAntennaId(AntennaId.newBuilder()
-                        .setLocalForm("NNO1")
-                        .build()
-                    )
-                    .setDataLinkContinuity(0)
+                    .addMetaData(0, ReceptionMetaData.newBuilder()
+                        .setApertureId(ApertureId.newBuilder()
+                            .setLocalForm("NNO1")
+                            .build())
+                        .setReceiveTime(TimeUtil.now())
+                        .setDataLinkContinuity(0)
+                        .build())
                     .setGvcId(GvcId.newBuilder()
                         .setSpacecraftId(4711)
                         .setVersion(FrameVersion.AOS)
@@ -96,7 +98,8 @@ public class TestTelemetryFile {
                 writtenTmMessages.add(tmMessage);
 
                 if(idx == 0) {
-                    System.out.println("Earth receive time: " + TimeUtil.dateTime(tmMessage.getTelemetry().getEarthReceiveTime()));
+                    System.out.println("Earth receive time: " + 
+                        TimeUtil.dateTime(tmMessage.getTelemetry().getMetaData(0).getReceiveTime()));
                     System.out.println("First written TM frame: " + tmMessage.toString());
                 }
 
@@ -114,10 +117,12 @@ public class TestTelemetryFile {
                 readTmMessages.add(tmMessage);
 
                 if(readTmMessages.size() == 1) {
-                    System.out.println("Earth receive time: " + TimeUtil.dateTime(tmMessage.getTelemetry().getEarthReceiveTime()));
+                    System.out.println("Earth receive time: "
+                        + TimeUtil.dateTime(tmMessage.getTelemetry().getMetaData(0).getReceiveTime()));
                     System.out.println("First read TM frame: " + tmMessage.toString());
                 } else if(readTmMessages.size() == NUM_TM_MESSAGES) {
-                    System.out.println("Earth receive time: " + TimeUtil.dateTime(tmMessage.getTelemetry().getEarthReceiveTime()));
+                    System.out.println("Earth receive time: "
+                         + TimeUtil.dateTime(tmMessage.getTelemetry().getMetaData(0).getReceiveTime()));
                     System.out.println("Last read TM frame: " + tmMessage.toString());
                 }
 

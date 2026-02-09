@@ -1,5 +1,6 @@
 syntax = "proto3";
-package ccsds.cdds.tc; 
+package ccsds.cdds.tc;
+import "types.proto"; 
 import "telecommand.proto";
 
 /**
@@ -49,8 +50,8 @@ message TcServiceEndpoint {
      * or a TC VC when the TC User provides TC frames for radiation.
      */
     oneof type {
-        bool    cltu = 4;
-        int64   tcVcId = 5;
+        bool    cltu = 4;       // encoded CLTU
+        GvcId   gvcId = 5;      // TC Global VC ID: Spacecraft ID, Transfer Frame Version, VC ID
     }
 
     /**

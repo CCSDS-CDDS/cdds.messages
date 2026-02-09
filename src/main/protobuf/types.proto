@@ -11,15 +11,55 @@ extend google.protobuf.MessageOptions {
 
 
 /**
- * Denotes an antenna involved in service production.
+ * Denotes an aperture involved in service production (reception or transmission).
  */ 
-message AntennaId {
+message ApertureId {
   option (oid) = "1.2.840.10003.";
 
-  oneof antennaIdForm {
-    ObjectIdentifier globalForm = 1;  // The object identifier of the antenna as per SANA Service Site and Aperture registry
-    string localForm = 2;             // A string to identify the antenna. Use a hex representation to encode octets
+  oneof apertureIdForm {
+    ObjectIdentifier globalForm = 1;  // The object identifier of the aperture / antenna as per SANA Service Site and Aperture registry
+    string localForm = 2;             // A string to identify the aperture / antenna. Use a hex representation to encode octets
   } 
+}
+
+/**
+ * Meta data of received data. Indicates which aperture or antenna
+ * received data at a certain time and a data link continuity
+ */
+message ReceptionMetaData {
+
+  /**
+   * For a telemetry frame received on the data link layer, the receiveTime shall 
+   * contain the UTC time at which the signal event corresponding to the leading
+   * edge of the first bit of the Attached Sync Marker that immediately preceded
+   * this encoded or un-coded frame was presented at the phase center of the
+   * antenna used to acquire the frame.
+   * For frames received somehow encapsulated, the receive time shall 
+   * indicate the time of extraction.
+   */
+  DateTime receiveTime = 1;
+
+  /**
+   * The apertureId shall indicate which aperture or antenna
+   * was used to acquire the frame.
+   */
+  ApertureId apertureId = 2;
+
+  /**
+   * The dataLinkContinuity shall indicate whether the extracted frame
+   * is the direct successor of the previous frame
+   * on the selected Master or Virtual Channel.
+   * 
+   * The dataLinkContinuity shall contain an integer value:
+   *
+   * If the gcvId is provided, the dataLinkContinuity is defined as follows:
+
+   * A value of ‘-1’ indicates that this is the first frame after the start of
+   * production or the selected channel is a Master Channel carrying AOS Transfer
+   * Frames or USLP Transfer Frames and therefore no information regarding a
+   * discontinuity on the channel can be provided. 
+   */
+  int64 dataLinkContinuity = 3;  
 }
 
 /**

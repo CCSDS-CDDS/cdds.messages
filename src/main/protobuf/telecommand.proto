@@ -109,10 +109,10 @@ message TelecommandReport {
     DateTime reportGenerationTime = 6;
 
     /**
-     * The antennaId shall indicate which antenna of the Earth User Node
+     * The apertureId shall indicate which aperture or antenna 
      * was used to generate this report.
      */
-    AntennaId antennaId = 7;
+    ApertureId apertureId = 7;
 
     oneof report {
         /**

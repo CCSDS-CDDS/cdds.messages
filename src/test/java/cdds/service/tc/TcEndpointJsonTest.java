@@ -20,7 +20,7 @@ public class TcEndpointJsonTest {
             .setServiceUser("mySpacecraft")
             .setGvcId(GvcId.newBuilder()
                 .setSpacecraftId(4711)
-                .setVersion(FrameVersion.PACKET_TM)
+                .setVersion(FrameVersion.TM_TC_SDLP)
                 .setVirtualChannelId(0)
                 .build())
             .setServiceVersion(1)

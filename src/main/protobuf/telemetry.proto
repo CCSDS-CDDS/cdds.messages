@@ -30,42 +30,36 @@ message TelemetryMessage {
 message TelemetryData {
 
   /**
-   * The reception meta data provide the meta data of apertures involved
+   * The reception meta data provide the meta data of aperture(s) involved
    * in data transfer received the provide telemetry data. Typically that is for a ground station the 
    * earth receive time and aperture ID, but in case relays are involved, the involved
    * relay apertures and reception times can be provided as part of the meta data.
    */
   repeated ReceptionMetaData metaData = 1;
 
-  oneof qualityOrGvcId {
-
-    /**
-     * The frameQuality shall indicate the result of the forward error correction decoding
-     * or Frame Error Control Field evaluation and shall contain one of the
-     * following values:
-     * <br/><br/>
-     * a) ‘good’ No error was detected by the decoder
-     * <br/><br/>
-     * b) ‘erred’ An error was detected by the decoder
-     * <br/><br/>
-     * c) ‘undetermined’ – the results of the decoding process for this frame are not specified or no decoding was performed.
-     * <br/><br/>
-     */
-    FrameQuality frameQuality = 2;
-
-    /**
-     * The global virtual channel identifier.
-     * If the gvcId is provided, the frame quality is good
-     */
-    GvcId gvcId = 3; 
-  }
+  /**
+    * The frameQuality shall indicate the result of the forward error correction decoding
+    * Default: good
+    * Note: The frame quality is always good for frames delivered for a service endpoints with 
+    * a defined Global Virtual Channel Identifier. 
+    * or Frame Error Control Field evaluation and shall contain one of the
+    * following values:
+    * <br/><br/>
+    * a) ‘good’ No error was detected by the decoder
+    * <br/><br/>
+    * b) ‘erred’ An error was detected by the decoder
+    * <br/><br/>
+    * c) ‘undetermined’ – the results of the decoding process for this frame are not specified or no decoding was performed.
+    * <br/><br/>
+    */
+  optional FrameQuality frameQuality = 2;
 
   /**
    * 0..N privateAnnotation shall be used to convey additional information that
    * may be associated with a frame. The content of private annotations must be agreed by the 
    * CDDS user and CDDS provider before use.
    */
-  repeated Annotation privateAnnotation = 4;
+  repeated Annotation privateAnnotation = 3;
 
   /**
    * The data shall be the telemetry frame acquired from the selected 
@@ -78,7 +72,7 @@ message TelemetryData {
    * as identified by the frame synchronization process. For BCH encoded frames failing the decoding,
    * the result of the BCH decoding including the fill bits for which decoding was not possible is delivered.
    */
-  bytes data = 5;
+  bytes data = 4;
 }
 
 /**

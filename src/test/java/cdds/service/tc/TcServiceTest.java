@@ -113,14 +113,19 @@ public class TcServiceTest {
         return ByteString.copyFromUtf8("Hello TC provider");
     }
 
-        public static File resourceToFile(String resourcePath) {
+    /**
+     * Converts a resource path (directory) to a File
+     * @param resourcePath
+     * @return  The File representing the resource.
+     */
+    public static File resourceToFile(String resourcePath) {
         URL url = Thread.currentThread()
                 .getContextClassLoader()
                 .getResource(resourcePath);
 
         if (url == null) {
             throw new IllegalArgumentException(
-                "Resource not found: " + resourcePath);
+                    "Resource not found: " + resourcePath);
         }
 
         try {

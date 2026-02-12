@@ -24,32 +24,34 @@ import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
 public class TcServiceTest {
 
     private static final int PROVIDER_PORT = 6666;
-    
+
     final TcServiceEndpoint authorizedTcEndpoint = TcServiceUser.getTcEndpoint("myProvider",
-                        "myGroundStation",
-                        "theSpacecraft",
-                        4711,
-                        1);
+            "myGroundStation",
+            "theSpacecraft",
+            4711,
+            1);
+
+   final TcServiceEndpoint unAuthorizedTcEndpoint = TcServiceUser.getTcEndpoint("myProvider",
+            "unAuthorizedGroundStation",
+            "theSpacecraft",
+            4711,
+            1);
 
     @Test
     public void testUnsecureTcService() throws IOException, InterruptedException, TimeLimitExceededException {
 
         ProviderServer server = new ProviderServer(PROVIDER_PORT);
-        
         server.start();
-
         server.addAuthorizedTcEndpoint(authorizedTcEndpoint);
 
-        final TcServiceUser tcServiceUser = TcServiceUser.buildUnsecureTcServiceUser("localhost", PROVIDER_PORT, authorizedTcEndpoint);
-                
+        final TcServiceUser tcServiceUser = TcServiceUser.buildUnsecureTcServiceUser("localhost", PROVIDER_PORT,
+                authorizedTcEndpoint);
         tcServiceUser.openTelecommandEndpoint();
 
         TelecommandMessage tc = getTcRadiationRequestMessage(1);
-
         tcServiceUser.sendTelecommand(tc);
 
         tcServiceUser.waitForTcReports(2);
-
         tcServiceUser.stop();
 
         server.stop();
@@ -57,35 +59,63 @@ public class TcServiceTest {
 
     @Test
     public void testSecureTcService() throws IOException, InterruptedException, TimeLimitExceededException {
-        final ProviderServer server = new ProviderServer(PROVIDER_PORT, 
-                                                        resourceToFile("cert/cdds-ca.pem"),
-                                                        resourceToFile("cert/cdds-provider.pem"), 
-                                                        resourceToFile("cert/cdds-provider.key"));
+        final ProviderServer server = new ProviderServer(PROVIDER_PORT,
+                resourceToFile("cert/cdds-ca.pem"),
+                resourceToFile("cert/cdds-provider.pem"),
+                resourceToFile("cert/cdds-provider.key"));
 
         server.start();
-        
         server.addAuthorizedTcEndpoint(authorizedTcEndpoint);
 
         final TcServiceUser tcServiceUser = TcServiceUser.buildSecureTcService("localhost", PROVIDER_PORT,
-                                                                                authorizedTcEndpoint,
-                                                                                resourceToFile("cert/cdds-ca.pem"), 
-                                                                                resourceToFile("cert/cdds-user.pem"), 
-                                                                                resourceToFile("cert/cdds-user.key"));
+                authorizedTcEndpoint,
+                resourceToFile("cert/cdds-ca.pem"),
+                resourceToFile("cert/cdds-user.pem"),
+                resourceToFile("cert/cdds-user.key"));
 
-        // Do two runs using the TC endpoint                                                                        
-        for(int idx=1; idx<=2; idx++) {                                                                                
-            tcServiceUser.openTelecommandEndpoint();                                                                                    
-            
+        // Do two runs using the TC endpoint
+        for (int idx = 1; idx <= 2; idx++) {
+            tcServiceUser.openTelecommandEndpoint();
+
             TelecommandMessage tc = getTcRadiationRequestMessage(idx);
-
             tcServiceUser.sendTelecommand(tc);
-
+            
             tcServiceUser.waitForTcReports(2);
-
             tcServiceUser.stop();
         }
 
         server.stop();
+    }
+
+    /**
+     * Test if a not authorized endpoint fails as expected
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    @Test
+    public void testNotAuthorizedTcEndpoint() throws IOException, InterruptedException {
+       final ProviderServer server = new ProviderServer(PROVIDER_PORT,
+                resourceToFile("cert/cdds-ca.pem"),
+                resourceToFile("cert/cdds-provider.pem"),
+                resourceToFile("cert/cdds-provider.key"));
+                
+        server.start();
+        server.addAuthorizedTcEndpoint(authorizedTcEndpoint);
+
+        // Use an un authorized endpoint
+        final TcServiceUser tcServiceUser = TcServiceUser.buildSecureTcService("localhost", PROVIDER_PORT,
+                unAuthorizedTcEndpoint,
+                resourceToFile("cert/cdds-ca.pem"),
+                resourceToFile("cert/cdds-user.pem"),
+                resourceToFile("cert/cdds-user.key"));        
+        
+        tcServiceUser.openTelecommandEndpoint();
+        
+        Throwable error = tcServiceUser.getLastError(1000);
+        assert(error != null);
+        System.out.println("Unauthorized TC Service. Got expected error " + error);
+        
+        server.stop(); 
     }
 
     /**
@@ -115,8 +145,9 @@ public class TcServiceTest {
 
     /**
      * Converts a resource path (directory) to a File
+     * 
      * @param resourcePath
-     * @return  The File representing the resource.
+     * @return The File representing the resource.
      */
     public static File resourceToFile(String resourcePath) {
         URL url = Thread.currentThread()

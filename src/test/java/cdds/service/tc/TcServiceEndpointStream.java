@@ -16,6 +16,10 @@ import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
 import cdds.util.TimeUtil;
 import io.grpc.stub.StreamObserver;
 
+/**
+ * Simple TC endpoint stream. Receives TC from the user;
+ * each received TC is responded with an ACK and RADIATION message.
+ */
 public class TcServiceEndpointStream implements StreamObserver<TelecommandMessage> {
 
     private final StreamObserver<TelecommandReport> tcUserStream;

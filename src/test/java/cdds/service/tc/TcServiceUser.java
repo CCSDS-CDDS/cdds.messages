@@ -27,11 +27,16 @@ import io.grpc.netty.shaded.io.netty.handler.ssl.SslContext;
 import io.grpc.stub.MetadataUtils;
 import io.grpc.stub.StreamObserver;
 
+/**
+ * Simple TC Service User to open a TC endpoint
+ * and end TC messages. Allows to wait for responses.
+ */
 public class TcServiceUser {
 
     private final TcServiceProviderStub tcProviderStub;             // the provider stub to open TC streams
     private final StreamObserver<TelecommandReport> tcUserStream;   // the stream to observer TC responses
     private StreamObserver<TelecommandMessage> tcProviderStream;    // the stream to send TCs
+    private Throwable lastError;
 
     private final AtomicLong numReportsReceived = new AtomicLong(0);
     private static final Logger LOG = Logger.getLogger("CDDS TC User");
@@ -105,6 +110,10 @@ public class TcServiceUser {
             @Override
             public void onError(Throwable err) {
                 LOG.info("TC service user error called: " + err);
+                synchronized(this) {
+                    lastError = err;
+                    this.notifyAll();
+                }
             }
 
             @Override
@@ -124,6 +133,7 @@ public class TcServiceUser {
      */
     public void openTelecommandEndpoint() {
         tcProviderStream = tcProviderStub.openTelecommandEndpoint(tcUserStream);
+        numReportsReceived.set(0);        
         LOG.info("Opened telecommand stream called");
     }
 
@@ -200,7 +210,7 @@ public class TcServiceUser {
         synchronized(numReportsReceived) {
             while(this.numReportsReceived.get() < numReports) {
                 try {
-                    LOG.info("wait for " + numReports + "/" + numReportsReceived.get() + " reports");
+                    LOG.info("wait for reports. " + numReportsReceived.get() + "/" + numReports + " TC reports received");
                     this.numReportsReceived.wait(1000);
                     LOG.info("wait for TC reports returned. reports: " + numReportsReceived.get());
                 } catch (InterruptedException e) {
@@ -213,7 +223,23 @@ public class TcServiceUser {
             }    
         }
 
-        LOG.info("Return from wait for reports. " + numReports + "/" + numReportsReceived.get() + " TC reports received");
+        LOG.info("Return from wait for reports. " + numReportsReceived.get() + "/" + numReports + " TC reports received");
         return numReportsReceived.get();   
+    }
+
+    public Throwable getLastError(long timeout) {
+        synchronized(this) {
+            if(lastError == null) {
+                try {
+                    this.wait(timeout);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                
+                return lastError;
+            }
+        }
+
+        return null;
     }
 }

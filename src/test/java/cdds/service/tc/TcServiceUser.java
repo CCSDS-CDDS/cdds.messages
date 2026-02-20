@@ -12,6 +12,7 @@ import ccsds.cdds.Telecommand.TelecommandMessage;
 import ccsds.cdds.Telecommand.TelecommandReport;
 import ccsds.cdds.Types.FrameVersion;
 import ccsds.cdds.Types.GvcId;
+import ccsds.cdds.Types.GvcIdList;
 import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
 import ccsds.cdds.tc.TcServiceProviderGrpc;
 import ccsds.cdds.tc.TcServiceProviderGrpc.TcServiceProviderStub;
@@ -154,11 +155,13 @@ public class TcServiceUser {
                 .setServiceProvider(serviceProvider)
                 .setTerminal(terminal)
                 .setServiceUser(serviceUser)
-                .setGvcId(GvcId.newBuilder()
+                .setGvcId(GvcIdList.newBuilder().addGvcId(
+                    GvcId.newBuilder()
                         .setSpacecraftId(scId)
                         .setVersion(FrameVersion.USLP)
                         .setVirtualChannelId(tcVcId)
                         .build())
+                    .build())
                 .setServiceVersion(1)
                 .build();
     }

@@ -50,8 +50,8 @@ message TcServiceEndpoint {
      * or a TC VC when the TC User provides TC frames for radiation.
      */
     oneof type {
-        bool    cltu = 4;       // encoded CLTU
-        GvcId   gvcId = 5;      // TC Global VC ID: Spacecraft ID, Transfer Frame Version, VC ID
+        bool        cltu = 4;       // encoded CLTU
+        GvcIdList  gvcId = 5;      // TC Global VC ID: Spacecraft ID, Transfer Frame Version, VC ID
     }
 
     /**

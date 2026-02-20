@@ -8,6 +8,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 
 import ccsds.cdds.Types.FrameVersion;
 import ccsds.cdds.Types.GvcId;
+import ccsds.cdds.Types.GvcIdList;
 import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
 
 public class TcEndpointJsonTest {
@@ -18,10 +19,12 @@ public class TcEndpointJsonTest {
             .setServiceProvider("myProvider")
             .setTerminal("myGroundStation")
             .setServiceUser("mySpacecraft")
-            .setGvcId(GvcId.newBuilder()
-                .setSpacecraftId(4711)
-                .setVersion(FrameVersion.TM_TC_SDLP)
-                .setVirtualChannelId(0)
+            .setGvcId(GvcIdList.newBuilder().addGvcId(
+                GvcId.newBuilder()
+                    .setSpacecraftId(4711)
+                    .setVersion(FrameVersion.TM_TC_SDLP)
+                    .setVirtualChannelId(0)
+                    .build())
                 .build())
             .setServiceVersion(1)
             .build();   

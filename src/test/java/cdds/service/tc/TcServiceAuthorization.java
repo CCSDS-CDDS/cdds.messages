@@ -2,7 +2,9 @@ package cdds.service.tc;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.logging.Logger;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -26,7 +28,7 @@ public class TcServiceAuthorization implements ServerInterceptor {
     // used by the TC Provider to read the intercepted meta data TC_ENDPOINT from the call context
     public static final Context.Key<byte[]> TC_ENDPOINT_CTX_KEY = Context.key(TC_ENDPOINT);
 
-    private static final Logger LOG = Logger.getLogger("CDDS Provider");
+    private static final Logger LOG = LogManager.getLogger("cdds.tc.authorization.");
 
     private final Set<TcServiceEndpoint> authorizedTcEndpoints = new LinkedHashSet<>();
 
@@ -40,13 +42,13 @@ public class TcServiceAuthorization implements ServerInterceptor {
         byte[] endpointBytes = headers.get(TC_ENDPOINT_KEY);
         TcServiceEndpoint tcEndPoint = TcServiceEndpoint.newBuilder().build(); // empty default
         try {
-            tcEndPoint = TcEndpointJson.tcEndpointFromJson(endpointBytes);
+            tcEndPoint = TcEndpointUtil.tcEndpointFromJson(endpointBytes);
             
             // At this point the endpoint is known and can be used for authorization. 
             if (authorizedTcEndpoints.contains(tcEndPoint) == true) {
-                LOG.info("Authorize TC service meta data from \n'" + TC_ENDPOINT + "':\n" + new String(endpointBytes));
+                LOG.info("Authorize TC service meta data for \n'" + TC_ENDPOINT + "':\n" + new String(endpointBytes));
             } else {
-                LOG.warning("TC service meta data, invalid TC_ENDPOINT provided: " + tcEndPoint 
+                LOG.warn("TC service meta data, invalid TC_ENDPOINT provided: " + tcEndPoint 
                     + "\nauthorized endpoints: " + authorizedTcEndpoints);
                 
                 call.close(Status.PERMISSION_DENIED.withDescription("Invalid TC_ENDPOINT meta data provided"),

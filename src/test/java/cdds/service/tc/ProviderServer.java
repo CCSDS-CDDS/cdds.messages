@@ -3,7 +3,9 @@ package cdds.service.tc;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.net.ssl.SSLException;
 
@@ -24,7 +26,7 @@ import io.grpc.netty.shaded.io.netty.handler.ssl.SslContext;
 public class ProviderServer {
     private final int port;
     private final Server gRpcServer;
-    private static final Logger LOG = Logger.getLogger("CDDS Provider Server");
+    private static final Logger LOG = LogManager.getLogger("cdds.provider.server.");;
     private final TcServiceAuthorization tcAuthorization = new TcServiceAuthorization();
 
     /**
@@ -73,7 +75,7 @@ public class ProviderServer {
                 .addService(new TcServiceProvider())
                 .build();
         } catch(SSLException sslEx) {
-            LOG.warning("Exception creating secure server: " + sslEx);
+            LOG.warn("Exception creating secure server: " + sslEx);
             throw sslEx;
         }
     
@@ -106,7 +108,7 @@ public class ProviderServer {
             public void run() {
                 // Use stderr here since the logger may have been reset by its JVM shutdown
                 // hook.
-                LOG.warning("*** shutting down gRPC server since JVM is shutting down");
+                LOG.warn("*** shutting down gRPC server since JVM is shutting down");
                 try {
                     ProviderServer.this.stop();
                 } catch (InterruptedException e) {

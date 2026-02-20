@@ -1,6 +1,7 @@
 package cdds.service.tc;
 
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -16,21 +17,22 @@ import io.grpc.stub.StreamObserver;
  */
 public class TcServiceProvider extends TcServiceProviderImplBase {
 
-    private static final Logger LOG = Logger.getLogger("CDDS TC Provider");
+    private static final Logger LOG = LogManager.getLogger("cdds.tc.provider");
 
     @Override
     public StreamObserver<TelecommandMessage> openTelecommandEndpoint(StreamObserver<TelecommandReport> tcUserStream) {
         
         try {
             byte[] endpointBytes = TcServiceAuthorization.TC_ENDPOINT_CTX_KEY.get();            // get the tc-endpoint-bin meta data
-            TcServiceEndpoint tcEndPoint = TcEndpointJson.tcEndpointFromJson(endpointBytes);    // decode the endpoint from JSON
+            TcServiceEndpoint tcEndPoint = TcEndpointUtil.tcEndpointFromJson(endpointBytes);    // decode the endpoint from JSON
             LOG.info("Open TC stream for endpoint\n" + tcEndPoint);
+            // in this simple example the TC Provider has only one (static) endpoint.
+            return new TcServiceEndpointStream(tcUserStream, tcEndPoint);
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
         }
 
-        // in this simple example the TC Provider has only one (static) endpoint.
-        return new TcServiceEndpointStream(tcUserStream);
+        return null;
     }
 
 }

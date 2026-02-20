@@ -19,7 +19,7 @@ public class TcEndpointJsonTest {
             .setServiceProvider("myProvider")
             .setTerminal("myGroundStation")
             .setServiceUser("mySpacecraft")
-            .setGvcId(GvcIdList.newBuilder().addGvcId(
+            .setGvcIds(GvcIdList.newBuilder().addGvcId(
                 GvcId.newBuilder()
                     .setSpacecraftId(4711)
                     .setVersion(FrameVersion.TM_TC_SDLP)
@@ -29,11 +29,11 @@ public class TcEndpointJsonTest {
             .setServiceVersion(1)
             .build();   
             
-        String tcEndpointJson = TcEndpointJson.tcEndpointToJson(tcEndpointOne);
+        String tcEndpointJson = TcEndpointUtil.tcEndpointToJson(tcEndpointOne);
         
         System.out.println(tcEndpointJson);
 
-        final TcServiceEndpoint tcEndpointTwo = TcEndpointJson.tcEndpointFromJson(tcEndpointJson);
+        final TcServiceEndpoint tcEndpointTwo = TcEndpointUtil.tcEndpointFromJson(tcEndpointJson);
 
         assertTrue(tcEndpointOne.equals(tcEndpointTwo));
     }

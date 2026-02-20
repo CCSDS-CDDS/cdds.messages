@@ -22,20 +22,11 @@ echo "==> Creating CA key and certificate"
 
 openssl genrsa -out ${CA_NAME}.key 4096
 
-openssl genrsa -out ${CA_NAME}-not-ok.key 4096
-
 openssl req -x509 -new -nodes \
   -key ${CA_NAME}.key \
   -sha256 \
   -days ${CA_DAYS} \
   -out ${CA_NAME}.pem \
-  -subj "/C=EU/O=CDDS/OU=PKI/CN=CDDS-Root-CA"
-
-openssl req -x509 -new -nodes \
-  -key ${CA_NAME}-not-ok.key \
-  -sha256 \
-  -days ${CA_DAYS} \
-  -out ${CA_NAME}-not-ok.pem \
   -subj "/C=EU/O=CDDS/OU=PKI/CN=CDDS-Root-CA"
 
 # ----------------------------
@@ -133,17 +124,6 @@ openssl x509 -req \
   -CAkey ${CA_NAME}.key \
   -CAcreateserial \
   -out ${USER_NAME}.pem \
-  -days ${LEAF_DAYS} \
-  -sha256 \
-  -extensions req_ext \
-  -extfile ${USER_NAME}.cnf
-
-openssl x509 -req \
-  -in ${USER_NAME}.csr \
-  -CA ${CA_NAME}-not-ok.pem \
-  -CAkey ${CA_NAME}-not-ok.key \
-  -CAcreateserial \
-  -out ${USER_NAME}-not-ok.pem \
   -days ${LEAF_DAYS} \
   -sha256 \
   -extensions req_ext \

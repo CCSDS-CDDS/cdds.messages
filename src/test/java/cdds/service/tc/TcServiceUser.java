@@ -2,7 +2,9 @@ package cdds.service.tc;
 
 import java.io.File;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 import javax.naming.TimeLimitExceededException;
 import javax.net.ssl.SSLException;
@@ -40,7 +42,7 @@ public class TcServiceUser {
     private Throwable lastError;
 
     private final AtomicLong numReportsReceived = new AtomicLong(0);
-    private static final Logger LOG = Logger.getLogger("CDDS TC User");
+    private final Logger LOG;
 
     /**
      * Constructs and TC service user and connects to the provider, w/o security.
@@ -65,7 +67,7 @@ public class TcServiceUser {
      */
     public static TcServiceUser buildSecureTcService(String host, int port, TcServiceEndpoint tcEndpoint
         , File caCertificateFile, File userCertificateFile, File userKeyFile) throws SSLException, InvalidProtocolBufferException {
-        
+
         SslContext sslContext =
             GrpcSslContexts.forClient()
                 .keyManager(
@@ -79,7 +81,7 @@ public class TcServiceUser {
                 .sslContext(sslContext)
                 .build();
     
-        LOG.info("Secure TC Service User, host: " + host + " port: " + port + 
+        LogManager.getLogger().info("Secure TC Service User, host: " + host + " port: " + port + 
             " created using \n\tCA: " + caCertificateFile + "\n\tuser cert: " + userCertificateFile + "\n\tuser key: " + userKeyFile);
 
         return new TcServiceUser(channel, tcEndpoint);            
@@ -93,7 +95,8 @@ public class TcServiceUser {
      * @throws InvalidProtocolBufferException In case the endpoint cannot be encoded
      */
     private TcServiceUser(Channel channel, TcServiceEndpoint tcEndpoint) throws InvalidProtocolBufferException {
-        
+        LOG = LogManager.getLogger("cdds.tc.user [" + TcEndpointUtil.getEndpointType(tcEndpoint) + "]");
+
         // add an interceptor to the client stream to attach the metadata required for the TC service:
         // - tc-endpoint-bin=<TcEndpoint>
         ClientInterceptor interceptor = MetadataUtils.newAttachHeadersInterceptor(getTcEndpointMetaData(tcEndpoint));
@@ -135,7 +138,7 @@ public class TcServiceUser {
     public void openTelecommandEndpoint() {
         tcProviderStream = tcProviderStub.openTelecommandEndpoint(tcUserStream);
         numReportsReceived.set(0);        
-        LOG.info("Opened telecommand stream called");
+        LOG.info("Opened telecommand endpoint called");
     }
 
     /**
@@ -155,7 +158,7 @@ public class TcServiceUser {
                 .setServiceProvider(serviceProvider)
                 .setTerminal(terminal)
                 .setServiceUser(serviceUser)
-                .setGvcId(GvcIdList.newBuilder().addGvcId(
+                .setGvcIds(GvcIdList.newBuilder().addGvcId(
                     GvcId.newBuilder()
                         .setSpacecraftId(scId)
                         .setVersion(FrameVersion.USLP)
@@ -179,7 +182,7 @@ public class TcServiceUser {
     private Metadata getTcEndpointMetaData(TcServiceEndpoint tcEndpoint) throws InvalidProtocolBufferException {
         Metadata spacecraftHeader = new Metadata();
 
-        spacecraftHeader.put(TcServiceAuthorization.TC_ENDPOINT_KEY, TcEndpointJson.tcEndpointToJsonUtf8(tcEndpoint));
+        spacecraftHeader.put(TcServiceAuthorization.TC_ENDPOINT_KEY, TcEndpointUtil.tcEndpointToJsonUtf8(tcEndpoint));
 
         return spacecraftHeader;
     }

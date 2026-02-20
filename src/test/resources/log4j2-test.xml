@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] [thread-%t] %c - %m%n"/>
+        </Console>
+    </Appenders>
+
+    <Loggers>
+        <!-- Root logger -->
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+        </Root>
+
+        <!-- Your specific logger -->
+        <Logger name="cdds.tc.user" level="info" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+
+        <!-- Set the two loggers below to debug to see failed SSL / TLS handshake -->
+        <Logger name="io.grpc.netty.shaded.io.netty.handler.ssl.ReferenceCountedOpenSslEngine" level="info" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+
+        <Logger name="io.grpc.netty.shaded.io.netty.handler.ssl.ReferenceCountedOpenSslContext" level="info" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+
+
+    </Loggers>
+</Configuration>

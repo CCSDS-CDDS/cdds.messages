@@ -1,6 +1,7 @@
 package cdds.service.tc;
 
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -23,24 +24,25 @@ import io.grpc.stub.StreamObserver;
 public class TcServiceEndpointStream implements StreamObserver<TelecommandMessage> {
 
     private final StreamObserver<TelecommandReport> tcUserStream;
-    private static final Logger LOG = Logger.getLogger("CDDS TC Provider Endpoint Stream");
+    private final Logger LOG;
     
-    // get from the gRPC call context the meta data SPACECRAFT as provided by the user
-    private TcServiceEndpoint tcEndPoint;
+    private final TcServiceEndpoint tcEndPoint;
 
-    public TcServiceEndpointStream(StreamObserver<TelecommandReport> tcUserStream) {
+    public TcServiceEndpointStream(StreamObserver<TelecommandReport> tcUserStream, TcServiceEndpoint tcEndPoint) {
         this.tcUserStream = tcUserStream;
+        this.tcEndPoint = tcEndPoint;
+        LOG = LogManager.getLogger("cdds.tc.provider.endpoint [" + TcEndpointUtil.getEndpointType(tcEndPoint) + "]");
     }
 
     @Override
     public void onCompleted() {
-        LOG.info("TC services stopped on use request");
+        LOG.info("stopped on user request");
         tcUserStream.onCompleted();
     }
 
     @Override
     public void onError(Throwable t) {
-        LOG.warning("Error in Tc Provider: " + t);
+        LOG.warn("Error: " + t);
     }
 
     @Override
@@ -48,14 +50,13 @@ public class TcServiceEndpointStream implements StreamObserver<TelecommandMessag
         
         try {
             byte[] endpointBytes = TcServiceAuthorization.TC_ENDPOINT_CTX_KEY.get();    // get the tc-endpoint-bin meta data
-            tcEndPoint = TcEndpointJson.tcEndpointFromJson(endpointBytes);              // decode the endpoint from JSON
+             TcServiceEndpoint tcEndPointRuntime = TcEndpointUtil.tcEndpointFromJson(endpointBytes);              // decode the endpoint from JSON
+             LOG.info("Received TC message for '" + TcEndpointUtil.getEndpointType(tcEndPointRuntime) + "'\n" + tc);
         } catch (InvalidProtocolBufferException e) {
-            tcEndPoint = TcServiceEndpoint.newBuilder().build(); // empty
             e.printStackTrace();
         }
 
-        LOG.info("Received TC message for '" + tcEndPoint.getServiceUser() + "'\n" + tc);
-
+        
         if(tc.hasRadiationRequest()) {
 
             // send an ACK

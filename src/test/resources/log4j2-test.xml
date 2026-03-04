@@ -1,9 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
     <Appenders>
+        
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] [thread-%t] %c - %m%n"/>
+            <PatternLayout pattern="%highlight{%-5level}%d{yyyy-MM-dd HH:mm:ss.SSS} [thread-%t] %c - %m%n"/>
         </Console>
+        
+        <Console name="ConsoleBrightBlack" target="SYSTEM_OUT">
+            <PatternLayout pattern="%highlight{%-5level}%style{%d{yyyy-MM-dd HH:mm:ss.SSS} [thread-%t] %c - %m%n}{bright_black}"/>
+        </Console>
+
+        <Console name="ConsoleWhite" target="SYSTEM_OUT">
+            <PatternLayout pattern="%highlight{%-5level}%style{%d{yyyy-MM-dd HH:mm:ss.SSS} [thread-%t] %c - %m%n}{white}"/>
+        </Console>
+
+        <Console name="ConsoleYellow" target="SYSTEM_OUT">
+            <PatternLayout pattern="%highlight{%-5level}%style{%d{yyyy-MM-dd HH:mm:ss.SSS} [thread-%t] %c - %m%n}{yellow}"/>
+        </Console>
+
+        <Console name="ConsoleMagenta" target="SYSTEM_OUT">
+            <PatternLayout pattern="%highlight{%-5level}%style{%d{yyyy-MM-dd HH:mm:ss.SSS} [thread-%t] %c - %m%n}{magenta}"/>
+        </Console>
+
     </Appenders>
 
     <Loggers>
@@ -12,9 +30,20 @@
             <AppenderRef ref="Console"/>
         </Root>
 
-        <!-- Your specific logger -->
+        <Logger name="cdds.tc.test" level="info" additivity="false">
+            <AppenderRef ref="ConsoleMagenta"/>
+        </Logger>
+
+        <Logger name="cdds.tc.provider" level="info" additivity="false">
+            <AppenderRef ref="ConsoleWhite"/>
+        </Logger>
+
+        <Logger name="cdds.tc.authorization" level="info" additivity="false">
+            <AppenderRef ref="ConsoleYellow"/>
+        </Logger>
+
         <Logger name="cdds.tc.user" level="info" additivity="false">
-            <AppenderRef ref="Console"/>
+            <AppenderRef ref="ConsoleBrightBlack"/>
         </Logger>
 
         <!-- Set the two loggers below to debug to see failed SSL / TLS handshake -->

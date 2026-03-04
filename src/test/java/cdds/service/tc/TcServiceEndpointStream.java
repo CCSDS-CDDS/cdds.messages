@@ -31,7 +31,7 @@ public class TcServiceEndpointStream implements StreamObserver<TelecommandMessag
     public TcServiceEndpointStream(StreamObserver<TelecommandReport> tcUserStream, TcServiceEndpoint tcEndPoint) {
         this.tcUserStream = tcUserStream;
         this.tcEndPoint = tcEndPoint;
-        LOG = LogManager.getLogger("cdds.tc.provider.endpoint [" + TcEndpointUtil.getEndpointType(tcEndPoint) + "]");
+        LOG = LogManager.getLogger("cdds.tc.provider.endpoint." + TcEndpointUtil.getEndpointType(tcEndPoint) + "");
     }
 
     @Override

@@ -7,7 +7,12 @@ import java.net.URL;
 
 import javax.naming.TimeLimitExceededException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 
 import com.google.protobuf.ByteString;
 
@@ -43,6 +48,18 @@ public class TcServiceTest {
             "theSpacecraft",
             4711,
             1);
+
+    private static final Logger LOG = LogManager.getLogger("cdds.tc.test");    
+
+    @BeforeEach
+        void before(TestInfo info) {
+        LOG.info("START " + info.getDisplayName());
+    }            
+
+    @AfterEach
+    void after(TestInfo info) {
+            LOG.info("END " + info.getDisplayName());
+    }
 
     /**
      * Test one TC user and TC provider:

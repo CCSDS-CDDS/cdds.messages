@@ -95,7 +95,7 @@ public class TcServiceUser {
      * @throws InvalidProtocolBufferException In case the endpoint cannot be encoded
      */
     private TcServiceUser(Channel channel, TcServiceEndpoint tcEndpoint) throws InvalidProtocolBufferException {
-        LOG = LogManager.getLogger("cdds.tc.user [" + TcEndpointUtil.getEndpointType(tcEndpoint) + "]");
+        LOG = LogManager.getLogger("cdds.tc.user." + TcEndpointUtil.getEndpointType(tcEndpoint) + "");
 
         // add an interceptor to the client stream to attach the metadata required for the TC service:
         // - tc-endpoint-bin=<TcEndpoint>

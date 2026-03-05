@@ -20,6 +20,7 @@ import ccsds.cdds.Telecommand.ReportRequest;
 import ccsds.cdds.Telecommand.TelecommandMessage;
 import ccsds.cdds.Telecommand.TelecommandRadiationRequest;
 import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
+import io.grpc.BindableService;
 
 /**
  * Test the communication among a TC service user and a TC service provider
@@ -73,7 +74,7 @@ public class TcServiceTest {
     @Test
     public void testUnsecureTcService() throws IOException, InterruptedException, TimeLimitExceededException {
 
-        ProviderServer server = new ProviderServer(PROVIDER_PORT);
+        ProviderServer server = new ProviderServer(PROVIDER_PORT, new BindableService[]{new TcServiceProvider()});
         server.start();
         server.addAuthorizedTcEndpoint(authorizedTcEndpoint1);
 
@@ -103,7 +104,7 @@ public class TcServiceTest {
 
     @Test
     public void testSecureTcServiceTwoUser() throws IOException, InterruptedException, TimeLimitExceededException {
-        final ProviderServer server = new ProviderServer(PROVIDER_PORT,
+        final ProviderServer server = new ProviderServer(PROVIDER_PORT, new BindableService[]{new TcServiceProvider()},
                 resourceToFile("cert/cdds-ca.pem"),
                 resourceToFile("cert/cdds-provider.pem"),
                 resourceToFile("cert/cdds-provider.key"));
@@ -153,6 +154,7 @@ public class TcServiceTest {
     @Test
     public void testNotAuthorizedTcEndpoint() throws IOException, InterruptedException {
        final ProviderServer server = new ProviderServer(PROVIDER_PORT,
+                new BindableService[]{new TcServiceProvider()},
                 resourceToFile("cert/cdds-ca.pem"),
                 resourceToFile("cert/cdds-provider.pem"),
                 resourceToFile("cert/cdds-provider.key"));
@@ -185,6 +187,7 @@ public class TcServiceTest {
     @Test
     public void testNotAuthenticatedTcEndpoint() throws IOException, InterruptedException {
        final ProviderServer server = new ProviderServer(PROVIDER_PORT,
+                new BindableService[]{new TcServiceProvider()},
                 resourceToFile("cert/cdds-ca.pem"),
                 resourceToFile("cert/cdds-provider.pem"),
                 resourceToFile("cert/cdds-provider.key"));

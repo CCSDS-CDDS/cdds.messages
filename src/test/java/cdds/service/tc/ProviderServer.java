@@ -2,6 +2,7 @@ package cdds.service.tc;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
@@ -10,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import javax.net.ssl.SSLException;
 
 import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
+import io.grpc.BindableService;
 import io.grpc.Grpc;
 import io.grpc.InsecureServerCredentials;
 import io.grpc.Server;
@@ -26,15 +28,15 @@ import io.grpc.netty.shaded.io.netty.handler.ssl.SslContext;
 public class ProviderServer {
     private final int port;
     private final Server gRpcServer;
-    private static final Logger LOG = LogManager.getLogger("cdds.provider.server.");;
+    private static final Logger LOG = LogManager.getLogger("cdds.provider.server.");
     private final TcServiceAuthorization tcAuthorization = new TcServiceAuthorization();
 
     /**
      * Creates a TC server running one TC service on the given port.
      * @param port
      */
-    public ProviderServer(int port) {
-        this(Grpc.newServerBuilderForPort(port, InsecureServerCredentials.create()), port);
+    public ProviderServer(int port, BindableService[] services) {
+        this(Grpc.newServerBuilderForPort(port, InsecureServerCredentials.create()), port, services);
     }
 
     /**
@@ -45,7 +47,7 @@ public class ProviderServer {
      * @param providerKeyFile
      * @throws IOException 
      */
-    public ProviderServer(int port, File caCertificateFile, File providerCertificateFile, File providerKeyFile)
+    public ProviderServer(int port, BindableService[] services, File caCertificateFile, File providerCertificateFile, File providerKeyFile)
             throws IOException {
         this.port = port;
         
@@ -69,11 +71,14 @@ public class ProviderServer {
                     .clientAuth(ClientAuth.REQUIRE) // Enforce mTLS
                     .build();
             
-        gRpcServer = NettyServerBuilder.forPort(port)
+        NettyServerBuilder serverBuilder = NettyServerBuilder.forPort(port)
                 .sslContext(sslContext)
-                .intercept(tcAuthorization)           /* call before adding the service to intercept */
-                .addService(new TcServiceProvider())
-                .build();
+                .intercept(tcAuthorization);           /* call before adding the service to intercept */
+
+        Arrays.stream(services).forEach(service -> {serverBuilder.addService(service);});
+
+        gRpcServer = serverBuilder.build();        
+                
         } catch(SSLException sslEx) {
             LOG.warn("Exception creating secure server: " + sslEx);
             throw sslEx;
@@ -89,12 +94,16 @@ public class ProviderServer {
      * @param serverBuilder The server builder to use
      * @param port          The port to use
      */
-    public ProviderServer(ServerBuilder<?> serverBuilder, int port) {
-        this.port = port;        
-        gRpcServer = serverBuilder
-            .intercept(tcAuthorization)
-            .addService(new TcServiceProvider())
-            .build();
+    public ProviderServer(ServerBuilder<?> serverBuilder, int port, BindableService[] services) {
+        this.port = port;
+        
+        
+        serverBuilder
+            .intercept(tcAuthorization);
+        
+        Arrays.stream(services).forEach(service -> {serverBuilder.addService(service);});
+        
+        gRpcServer = serverBuilder.build();
     }
 
     /**
@@ -138,7 +147,7 @@ public class ProviderServer {
     }
 
     /**
-     * Removes an allowd TC endpoint
+     * Removes an allowed TC endpoint
      * @param tcEndpoint
      */
     public void removeAuthorizedTcEndpoint(TcServiceEndpoint tcEndpoint) {

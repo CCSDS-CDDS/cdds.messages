@@ -22,6 +22,8 @@ public class TcServiceAuthorization implements ServerInterceptor {
 
     public static final String TC_ENDPOINT = "tc-endpoint-bin";
 
+    public static final String HANDLED_TC_METHOD = "openTelecommandEndpoint"; 
+
     // used by the TC User to put meta data TC_ENDPOINT
     public static final Metadata.Key<byte[]> TC_ENDPOINT_KEY = Metadata.Key.of(TC_ENDPOINT, Metadata.BINARY_BYTE_MARSHALLER);
 
@@ -39,29 +41,46 @@ public class TcServiceAuthorization implements ServerInterceptor {
     public <ReqT, RespT> Listener<ReqT> interceptCall(ServerCall<ReqT, RespT> call, Metadata headers,
             ServerCallHandler<ReqT, RespT> next) {
 
-        byte[] endpointBytes = headers.get(TC_ENDPOINT_KEY);
-        TcServiceEndpoint tcEndPoint = TcServiceEndpoint.newBuilder().build(); // empty default
-        try {
-            tcEndPoint = TcEndpointUtil.tcEndpointFromJson(endpointBytes);
-            
-            // At this point the endpoint is known and can be used for authorization. 
-            if (authorizedTcEndpoints.contains(tcEndPoint) == true) {
-                LOG.info("Authorize TC service meta data for \n'" + TC_ENDPOINT + "':\n" + new String(endpointBytes));
-            } else {
-                LOG.warn("TC service meta data, invalid TC_ENDPOINT provided: " + tcEndPoint 
-                    + "\nauthorized endpoints: " + authorizedTcEndpoints);
+        if(isHandlingCall(call.getMethodDescriptor().getFullMethodName())) {
+            byte[] endpointBytes = headers.get(TC_ENDPOINT_KEY);
+            TcServiceEndpoint tcEndPoint = TcServiceEndpoint.newBuilder().build(); // empty default
+            try {
+                tcEndPoint = TcEndpointUtil.tcEndpointFromJson(endpointBytes);
                 
-                call.close(Status.PERMISSION_DENIED.withDescription("Invalid TC_ENDPOINT meta data provided"),
-                        new Metadata());
+                // At this point the endpoint is known and can be used for authorization. 
+                if (authorizedTcEndpoints.contains(tcEndPoint) == true) {
+                    LOG.info("Authorize TC service meta data for \n'" + TC_ENDPOINT + "':\n" + new String(endpointBytes));
+                } else {
+                    LOG.warn("TC service meta data, invalid TC_ENDPOINT provided:\n" + tcEndPoint 
+                        + "\nauthorized endpoints:\n" + authorizedTcEndpoints);
+                    
+                    call.close(Status.PERMISSION_DENIED.withDescription("Invalid TC_ENDPOINT meta data provided"),
+                            new Metadata());
+                }
+
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
             }
 
-        } catch (InvalidProtocolBufferException e) {
-            e.printStackTrace();
+            Context ctx = Context.current().withValue(TC_ENDPOINT_CTX_KEY, endpointBytes);
+
+            return Contexts.interceptCall(ctx, call, headers, next);        
+        }
+        
+        return next.startCall(call, headers);
+    }
+
+    /**
+     * Check if this authorization is handling the method
+     * @param call  The call object
+     * @return      true if this TC service authorization is applicable to the call
+     */
+    private boolean isHandlingCall(String methodName) {
+        if(methodName.contains(HANDLED_TC_METHOD)) {
+            return true;
         }
 
-        Context ctx = Context.current().withValue(TC_ENDPOINT_CTX_KEY, endpointBytes);
-
-        return Contexts.interceptCall(ctx, call, headers, next);        
+        return false;
     }
 
     /**

@@ -9,6 +9,7 @@ import ccsds.cdds.Telecommand.TelecommandMessage;
 import ccsds.cdds.Telecommand.TelecommandReport;
 import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
 import ccsds.cdds.tc.TcServiceProviderGrpc.TcServiceProviderImplBase;
+import cdds.service.common.ProtoJsonUtil;
 import io.grpc.stub.StreamObserver;
 
 /**
@@ -24,10 +25,10 @@ public class TcServiceProvider extends TcServiceProviderImplBase {
         
         try {
             byte[] endpointBytes = TcServiceAuthorization.TC_ENDPOINT_CTX_KEY.get();            // get the tc-endpoint-bin meta data
-            TcServiceEndpoint tcEndPoint = TcEndpointUtil.tcEndpointFromJson(endpointBytes);    // decode the endpoint from JSON
-            LOG.info("Open TC stream for endpoint\n" + tcEndPoint);
+            TcServiceEndpoint tcEndpoint = ProtoJsonUtil.fromJson(endpointBytes, TcServiceEndpoint.newBuilder());    // decode the endpoint from JSON
+            LOG.info("Open TC stream for endpoint\n" + tcEndpoint);
             // in this simple example the TC Provider has only one (static) endpoint.
-            return new TcServiceEndpointStream(tcUserStream, tcEndPoint);
+            return new TcServiceEndpointStream(tcUserStream, tcEndpoint);
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
         }

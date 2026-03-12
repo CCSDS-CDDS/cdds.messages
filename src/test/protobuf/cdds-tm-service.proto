@@ -55,7 +55,7 @@ message TmServiceEndpoint {
     oneof qualityOrGvcId {
         FrameQuality frameQuality = 4;
 
-        GvcIdList gvcId = 5;
+        GvcIdList gvcIds = 5;
     }
 
     /**

@@ -2,6 +2,8 @@ package cdds.service.tc;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
@@ -11,6 +13,8 @@ import org.apache.logging.log4j.Logger;
 import javax.net.ssl.SSLException;
 
 import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
+import ccsds.cdds.tm.CddsTmService.TmServiceEndpoint;
+import cdds.service.tm.TmServiceAuthorization;
 import io.grpc.BindableService;
 import io.grpc.Grpc;
 import io.grpc.InsecureServerCredentials;
@@ -30,6 +34,7 @@ public class ProviderServer {
     private final Server gRpcServer;
     private static final Logger LOG = LogManager.getLogger("cdds.provider.server.");
     private final TcServiceAuthorization tcAuthorization = new TcServiceAuthorization();
+    private final TmServiceAuthorization tmAuthorization = new TmServiceAuthorization();
 
     /**
      * Creates a TC server running one TC service on the given port.
@@ -73,7 +78,8 @@ public class ProviderServer {
             
         NettyServerBuilder serverBuilder = NettyServerBuilder.forPort(port)
                 .sslContext(sslContext)
-                .intercept(tcAuthorization);           /* call before adding the service to intercept */
+                .intercept(tcAuthorization)
+                .intercept(tmAuthorization);           /* call intercept before adding the service to intercept */
 
         Arrays.stream(services).forEach(service -> {serverBuilder.addService(service);});
 
@@ -99,7 +105,8 @@ public class ProviderServer {
         
         
         serverBuilder
-            .intercept(tcAuthorization);
+            .intercept(tcAuthorization)
+            .intercept(tmAuthorization);
         
         Arrays.stream(services).forEach(service -> {serverBuilder.addService(service);});
         
@@ -153,5 +160,44 @@ public class ProviderServer {
     public void removeAuthorizedTcEndpoint(TcServiceEndpoint tcEndpoint) {
        tcAuthorization.removeAuthorizedTcEndpoint(tcEndpoint);
     }
+
+    /**
+     * Add an allowed TM endpoint
+     * @param tmEndpoint
+     */
+    public void addAuthorizedTmEndpoint(TmServiceEndpoint tmEndpoint) {
+        tmAuthorization.addAuthorizedTmEndpoint(tmEndpoint);
+    }
+
+    /**
+     * Removes an allowed TM endpoint
+     * @param tmEndpoint
+     */
+    public void removeAuthorizedTmEndpoint(TmServiceEndpoint tmEndpoint) {
+       tmAuthorization.removeAuthorizedTcEndpoint(tmEndpoint);
+    }
+
+    /**
+     * Converts a resource path (directory) to a File
+     * 
+     * @param resourcePath
+     * @return The File representing the resource.
+     */
+    public static File resourceToFile(String resourcePath) {
+        URL url = Thread.currentThread()
+                .getContextClassLoader()
+                .getResource(resourcePath);
+
+        if (url == null) {
+            throw new IllegalArgumentException(
+                    "Resource not found: " + resourcePath);
+        }
+
+        try {
+            return new File(url.toURI());
+        } catch (URISyntaxException e) {
+            throw new RuntimeException("Invalid URI for resource: " + resourcePath, e);
+        }
+    }    
 
 }

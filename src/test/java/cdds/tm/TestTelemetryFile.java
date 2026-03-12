@@ -133,8 +133,8 @@ public class TestTelemetryFile {
     /**
      * Returns test frame data 
      * @return  test data of length 
-     */
-    private byte[] getFrameData(int length) {
+    */
+    public static byte[] getFrameData(int length) {
        final byte[] data = new byte[length];
 
         String phrase = "the quick brown fox jumps over the lazy dog ";

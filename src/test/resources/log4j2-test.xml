@@ -42,7 +42,15 @@
             <AppenderRef ref="ConsoleYellow"/>
         </Logger>
 
+        <Logger name="cdds.tm.authorization" level="info" additivity="false">
+            <AppenderRef ref="ConsoleYellow"/>
+        </Logger>
+
         <Logger name="cdds.tc.user" level="info" additivity="false">
+            <AppenderRef ref="ConsoleBrightBlack"/>
+        </Logger>
+
+        <Logger name="cdds.tm.user" level="info" additivity="false">
             <AppenderRef ref="ConsoleBrightBlack"/>
         </Logger>
 

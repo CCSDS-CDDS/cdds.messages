@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
+import cdds.service.common.ProtoJsonUtil;
 import io.grpc.Context;
 import io.grpc.Contexts;
 import io.grpc.Metadata;
@@ -43,9 +44,17 @@ public class TcServiceAuthorization implements ServerInterceptor {
 
         if(isHandlingCall(call.getMethodDescriptor().getFullMethodName())) {
             byte[] endpointBytes = headers.get(TC_ENDPOINT_KEY);
+
+            if(endpointBytes == null) {
+                LOG.warn("Failed to read endpoint metadata " + TC_ENDPOINT_KEY);
+                call.close(Status.PERMISSION_DENIED.withDescription("No TC_ENDPOINT meta data provided"),
+                        new Metadata());
+                return null;
+            }
+
             TcServiceEndpoint tcEndPoint = TcServiceEndpoint.newBuilder().build(); // empty default
             try {
-                tcEndPoint = TcEndpointUtil.tcEndpointFromJson(endpointBytes);
+                tcEndPoint = ProtoJsonUtil.fromJson(endpointBytes, TcServiceEndpoint.newBuilder());
                 
                 // At this point the endpoint is known and can be used for authorization. 
                 if (authorizedTcEndpoints.contains(tcEndPoint) == true) {

@@ -10,6 +10,7 @@ import ccsds.cdds.Types.FrameVersion;
 import ccsds.cdds.Types.GvcId;
 import ccsds.cdds.Types.GvcIdList;
 import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
+import cdds.service.common.ProtoJsonUtil;
 
 public class TcEndpointJsonTest {
 
@@ -29,11 +30,11 @@ public class TcEndpointJsonTest {
             .setServiceVersion(1)
             .build();   
             
-        String tcEndpointJson = TcEndpointUtil.tcEndpointToJson(tcEndpointOne);
+        String tcEndpointJson = ProtoJsonUtil.toJson(tcEndpointOne);
         
         System.out.println(tcEndpointJson);
 
-        final TcServiceEndpoint tcEndpointTwo = TcEndpointUtil.tcEndpointFromJson(tcEndpointJson);
+        final TcServiceEndpoint tcEndpointTwo = ProtoJsonUtil.fromJson(tcEndpointJson, TcServiceEndpoint.newBuilder());
 
         assertTrue(tcEndpointOne.equals(tcEndpointTwo));
     }

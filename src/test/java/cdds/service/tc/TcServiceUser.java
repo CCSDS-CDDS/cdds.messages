@@ -1,6 +1,7 @@
 package cdds.service.tc;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,6 +19,7 @@ import ccsds.cdds.Types.GvcIdList;
 import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
 import ccsds.cdds.tc.TcServiceProviderGrpc;
 import ccsds.cdds.tc.TcServiceProviderGrpc.TcServiceProviderStub;
+import cdds.service.common.ProtoJsonUtil;
 import io.grpc.Channel;
 import io.grpc.ClientInterceptor;
 import io.grpc.ClientInterceptors;
@@ -39,6 +41,7 @@ public class TcServiceUser {
     private final TcServiceProviderStub tcProviderStub;             // the provider stub to open TC streams
     private final StreamObserver<TelecommandReport> tcUserStream;   // the stream to observer TC responses
     private StreamObserver<TelecommandMessage> tcProviderStream;    // the stream to send TCs
+    private final ManagedChannel channel;
     private Throwable lastError;
 
     private final AtomicLong numReportsReceived = new AtomicLong(0);
@@ -94,8 +97,10 @@ public class TcServiceUser {
      * @param tcEndpoint    The TC endpoint for which the stream is created
      * @throws InvalidProtocolBufferException In case the endpoint cannot be encoded
      */
-    private TcServiceUser(Channel channel, TcServiceEndpoint tcEndpoint) throws InvalidProtocolBufferException {
+    private TcServiceUser(ManagedChannel channel, TcServiceEndpoint tcEndpoint) throws InvalidProtocolBufferException {
         LOG = LogManager.getLogger("cdds.tc.user." + TcEndpointUtil.getEndpointType(tcEndpoint) + "");
+
+        this.channel = channel; // needed for later shutdown
 
         // add an interceptor to the client stream to attach the metadata required for the TC service:
         // - tc-endpoint-bin=<TcEndpoint>
@@ -171,20 +176,16 @@ public class TcServiceUser {
 
     /**
      * Creates a meta data header TC endpoint encoded in JSON
-     * @param serviceProvider   The service provider
-     * @param terminal          The terminal supporting the endpoint
-     * @param serviceUser       The service user using the service endpoint
-     * @param scId              The spacecraft ID 
-     * @param tcVcId            The TC VC ID
+     * @param tcEndpoint The TC endpoint
      * @return The meta data with the encoded TC endpoint
      * @throws InvalidProtocolBufferException 
      */
     private Metadata getTcEndpointMetaData(TcServiceEndpoint tcEndpoint) throws InvalidProtocolBufferException {
-        Metadata spacecraftHeader = new Metadata();
+        Metadata tcEndpointMetaData = new Metadata();
 
-        spacecraftHeader.put(TcServiceAuthorization.TC_ENDPOINT_KEY, TcEndpointUtil.tcEndpointToJsonUtf8(tcEndpoint));
+        tcEndpointMetaData.put(TcServiceAuthorization.TC_ENDPOINT_KEY, ProtoJsonUtil.toJsonUtf8(tcEndpoint));
 
-        return spacecraftHeader;
+        return tcEndpointMetaData;
     }
 
     /**
@@ -197,10 +198,20 @@ public class TcServiceUser {
     }
 
     /**
-     * Stop using this service instance
+     * Stop using this service endpoint.
+     * The cannel remains connected
      */
-    public void stop() {
+    public void stop(){
         tcProviderStream.onCompleted();
+    }
+
+    /**
+     * Shuts down the communcation channel
+     * @throws InterruptedException
+     */
+    public void shutdown() throws InterruptedException {
+        channel.shutdown();
+        channel.awaitTermination(5, TimeUnit.SECONDS);
     }
 
     /**

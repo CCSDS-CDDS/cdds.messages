@@ -1,10 +1,6 @@
 package cdds.service.tc;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-
 import javax.naming.TimeLimitExceededException;
 
 import org.apache.logging.log4j.LogManager;
@@ -24,8 +20,6 @@ import io.grpc.BindableService;
 
 /**
  * Test the communication among a TC service user and a TC service provider
- * Test case: Send one TC radiation request, receive an ACK and RADIATION
- * report.
  */
 public class TcServiceTest {
 
@@ -105,9 +99,9 @@ public class TcServiceTest {
     @Test
     public void testSecureTcServiceTwoUser() throws IOException, InterruptedException, TimeLimitExceededException {
         final ProviderServer server = new ProviderServer(PROVIDER_PORT, new BindableService[]{new TcServiceProvider()},
-                resourceToFile("cert/cdds-ca.pem"),
-                resourceToFile("cert/cdds-provider.pem"),
-                resourceToFile("cert/cdds-provider.key"));
+                ProviderServer.resourceToFile("cert/cdds-ca.pem"),
+                ProviderServer.resourceToFile("cert/cdds-provider.pem"),
+                ProviderServer.resourceToFile("cert/cdds-provider.key"));
 
         server.start();
         server.addAuthorizedTcEndpoint(authorizedTcEndpoint1);
@@ -115,15 +109,15 @@ public class TcServiceTest {
 
         final TcServiceUser tcServiceUser1 = TcServiceUser.buildSecureTcService("localhost", PROVIDER_PORT,
                 authorizedTcEndpoint1,
-                resourceToFile("cert/cdds-ca.pem"),
-                resourceToFile("cert/cdds-user.pem"),
-                resourceToFile("cert/cdds-user.key"));
+                ProviderServer.resourceToFile("cert/cdds-ca.pem"),
+                ProviderServer.resourceToFile("cert/cdds-user.pem"),
+                ProviderServer.resourceToFile("cert/cdds-user.key"));
 
         final TcServiceUser tcServiceUser2 = TcServiceUser.buildSecureTcService("localhost", PROVIDER_PORT,
                 authorizedTcEndpoint2,
-                resourceToFile("cert/cdds-ca.pem"),
-                resourceToFile("cert/cdds-user.pem"),
-                resourceToFile("cert/cdds-user.key"));
+                ProviderServer.resourceToFile("cert/cdds-ca.pem"),
+                ProviderServer.resourceToFile("cert/cdds-user.pem"),
+                ProviderServer.resourceToFile("cert/cdds-user.key"));
 
         // Do two runs using the TC endpoints
         for (int idx = 1; idx <= 2; idx++) {
@@ -155,9 +149,9 @@ public class TcServiceTest {
     public void testNotAuthorizedTcEndpoint() throws IOException, InterruptedException {
        final ProviderServer server = new ProviderServer(PROVIDER_PORT,
                 new BindableService[]{new TcServiceProvider()},
-                resourceToFile("cert/cdds-ca.pem"),
-                resourceToFile("cert/cdds-provider.pem"),
-                resourceToFile("cert/cdds-provider.key"));
+                ProviderServer.resourceToFile("cert/cdds-ca.pem"),
+                ProviderServer.resourceToFile("cert/cdds-provider.pem"),
+                ProviderServer.resourceToFile("cert/cdds-provider.key"));
                 
         server.start();
         server.addAuthorizedTcEndpoint(authorizedTcEndpoint1);
@@ -165,9 +159,9 @@ public class TcServiceTest {
         // Use an un authorized endpoint
         final TcServiceUser tcServiceUser = TcServiceUser.buildSecureTcService("localhost", PROVIDER_PORT,
                 unAuthorizedTcEndpoint,
-                resourceToFile("cert/cdds-ca.pem"),
-                resourceToFile("cert/cdds-user.pem"),
-                resourceToFile("cert/cdds-user.key"));        
+                ProviderServer.resourceToFile("cert/cdds-ca.pem"),
+                ProviderServer.resourceToFile("cert/cdds-user.pem"),
+                ProviderServer.resourceToFile("cert/cdds-user.key"));        
         
         tcServiceUser.openTelecommandEndpoint();
         
@@ -188,9 +182,9 @@ public class TcServiceTest {
     public void testNotAuthenticatedTcEndpoint() throws IOException, InterruptedException {
        final ProviderServer server = new ProviderServer(PROVIDER_PORT,
                 new BindableService[]{new TcServiceProvider()},
-                resourceToFile("cert/cdds-ca.pem"),
-                resourceToFile("cert/cdds-provider.pem"),
-                resourceToFile("cert/cdds-provider.key"));
+                ProviderServer.resourceToFile("cert/cdds-ca.pem"),
+                ProviderServer.resourceToFile("cert/cdds-provider.pem"),
+                ProviderServer.resourceToFile("cert/cdds-provider.key"));
                 
         server.start();
         server.addAuthorizedTcEndpoint(authorizedTcEndpoint1);
@@ -198,9 +192,9 @@ public class TcServiceTest {
         // Use an un authorized endpoint
         final TcServiceUser tcServiceUser = TcServiceUser.buildSecureTcService("localhost", PROVIDER_PORT,
                 authorizedTcEndpoint1,
-                resourceToFile("cert/cdds-ca-not-ok.pem"),
-                resourceToFile("cert/cdds-user-not-ok.pem"),
-                resourceToFile("cert/cdds-user.key"));        
+                ProviderServer.resourceToFile("cert/cdds-ca-not-ok.pem"),
+                ProviderServer.resourceToFile("cert/cdds-user-not-ok.pem"),
+                ProviderServer.resourceToFile("cert/cdds-user.key"));        
         
         tcServiceUser.openTelecommandEndpoint();
         
@@ -235,27 +229,5 @@ public class TcServiceTest {
     private static ByteString getTcDummy() {
         return ByteString.copyFromUtf8("Hello TC provider");
     }
-
-    /**
-     * Converts a resource path (directory) to a File
-     * 
-     * @param resourcePath
-     * @return The File representing the resource.
-     */
-    public static File resourceToFile(String resourcePath) {
-        URL url = Thread.currentThread()
-                .getContextClassLoader()
-                .getResource(resourcePath);
-
-        if (url == null) {
-            throw new IllegalArgumentException(
-                    "Resource not found: " + resourcePath);
-        }
-
-        try {
-            return new File(url.toURI());
-        } catch (URISyntaxException e) {
-            throw new RuntimeException("Invalid URI for resource: " + resourcePath, e);
-        }
-    }
+ 
 }

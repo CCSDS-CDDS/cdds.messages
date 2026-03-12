@@ -66,7 +66,7 @@ public class TmServiceTest {
         
         // create a TM provider and add a TM frame production for the endpoint producing 10 frames
         TmServiceProvider tmProvider = new TmServiceProvider();
-        tmProvider.addTmProduction(authorizedTmEndpoint1, new TmProductionNFrames(numFrames, frameLength)); 
+        tmProvider.addTmProduction(authorizedTmEndpoint1, new TmProductionNFrames(numFrames, 500, frameLength)); 
 
         ProviderServer server = new ProviderServer(PROVIDER_PORT, new BindableService[]{tmProvider},
                 ProviderServer.resourceToFile("cert/cdds-ca.pem"),
@@ -96,7 +96,7 @@ public class TmServiceTest {
 
         // create a TM provider and add a TM frame production for the endpoint producing 10 frames
         TmServiceProvider tmProvider = new TmServiceProvider();
-        tmProvider.addTmProduction(authorizedTmEndpoint1, new TmProductionNFrames(numFrames, frameLength)); 
+        tmProvider.addTmProduction(authorizedTmEndpoint1, new TmProductionNFrames(numFrames, 1, frameLength)); 
 
         ProviderServer server = new ProviderServer(PROVIDER_PORT, new BindableService[]{tmProvider});
 

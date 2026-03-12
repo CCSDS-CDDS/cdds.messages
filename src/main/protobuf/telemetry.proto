@@ -19,21 +19,32 @@ message TelemetryMessage {
   optional int64 sequenceNumber = 1; 
   
   oneof data {
-    TelemetryData telemetry = 2;    // Set if the message carries telemetry data
-    SyncNotify syncNotify = 3;      // Set if the message carries a sync notify
+    TelemetryData telemetry = 2;                    // Set if the message carries telemetry data
+    SyncNotify syncNotify = 3;                      // Set if the message carries a sync notify
   }
+
+  repeated TelemetryItem telemetryItems = 4;        // a list if Telemetry Data or sync notify messages
+}
+
+/**
+ * A telemetry item holds either a TelemetryData or a SyncNotify message
+ */
+message TelemetryItem {
+  oneof data {
+    TelemetryData telemetry = 1;                    // Set if the message carries telemetry data
+    SyncNotify syncNotify = 2;                      // Set if the message carries a sync notify
+  }  
 }
 
 /**
  * TelemetryData holds the received telemetry frame and associated meta data.
  */
 message TelemetryData {
-
   /**
    * The reception meta data provide the meta data of aperture(s) involved
    * in data transfer received the provide telemetry data. Typically that is for a ground station the 
    * earth receive time and aperture ID, but in case relays are involved, the involved
-   * relay apertures and reception times can be provided as part of the meta data.
+   * relays and their reception times can be provided as part of the meta data.
    */
   repeated ReceptionMetaData metaData = 1;
 

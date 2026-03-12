@@ -11,6 +11,9 @@ import javax.naming.TimeLimitExceededException;
 import javax.net.ssl.SSLException;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+
+import ccsds.cdds.Telemetry.TelemetryData;
+import ccsds.cdds.Telemetry.TelemetryItem;
 import ccsds.cdds.Telemetry.TelemetryMessage;
 import ccsds.cdds.Types.EnumQoS;
 import ccsds.cdds.Types.FrameVersion;
@@ -140,24 +143,14 @@ public class TmServiceUser {
             @Override
             public void onNext(TelemetryMessage tmMessage) {
 
-                if(tmMessage.hasTelemetry()) {
-                    if(firstMessageTime == 0) {
-                        firstMessageTime = System.nanoTime();
-                        frameLength = tmMessage.getTelemetry().getData().size(); // assume fix frame length, read only once
-                        protoTmLength = tmMessage.getSerializedSize();
+                if(tmMessage.getTelemetryItemsCount() > 0) {                     
+                    for(TelemetryItem tmItem : tmMessage.getTelemetryItemsList()) {
+                       if(tmItem.hasTelemetry()) {
+                            onTelemetryData(tmItem.getTelemetry());
+                       }
                     }
-
-                    long numFrames = TmServiceUser.this.numFramesReceived.incrementAndGet();
-                    if(numFrames >= TmServiceUser.this.numFramesExpected.get()) {
-                        lastMessageTime = System.nanoTime(); 
-                        synchronized(TmServiceUser.this.numFramesReceived) {
-                            TmServiceUser.this.numFramesReceived.notifyAll();
-                        }
-                    }
-
-                    if(LOG.isDebugEnabled()) { 
-                        LOG.debug("TM service user received " + numFrames + " frames:\n" + tmMessage);
-                    }
+                } else if(tmMessage.hasTelemetry()) {
+                    onTelemetryData(tmMessage.getTelemetry());
                 } else if(tmMessage.hasSyncNotify()) {
                     if(firstMessageTime == 0) {
                         firstMessageTime = System.nanoTime();
@@ -175,6 +168,31 @@ public class TmServiceUser {
                 } else {
                    LOG.info("TM service user received invalid TM message (not a frame or sync notify):\n" + tmMessage); 
                 }
+            }
+
+            /**
+             * Handle a TelemetryData message. 
+             * @param tmData
+             */
+            private void onTelemetryData(TelemetryData tmData) {
+                   if(firstMessageTime == 0) {
+                        firstMessageTime = System.nanoTime();
+                        frameLength = tmData.getData().size(); // assume fix frame length, read only once
+                        protoTmLength = tmData.getSerializedSize();
+                    }
+
+                    long numFrames = TmServiceUser.this.numFramesReceived.incrementAndGet();
+                    if(numFrames >= TmServiceUser.this.numFramesExpected.get()) {
+                        lastMessageTime = System.nanoTime(); 
+                        synchronized(TmServiceUser.this.numFramesReceived) {
+                            TmServiceUser.this.numFramesReceived.notifyAll();
+                        }
+                    }
+
+                    if(LOG.isDebugEnabled()) { 
+                        LOG.debug("TM service user received " + numFrames + " frames:\n" + tmData);
+                    }
+
             }
 
             @Override

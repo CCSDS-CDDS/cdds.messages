@@ -1,6 +1,7 @@
 package cdds.service.tc;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -58,8 +59,7 @@ public class TcServiceAuthorization implements ServerInterceptor {
                 tcEndpoint = ProtoJsonUtil.fromJson(endpointBytes, TcServiceEndpoint.newBuilder());
                 
                 // At this point the endpoint is known and can be used for authorization. 
-                if (authorizedTcEndpoints.contains(tcEndpoint) == true &&
-                    (GrpcUtil.getSan(call).size() == 0 || GrpcUtil.getSan(call).contains(tcEndpoint.getServiceUser()))) {
+                if (isEndpointAuthorized(GrpcUtil.getSan(call), tcEndpoint) == true) {
                     LOG.info("Authorize TC service meta data for \n'" + TC_ENDPOINT + "':\n" + new String(endpointBytes)
                         + "\nSAN: " + GrpcUtil.getSan(call));
                 } else {
@@ -80,6 +80,31 @@ public class TcServiceAuthorization implements ServerInterceptor {
         }
         
         return next.startCall(call, headers);
+    }
+
+    /**
+     * Check if the given TC endpoint is authorized for one of the Subject Alternative Names
+     * @param sanList       The list of Subject Alternative Names 
+     * @param tcEndpoint    The TC requested for authorization
+     * @return              true if the endpoint is authorized
+     */
+    private boolean isEndpointAuthorized(List<String> sanList, TcServiceEndpoint tcEndpoint) {
+        if(authorizedTcEndpoints.contains(tcEndpoint) == false) {
+            return false;
+        }
+
+        // for testing only: without security, there is no SAN
+        if(sanList.size() == 0) {
+            return true;
+        }
+        
+        for(String san : sanList) {
+            if(san.equals(tcEndpoint.getServiceUser())) {
+                return true;
+            }                
+        }
+
+        return false;
     }
 
     /**
@@ -110,6 +135,4 @@ public class TcServiceAuthorization implements ServerInterceptor {
     public void removeAuthorizedTcEndpoint(TcServiceEndpoint tcEndpoint) {
        authorizedTcEndpoints.remove(tcEndpoint);
     }
-
-
 }

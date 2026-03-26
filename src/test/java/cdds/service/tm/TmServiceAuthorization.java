@@ -1,6 +1,7 @@
 package cdds.service.tm;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -8,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
+import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
 import ccsds.cdds.tm.CddsTmService.TmServiceEndpoint;
 import cdds.service.common.GrpcUtil;
 import cdds.service.common.ProtoJsonUtil;
@@ -58,9 +60,8 @@ public class TmServiceAuthorization implements ServerInterceptor {
                 tmEndpoint = ProtoJsonUtil.fromJson(endpointBytes, TmServiceEndpoint.newBuilder());
 
                 // At this point the endpoint is known and can be used for authorization. 
-                if (authorizedTmEndpoints.contains(tmEndpoint) == true && 
-                    (GrpcUtil.getSan(call).size() == 0 || GrpcUtil.getSan(call).contains(tmEndpoint.getServiceUser()))) {    
-                LOG.info("Authorize TM service meta data for \n'" + TM_ENDPOINT + "':\n" + new String(endpointBytes)
+                if (isEndpointAuthorized(GrpcUtil.getSan(call), tmEndpoint)) {    
+                    LOG.info("Authorize TM service meta data for \n'" + TM_ENDPOINT + "':\n" + new String(endpointBytes)
                         + "\nSAN: " + GrpcUtil.getSan(call));
                 } else {
                     LOG.warn("TM service meta data, invalid TM_ENDPOINT provided:\n" + tmEndpoint 
@@ -80,6 +81,31 @@ public class TmServiceAuthorization implements ServerInterceptor {
         }
         
         return next.startCall(call, headers);
+    }
+
+    /**
+     * Check if the given TM endpoint is authorized for one of the Subject Alternative Names
+     * @param sanList       The list of Subject Alternative Names 
+     * @param tcEndpoint    The TM requested for authorization
+     * @return              true if the endpoint is authorized
+     */
+    private boolean isEndpointAuthorized(List<String> sanList, TmServiceEndpoint tmEndpoint) {
+        if(authorizedTmEndpoints.contains(tmEndpoint) == false) {
+            return false;
+        }
+
+        // for testing only: without security, there is no SAN
+        if(sanList.size() == 0) {
+            return true;
+        }
+        
+        for(String san : sanList) {
+            if(san.equals(tmEndpoint.getServiceUser())) {
+                return true;
+            }                
+        }
+
+        return false;
     }
 
     /**

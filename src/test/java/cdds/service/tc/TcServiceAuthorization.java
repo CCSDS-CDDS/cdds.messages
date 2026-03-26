@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
+import cdds.service.common.GrpcUtil;
 import cdds.service.common.ProtoJsonUtil;
 import io.grpc.Context;
 import io.grpc.Contexts;
@@ -52,15 +53,17 @@ public class TcServiceAuthorization implements ServerInterceptor {
                 return null;
             }
 
-            TcServiceEndpoint tcEndPoint = TcServiceEndpoint.newBuilder().build(); // empty default
+            TcServiceEndpoint tcEndpoint = TcServiceEndpoint.newBuilder().build(); // empty default
             try {
-                tcEndPoint = ProtoJsonUtil.fromJson(endpointBytes, TcServiceEndpoint.newBuilder());
+                tcEndpoint = ProtoJsonUtil.fromJson(endpointBytes, TcServiceEndpoint.newBuilder());
                 
                 // At this point the endpoint is known and can be used for authorization. 
-                if (authorizedTcEndpoints.contains(tcEndPoint) == true) {
-                    LOG.info("Authorize TC service meta data for \n'" + TC_ENDPOINT + "':\n" + new String(endpointBytes));
+                if (authorizedTcEndpoints.contains(tcEndpoint) == true &&
+                    (GrpcUtil.getSan(call).size() == 0 || GrpcUtil.getSan(call).contains(tcEndpoint.getServiceUser()))) {
+                    LOG.info("Authorize TC service meta data for \n'" + TC_ENDPOINT + "':\n" + new String(endpointBytes)
+                        + "\nSAN: " + GrpcUtil.getSan(call));
                 } else {
-                    LOG.warn("TC service meta data, invalid TC_ENDPOINT provided:\n" + tcEndPoint 
+                    LOG.warn("TC service meta data, invalid TC_ENDPOINT provided:\n" + tcEndpoint 
                         + "\nauthorized endpoints:\n" + authorizedTcEndpoints);
                     
                     call.close(Status.PERMISSION_DENIED.withDescription("Invalid TC_ENDPOINT meta data provided"),
@@ -107,4 +110,6 @@ public class TcServiceAuthorization implements ServerInterceptor {
     public void removeAuthorizedTcEndpoint(TcServiceEndpoint tcEndpoint) {
        authorizedTcEndpoints.remove(tcEndpoint);
     }
+
+
 }

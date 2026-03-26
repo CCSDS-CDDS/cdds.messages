@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import ccsds.cdds.tm.CddsTmService.TmServiceEndpoint;
+import cdds.service.common.GrpcUtil;
 import cdds.service.common.ProtoJsonUtil;
 import io.grpc.Context;
 import io.grpc.Contexts;
@@ -57,8 +58,10 @@ public class TmServiceAuthorization implements ServerInterceptor {
                 tmEndpoint = ProtoJsonUtil.fromJson(endpointBytes, TmServiceEndpoint.newBuilder());
 
                 // At this point the endpoint is known and can be used for authorization. 
-                if (authorizedTmEndpoints.contains(tmEndpoint) == true) {
-                    LOG.info("Authorize TM service meta data for \n'" + TM_ENDPOINT + "':\n" + new String(endpointBytes));
+                if (authorizedTmEndpoints.contains(tmEndpoint) == true && 
+                    (GrpcUtil.getSan(call).size() == 0 || GrpcUtil.getSan(call).contains(tmEndpoint.getServiceUser()))) {    
+                LOG.info("Authorize TM service meta data for \n'" + TM_ENDPOINT + "':\n" + new String(endpointBytes)
+                        + "\nSAN: " + GrpcUtil.getSan(call));
                 } else {
                     LOG.warn("TM service meta data, invalid TM_ENDPOINT provided:\n" + tmEndpoint 
                         + "\nauthorized endpoints:\n" + authorizedTmEndpoints);

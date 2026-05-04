@@ -70,6 +70,7 @@ enum FrameQuality {
     GOOD = 1;                   // The frame decoded successfully
     ERRED = 2;                  // The frame is undecodable
     UNDETERMINED = 3;           // Frame decoding was not performed
+    ALL = 4;
 }
 
 /**

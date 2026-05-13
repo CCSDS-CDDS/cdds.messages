@@ -19,7 +19,7 @@ message TrackingDataMessage {
         /**
          * A protobuf encoded TDM. 
          */
-        ccsds.schema.ndmxml.TdmType tdmProto = 2;
+        ccsds.schema.ndmxml.TdmType tdmProto = 10;
     }
 }
 
@@ -37,12 +37,12 @@ message TdmTypeText {
     /**
      * Atomic segments in KVN or XML notation
      */ 
-    repeated AtomicSegment atomicSegments = 2;
+    repeated AtomicSegment atomicSegments = 10;
 
     /**
      * The format of the provided TDM
      */
-    Format format  = 3;
+    Format format  = 20;
 }
 
 /**
@@ -60,7 +60,7 @@ message AtomicSegment {
     /**
      * The TDM Data according to CCSDS 503.0 Blue Book   
      */
-    string data = 2;
+    string data = 10;
 }
 
 /**

@@ -4,7 +4,7 @@ package ccsds.schema.ndmxml;
 
 message AccType {
   AccUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 enum AccUnits {
   // Default
@@ -45,18 +45,18 @@ enum AdMethodType {
 }
 message AdmHeader {
   repeated string comment = 1;
-  string classification = 2;
-  string creationDate = 3;
-  string originator = 4;
-  string messageId = 5;
+  string classification = 10;
+  string creationDate = 20;
+  string originator = 30;
+  string messageId = 40;
 }
 message AltType {
   LengthUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 message AngMomentumType {
   AngMomentumUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 enum AngMomentumUnits {
   // Default
@@ -65,25 +65,25 @@ enum AngMomentumUnits {
 }
 message AngVelComponentType {
   AngleRateUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 message AngVelStateType {
   repeated string comment = 1;
-  string refFrameA = 2;
-  string refFrameB = 3;
-  string angvelFrame = 4;
-  AngVelComponentType angvelX = 5;
-  AngVelComponentType angvelY = 6;
-  AngVelComponentType angvelZ = 7;
+  string refFrameA = 10;
+  string refFrameB = 20;
+  string angvelFrame = 30;
+  AngVelComponentType angvelX = 40;
+  AngVelComponentType angvelY = 50;
+  AngVelComponentType angvelZ = 60;
 }
 message AngVelType {
   AngVelComponentType angvelX = 1;
-  AngVelComponentType angvelY = 2;
-  AngVelComponentType angvelZ = 3;
+  AngVelComponentType angvelY = 10;
+  AngVelComponentType angvelZ = 20;
 }
 message AngleRateType {
   AngleRateUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 enum AngleRateUnits {
   // Default
@@ -92,7 +92,7 @@ enum AngleRateUnits {
 }
 message AngleType {
   AngleUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 enum AngleTypeType {
   // Default
@@ -115,7 +115,7 @@ enum ApmRateFrameType {
 }
 message AreaType {
   AreaUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 enum AreaUnits {
   // Default
@@ -124,14 +124,14 @@ enum AreaUnits {
 }
 message AtmosphericReentryParametersType {
   repeated string comment = 1;
-  DayIntervalTypeUR orbitLifetime = 2;
-  PositionTypeUR reentryAltitude = 3;
-  DayIntervalTypeUR orbitLifetimeWindowStart = 4;
-  DayIntervalTypeUR orbitLifetimeWindowEnd = 5;
-  string nominalReentryEpoch = 6;
-  string reentryWindowStart = 7;
-  string reentryWindowEnd = 8;
-  PercentageTypeUR orbitLifetimeConfidenceLevel = 9;
+  DayIntervalTypeUR orbitLifetime = 10;
+  PositionTypeUR reentryAltitude = 20;
+  DayIntervalTypeUR orbitLifetimeWindowStart = 30;
+  DayIntervalTypeUR orbitLifetimeWindowEnd = 40;
+  string nominalReentryEpoch = 50;
+  string reentryWindowStart = 60;
+  string reentryWindowEnd = 70;
+  PercentageTypeUR orbitLifetimeConfidenceLevel = 80;
 }
 enum AttBasisType {
   // Default
@@ -143,13 +143,13 @@ enum AttBasisType {
 }
 message AttManeuverStateType {
   repeated string comment = 1;
-  string manEpochStart = 2;
-  DurationType manDuration = 3;
-  string manRefFrame = 4;
-  TorqueType manTorX = 5;
-  TorqueType manTorY = 6;
-  TorqueType manTorZ = 7;
-  DeltamassTypeZ manDeltaMass = 8;
+  string manEpochStart = 10;
+  DurationType manDuration = 20;
+  string manRefFrame = 30;
+  TorqueType manTorX = 40;
+  TorqueType manTorY = 50;
+  TorqueType manTorZ = 60;
+  DeltamassTypeZ manDeltaMass = 70;
 }
 enum AttRateType {
   // Default
@@ -161,14 +161,14 @@ enum AttRateType {
 }
 message AttitudeStateType {
   QuaternionEphemerisType quaternionephemeris = 1;
-  QuaternionDerivativeType quaternionderivative = 2;
-  QuaternionAngVelType quaternionangvel = 3;
-  EulerAngleType eulerangle = 4;
-  EulerAngleDerivativeType euleranglederivative = 5;
-  EulerAngleAngVelType eulerangleangvel = 6;
-  SpinType spin = 7;
-  SpinNutationType spinnutation = 8;
-  SpinNutationMomType spinnutationmom = 9;
+  QuaternionDerivativeType quaternionderivative = 10;
+  QuaternionAngVelType quaternionangvel = 20;
+  EulerAngleType eulerangle = 30;
+  EulerAngleDerivativeType euleranglederivative = 40;
+  EulerAngleAngVelType eulerangleangvel = 50;
+  SpinType spin = 60;
+  SpinNutationType spinnutation = 70;
+  SpinNutationMomType spinnutationmom = 80;
 }
 enum AttitudeTypeType {
   // Default
@@ -185,7 +185,7 @@ enum AttitudeTypeType {
 }
 message BallisticCoeffType {
   BallisticCoeffUnitsType units = 1;
-  double value = 2;
+  double value = 10;
 }
 enum BallisticCoeffUnitsType {
   // Default
@@ -229,11 +229,11 @@ enum DataQualityType {
 }
 message DayIntervalTypeUO {
   DayIntervalUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 message DayIntervalTypeUR {
   DayIntervalUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 enum DayIntervalUnits {
   // Default
@@ -242,11 +242,11 @@ enum DayIntervalUnits {
 }
 message DeltamassType {
   MassUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 message DeltamassTypeZ {
   MassUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 enum DisintegrationType {
   // Default
@@ -258,51 +258,51 @@ enum DisintegrationType {
 }
 message DistanceType {
   PositionUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 message DurationType {
   TimeUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 message EulerAngleAngVelType {
   string epoch = 1;
-  AngleType angle1 = 2;
-  AngleType angle2 = 3;
-  AngleType angle3 = 4;
-  AngVelComponentType angvelX = 5;
-  AngVelComponentType angvelY = 6;
-  AngVelComponentType angvelZ = 7;
+  AngleType angle1 = 10;
+  AngleType angle2 = 20;
+  AngleType angle3 = 30;
+  AngVelComponentType angvelX = 40;
+  AngVelComponentType angvelY = 50;
+  AngVelComponentType angvelZ = 60;
 }
 message EulerAngleDerivativeType {
   string epoch = 1;
-  AngleType angle1 = 2;
-  AngleType angle2 = 3;
-  AngleType angle3 = 4;
-  AngleRateType angle1Dot = 5;
-  AngleRateType angle2Dot = 6;
-  AngleRateType angle3Dot = 7;
+  AngleType angle1 = 10;
+  AngleType angle2 = 20;
+  AngleType angle3 = 30;
+  AngleRateType angle1Dot = 40;
+  AngleRateType angle2Dot = 50;
+  AngleRateType angle3Dot = 60;
 }
 message EulerAngleStateType {
   repeated string comment = 1;
-  string refFrameA = 2;
-  string refFrameB = 3;
-  RotseqType eulerRotSeq = 4;
-  AngleType angle1 = 5;
-  AngleType angle2 = 6;
-  AngleType angle3 = 7;
-  AngleRateType angle1Dot = 8;
-  AngleRateType angle2Dot = 9;
-  AngleRateType angle3Dot = 10;
+  string refFrameA = 10;
+  string refFrameB = 20;
+  RotseqType eulerRotSeq = 30;
+  AngleType angle1 = 40;
+  AngleType angle2 = 50;
+  AngleType angle3 = 60;
+  AngleRateType angle1Dot = 70;
+  AngleRateType angle2Dot = 80;
+  AngleRateType angle3Dot = 90;
 }
 message EulerAngleType {
   string epoch = 1;
-  AngleType angle1 = 2;
-  AngleType angle2 = 3;
-  AngleType angle3 = 4;
+  AngleType angle1 = 10;
+  AngleType angle2 = 20;
+  AngleType angle3 = 30;
 }
 message FrequencyType {
   FrequencyUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 enum FrequencyUnits {
   // Default
@@ -311,7 +311,7 @@ enum FrequencyUnits {
 }
 message GeomagType {
   GeomagUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 enum GeomagUnits {
   // Default
@@ -320,7 +320,7 @@ enum GeomagUnits {
 }
 message GmType {
   GmUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 enum GmUnits {
   // Default
@@ -329,36 +329,36 @@ enum GmUnits {
 }
 message GroundImpactParametersType {
   repeated string comment = 1;
-  double probabilityOfImpact = 2;
-  double probabilityOfBurnUp = 3;
-  double probabilityOfBreakUp = 4;
-  double probabilityOfLandImpact = 5;
-  double probabilityOfCasualty = 6;
-  string nominalImpactEpoch = 7;
-  string impactWindowStart = 8;
-  string impactWindowEnd = 9;
-  string impactRefFrame = 10;
-  LonType nominalImpactLon = 11;
-  LatType nominalImpactLat = 12;
-  AltType nominalImpactAlt = 13;
-  PercentageTypeUR impact1Confidence = 14;
-  LonType impact1StartLon = 15;
-  LatType impact1StartLat = 16;
-  LonType impact1StopLon = 17;
-  LatType impact1StopLat = 18;
-  DistanceType impact1CrossTrack = 19;
-  PercentageTypeUR impact2Confidence = 20;
-  LonType impact2StartLon = 21;
-  LatType impact2StartLat = 22;
-  LonType impact2StopLon = 23;
-  LatType impact2StopLat = 24;
-  DistanceType impact2CrossTrack = 25;
-  PercentageTypeUR impact3Confidence = 26;
-  LonType impact3StartLon = 27;
-  LatType impact3StartLat = 28;
-  LonType impact3StopLon = 29;
-  LatType impact3StopLat = 30;
-  DistanceType impact3CrossTrack = 31;
+  double probabilityOfImpact = 10;
+  double probabilityOfBurnUp = 20;
+  double probabilityOfBreakUp = 30;
+  double probabilityOfLandImpact = 40;
+  double probabilityOfCasualty = 50;
+  string nominalImpactEpoch = 60;
+  string impactWindowStart = 70;
+  string impactWindowEnd = 80;
+  string impactRefFrame = 90;
+  LonType nominalImpactLon = 100;
+  LatType nominalImpactLat = 110;
+  AltType nominalImpactAlt = 120;
+  PercentageTypeUR impact1Confidence = 130;
+  LonType impact1StartLon = 140;
+  LatType impact1StartLat = 150;
+  LonType impact1StopLon = 160;
+  LatType impact1StopLat = 170;
+  DistanceType impact1CrossTrack = 180;
+  PercentageTypeUR impact2Confidence = 190;
+  LonType impact2StartLon = 200;
+  LatType impact2StartLat = 210;
+  LonType impact2StopLon = 220;
+  LatType impact2StopLat = 230;
+  DistanceType impact2CrossTrack = 240;
+  PercentageTypeUR impact3Confidence = 250;
+  LonType impact3StartLon = 260;
+  LatType impact3StartLat = 270;
+  LonType impact3StopLon = 280;
+  LatType impact3StopLat = 290;
+  DistanceType impact3CrossTrack = 300;
 }
 enum ImpactUncertaintyType {
   // Default
@@ -370,17 +370,17 @@ enum ImpactUncertaintyType {
 }
 message InclinationType {
   AngleUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 message InertiaStateType {
   repeated string comment = 1;
-  string inertiaRefFrame = 2;
-  MomentType ixx = 3;
-  MomentType iyy = 4;
-  MomentType izz = 5;
-  MomentType ixy = 6;
-  MomentType ixz = 7;
-  MomentType iyz = 8;
+  string inertiaRefFrame = 10;
+  MomentType ixx = 20;
+  MomentType iyy = 30;
+  MomentType izz = 40;
+  MomentType ixy = 50;
+  MomentType ixz = 60;
+  MomentType iyz = 70;
 }
 enum IntegrationRefType {
   // Default
@@ -391,7 +391,7 @@ enum IntegrationRefType {
 }
 message Km2Type {
   Km2Units units = 1;
-  double value = 2;
+  double value = 10;
 }
 enum Km2Units {
   // Default
@@ -400,7 +400,7 @@ enum Km2Units {
 }
 message Km2s2Type {
   Km2s2Units units = 1;
-  double value = 2;
+  double value = 10;
 }
 enum Km2s2Units {
   // Default
@@ -409,7 +409,7 @@ enum Km2s2Units {
 }
 message Km2sType {
   Km2sUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 enum Km2sUnits {
   // Default
@@ -423,15 +423,15 @@ enum LatLonUnits {
 }
 message LatType {
   LatLonUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 message LengthTypeUO {
   LengthUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 message LengthTypeUR {
   LengthUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 enum LengthUnits {
   // Default
@@ -440,7 +440,7 @@ enum LengthUnits {
 }
 message LonType {
   LatLonUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 enum ManBasisType {
   // Default
@@ -462,11 +462,11 @@ enum ManDCType {
 }
 message ManeuverFreqType {
   NumPerYearUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 message MassType {
   MassUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 enum MassUnits {
   // Default
@@ -481,7 +481,7 @@ enum ModeType {
 }
 message MomentType {
   MomentUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 enum MomentUnits {
   // Default
@@ -490,7 +490,7 @@ enum MomentUnits {
 }
 message Ms2Type {
   Ms2Units units = 1;
-  double value = 2;
+  double value = 10;
 }
 enum Ms2Units {
   // Default
@@ -499,8 +499,8 @@ enum Ms2Units {
 }
 message NdmHeader {
   repeated string comment = 1;
-  string creationDate = 2;
-  string originator = 3;
+  string creationDate = 10;
+  string originator = 20;
 }
 enum NumPerYearUnits {
   // Default
@@ -518,91 +518,91 @@ enum ObjectDescriptionType {
 }
 message OdParametersType {
   repeated string comment = 1;
-  string timeLastobStart = 2;
-  string timeLastobEnd = 3;
-  DayIntervalTypeUO recommendedOdSpan = 4;
-  DayIntervalTypeUO actualOdSpan = 5;
-  uint32 obsAvailable = 6;
-  uint32 obsUsed = 7;
-  uint32 tracksAvailable = 8;
-  uint32 tracksUsed = 9;
-  PercentageTypeUO residualsAccepted = 10;
-  double weightedRms = 11;
+  string timeLastobStart = 10;
+  string timeLastobEnd = 20;
+  DayIntervalTypeUO recommendedOdSpan = 30;
+  DayIntervalTypeUO actualOdSpan = 40;
+  uint32 obsAvailable = 50;
+  uint32 obsUsed = 60;
+  uint32 tracksAvailable = 70;
+  uint32 tracksUsed = 80;
+  PercentageTypeUO residualsAccepted = 90;
+  double weightedRms = 100;
 }
 message OdmHeader {
   repeated string comment = 1;
-  string classification = 2;
-  string creationDate = 3;
-  string originator = 4;
-  string messageId = 5;
+  string classification = 10;
+  string creationDate = 20;
+  string originator = 30;
+  string messageId = 40;
 }
 message OemCovarianceMatrixAbstractType {
   repeated string comment = 1;
-  string epoch = 2;
-  string covRefFrame = 3;
+  string epoch = 10;
+  string covRefFrame = 20;
 }
 message OemCovarianceMatrixType {
   repeated string comment = 1;
-  string epoch = 2;
-  string covRefFrame = 3;
-  PositionCovarianceType cxX = 21;
-  PositionCovarianceType cyX = 22;
-  PositionCovarianceType cyY = 23;
-  PositionCovarianceType czX = 24;
-  PositionCovarianceType czY = 25;
-  PositionCovarianceType czZ = 26;
-  PositionVelocityCovarianceType cxDotX = 27;
-  PositionVelocityCovarianceType cxDotY = 28;
-  PositionVelocityCovarianceType cxDotZ = 29;
-  VelocityCovarianceType cxDotXDot = 30;
-  PositionVelocityCovarianceType cyDotX = 31;
-  PositionVelocityCovarianceType cyDotY = 32;
-  PositionVelocityCovarianceType cyDotZ = 33;
-  VelocityCovarianceType cyDotXDot = 34;
-  VelocityCovarianceType cyDotYDot = 35;
-  PositionVelocityCovarianceType czDotX = 36;
-  PositionVelocityCovarianceType czDotY = 37;
-  PositionVelocityCovarianceType czDotZ = 38;
-  VelocityCovarianceType czDotXDot = 39;
-  VelocityCovarianceType czDotYDot = 40;
-  VelocityCovarianceType czDotZDot = 41;
+  string epoch = 10;
+  string covRefFrame = 20;
+  PositionCovarianceType cxX = 30;
+  PositionCovarianceType cyX = 40;
+  PositionCovarianceType cyY = 50;
+  PositionCovarianceType czX = 60;
+  PositionCovarianceType czY = 70;
+  PositionCovarianceType czZ = 80;
+  PositionVelocityCovarianceType cxDotX = 90;
+  PositionVelocityCovarianceType cxDotY = 100;
+  PositionVelocityCovarianceType cxDotZ = 110;
+  VelocityCovarianceType cxDotXDot = 120;
+  PositionVelocityCovarianceType cyDotX = 130;
+  PositionVelocityCovarianceType cyDotY = 140;
+  PositionVelocityCovarianceType cyDotZ = 150;
+  VelocityCovarianceType cyDotXDot = 160;
+  VelocityCovarianceType cyDotYDot = 170;
+  PositionVelocityCovarianceType czDotX = 180;
+  PositionVelocityCovarianceType czDotY = 190;
+  PositionVelocityCovarianceType czDotZ = 200;
+  VelocityCovarianceType czDotXDot = 210;
+  VelocityCovarianceType czDotYDot = 220;
+  VelocityCovarianceType czDotZDot = 230;
 }
 message OpmCovarianceMatrixAbstractType {
   repeated string comment = 1;
-  string covRefFrame = 2;
+  string covRefFrame = 10;
 }
 message OpmCovarianceMatrixType {
   repeated string comment = 1;
-  string covRefFrame = 2;
-  PositionCovarianceType cxX = 21;
-  PositionCovarianceType cyX = 22;
-  PositionCovarianceType cyY = 23;
-  PositionCovarianceType czX = 24;
-  PositionCovarianceType czY = 25;
-  PositionCovarianceType czZ = 26;
-  PositionVelocityCovarianceType cxDotX = 27;
-  PositionVelocityCovarianceType cxDotY = 28;
-  PositionVelocityCovarianceType cxDotZ = 29;
-  VelocityCovarianceType cxDotXDot = 30;
-  PositionVelocityCovarianceType cyDotX = 31;
-  PositionVelocityCovarianceType cyDotY = 32;
-  PositionVelocityCovarianceType cyDotZ = 33;
-  VelocityCovarianceType cyDotXDot = 34;
-  VelocityCovarianceType cyDotYDot = 35;
-  PositionVelocityCovarianceType czDotX = 36;
-  PositionVelocityCovarianceType czDotY = 37;
-  PositionVelocityCovarianceType czDotZ = 38;
-  VelocityCovarianceType czDotXDot = 39;
-  VelocityCovarianceType czDotYDot = 40;
-  VelocityCovarianceType czDotZDot = 41;
+  string covRefFrame = 10;
+  PositionCovarianceType cxX = 20;
+  PositionCovarianceType cyX = 30;
+  PositionCovarianceType cyY = 40;
+  PositionCovarianceType czX = 50;
+  PositionCovarianceType czY = 60;
+  PositionCovarianceType czZ = 70;
+  PositionVelocityCovarianceType cxDotX = 80;
+  PositionVelocityCovarianceType cxDotY = 90;
+  PositionVelocityCovarianceType cxDotZ = 100;
+  VelocityCovarianceType cxDotXDot = 110;
+  PositionVelocityCovarianceType cyDotX = 120;
+  PositionVelocityCovarianceType cyDotY = 130;
+  PositionVelocityCovarianceType cyDotZ = 140;
+  VelocityCovarianceType cyDotXDot = 150;
+  VelocityCovarianceType cyDotYDot = 160;
+  PositionVelocityCovarianceType czDotX = 170;
+  PositionVelocityCovarianceType czDotY = 180;
+  PositionVelocityCovarianceType czDotZ = 190;
+  VelocityCovarianceType czDotXDot = 200;
+  VelocityCovarianceType czDotYDot = 210;
+  VelocityCovarianceType czDotZDot = 220;
 }
 message PercentageTypeUO {
   PercentageUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 message PercentageTypeUR {
   PercentageUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 enum PercentageUnits {
   // Default
@@ -611,7 +611,7 @@ enum PercentageUnits {
 }
 message PositionCovarianceType {
   PositionCovarianceUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 enum PositionCovarianceUnits {
   // Default
@@ -620,11 +620,11 @@ enum PositionCovarianceUnits {
 }
 message PositionTypeUO {
   PositionUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 message PositionTypeUR {
   PositionUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 enum PositionUnits {
   // Default
@@ -633,7 +633,7 @@ enum PositionUnits {
 }
 message PositionVelocityCovarianceType {
   PositionVelocityCovarianceUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 enum PositionVelocityCovarianceUnits {
   // Default
@@ -642,23 +642,23 @@ enum PositionVelocityCovarianceUnits {
 }
 message QuaternionAngVelType {
   string epoch = 1;
-  QuaternionType quaternion = 2;
-  AngVelType angvel = 3;
+  QuaternionType quaternion = 10;
+  AngVelType angvel = 20;
 }
 message QuaternionDerivativeType {
   string epoch = 1;
-  QuaternionType quaternion = 2;
-  QuaternionDotType quaterniondot = 3;
+  QuaternionType quaternion = 10;
+  QuaternionDotType quaterniondot = 20;
 }
 message QuaternionDotComponentType {
   QuaternionDotUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 message QuaternionDotType {
   QuaternionDotComponentType q1Dot = 1;
-  QuaternionDotComponentType q2Dot = 2;
-  QuaternionDotComponentType q3Dot = 3;
-  QuaternionDotComponentType qcDot = 4;
+  QuaternionDotComponentType q2Dot = 10;
+  QuaternionDotComponentType q3Dot = 20;
+  QuaternionDotComponentType qcDot = 30;
 }
 enum QuaternionDotUnits {
   // Default
@@ -667,20 +667,20 @@ enum QuaternionDotUnits {
 }
 message QuaternionEphemerisType {
   string epoch = 1;
-  QuaternionType quaternion = 2;
+  QuaternionType quaternion = 10;
 }
 message QuaternionStateType {
   repeated string comment = 1;
-  string refFrameA = 2;
-  string refFrameB = 3;
-  QuaternionType quaternion = 4;
-  QuaternionDotType quaterniondot = 5;
+  string refFrameA = 10;
+  string refFrameB = 20;
+  QuaternionType quaternion = 30;
+  QuaternionDotType quaterniondot = 40;
 }
 message QuaternionType {
   double q1 = 1;
-  double q2 = 2;
-  double q3 = 3;
-  double qc = 4;
+  double q2 = 10;
+  double q3 = 20;
+  double qc = 30;
 }
 enum RangeUnitsType {
   // Default
@@ -698,16 +698,16 @@ enum RangemodeType {
 }
 message RdmSpacecraftParametersType {
   repeated string comment = 1;
-  MassType wetMass = 2;
-  MassType dryMass = 3;
-  string hazardousSubstances = 4;
-  AreaType solarRadArea = 5;
-  double solarRadCoeff = 6;
-  AreaType dragArea = 7;
-  double dragCoeff = 8;
-  AreaType rcs = 9;
-  BallisticCoeffType ballisticCoeff = 10;
-  Ms2Type thrustAcceleration = 11;
+  MassType wetMass = 10;
+  MassType dryMass = 20;
+  string hazardousSubstances = 30;
+  AreaType solarRadArea = 40;
+  double solarRadCoeff = 50;
+  AreaType dragArea = 60;
+  double dragCoeff = 70;
+  AreaType rcs = 80;
+  BallisticCoeffType ballisticCoeff = 90;
+  Ms2Type thrustAcceleration = 100;
 }
 enum ReentryUncertaintyMethodType {
   // Default
@@ -729,7 +729,7 @@ enum RefFrameType {
 }
 message RelTimeType {
   TimeUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 enum RevNumBasisType {
   // Default
@@ -755,11 +755,11 @@ enum RotseqType {
 }
 message SensorNoiseType {
   AngleUnits units = 1;
-  string value = 2;
+  string value = 10;
 }
 message SigmaUType {
   SigmaUUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 enum SigmaUUnits {
   // Default
@@ -768,7 +768,7 @@ enum SigmaUUnits {
 }
 message SigmaVType {
   SigmaVUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 enum SigmaVUnits {
   // Default
@@ -777,7 +777,7 @@ enum SigmaVUnits {
 }
 message SolarFluxType {
   SolarFluxUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 enum SolarFluxUnits {
   // Default
@@ -789,171 +789,171 @@ enum SolarFluxUnits {
 }
 message SpacecraftParametersType {
   repeated string comment = 1;
-  MassType mass = 2;
-  AreaType solarRadArea = 3;
-  double solarRadCoeff = 4;
-  AreaType dragArea = 5;
-  double dragCoeff = 6;
+  MassType mass = 10;
+  AreaType solarRadArea = 20;
+  double solarRadCoeff = 30;
+  AreaType dragArea = 40;
+  double dragCoeff = 50;
 }
 message SpinNutationMomType {
   string epoch = 1;
-  AngleType spinAlpha = 2;
-  AngleType spinDelta = 3;
-  AngleType spinAngle = 4;
-  AngleRateType spinAngleVel = 5;
-  AngleType momentumAlpha = 6;
-  AngleType momentumDelta = 7;
-  AngleRateType nutationVel = 8;
+  AngleType spinAlpha = 10;
+  AngleType spinDelta = 20;
+  AngleType spinAngle = 30;
+  AngleRateType spinAngleVel = 40;
+  AngleType momentumAlpha = 50;
+  AngleType momentumDelta = 60;
+  AngleRateType nutationVel = 70;
 }
 message SpinNutationType {
   string epoch = 1;
-  AngleType spinAlpha = 2;
-  AngleType spinDelta = 3;
-  AngleType spinAngle = 4;
-  AngleRateType spinAngleVel = 5;
-  AngleType nutation = 6;
-  DurationType nutationPer = 7;
-  AngleType nutationPhase = 8;
+  AngleType spinAlpha = 10;
+  AngleType spinDelta = 20;
+  AngleType spinAngle = 30;
+  AngleRateType spinAngleVel = 40;
+  AngleType nutation = 50;
+  DurationType nutationPer = 60;
+  AngleType nutationPhase = 70;
 }
 message SpinStateType {
   repeated string comment = 1;
-  string refFrameA = 2;
-  string refFrameB = 3;
-  AngleType spinAlpha = 4;
-  AngleType spinDelta = 5;
-  AngleType spinAngle = 6;
-  AngleRateType spinAngleVel = 7;
-  AngleType nutation = 8;
-  DurationType nutationPer = 9;
-  AngleType nutationPhase = 10;
-  AngleType momentumAlpha = 21;
-  AngleType momentumDelta = 22;
-  AngleRateType nutationVel = 23;
+  string refFrameA = 10;
+  string refFrameB = 20;
+  AngleType spinAlpha = 30;
+  AngleType spinDelta = 40;
+  AngleType spinAngle = 50;
+  AngleRateType spinAngleVel = 60;
+  AngleType nutation = 70;
+  DurationType nutationPer = 80;
+  AngleType nutationPhase = 90;
+  AngleType momentumAlpha = 100;
+  AngleType momentumDelta = 110;
+  AngleRateType nutationVel = 120;
 }
 message SpinType {
   string epoch = 1;
-  AngleType spinAlpha = 2;
-  AngleType spinDelta = 3;
-  AngleType spinAngle = 4;
-  AngleRateType spinAngleVel = 5;
+  AngleType spinAlpha = 10;
+  AngleType spinDelta = 20;
+  AngleType spinAngle = 30;
+  AngleRateType spinAngleVel = 40;
 }
 message StateVectorAccType {
   string epoch = 1;
-  PositionTypeUO x = 2;
-  PositionTypeUO y = 3;
-  PositionTypeUO z = 4;
-  VelocityTypeUO xDot = 5;
-  VelocityTypeUO yDot = 6;
-  VelocityTypeUO zDot = 7;
-  AccType xDdot = 8;
-  AccType yDdot = 9;
-  AccType zDdot = 10;
+  PositionTypeUO x = 10;
+  PositionTypeUO y = 20;
+  PositionTypeUO z = 30;
+  VelocityTypeUO xDot = 40;
+  VelocityTypeUO yDot = 50;
+  VelocityTypeUO zDot = 60;
+  AccType xDdot = 70;
+  AccType yDdot = 80;
+  AccType zDdot = 90;
 }
 message StateVectorType {
   repeated string comment = 1;
-  string epoch = 2;
-  PositionTypeUO x = 3;
-  PositionTypeUO y = 4;
-  PositionTypeUO z = 5;
-  VelocityTypeUO xDot = 6;
-  VelocityTypeUO yDot = 7;
-  VelocityTypeUO zDot = 8;
+  string epoch = 10;
+  PositionTypeUO x = 20;
+  PositionTypeUO y = 30;
+  PositionTypeUO z = 40;
+  VelocityTypeUO xDot = 50;
+  VelocityTypeUO yDot = 60;
+  VelocityTypeUO zDot = 70;
 }
 message TargetMomentumType {
   AngMomentumUnits units = 1;
 }
 message TdmAngleType {
   AngleUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 message TdmBody {
   repeated TdmSegment segment = 1;
 }
 message TdmData {
   repeated string comment = 1;
-  repeated TrackingDataObservationType observation = 2;
+  repeated TrackingDataObservationType observation = 10;
 }
 message TdmHeader {
   repeated string comment = 1;
-  string creationDate = 2;
-  string originator = 3;
-  string messageId = 4;
+  string creationDate = 10;
+  string originator = 20;
+  string messageId = 30;
 }
 message TdmMetadata {
   repeated string comment = 1;
-  string trackId = 2;
-  string dataTypes = 3;
-  string timeSystem = 4;
-  string startTime = 5;
-  string stopTime = 6;
-  string participant1 = 7;
-  string participant2 = 8;
-  string participant3 = 9;
-  string participant4 = 10;
-  string participant5 = 11;
-  ModeType mode = 12;
-  string path = 13;
-  string path1 = 14;
-  string path2 = 15;
-  string ephemerisName1 = 31;
-  string ephemerisName2 = 32;
-  string ephemerisName3 = 33;
-  string ephemerisName4 = 34;
-  string ephemerisName5 = 35;
-  string transmitBand = 36;
-  string receiveBand = 37;
-  int32 turnaroundNumerator = 38;
-  int32 turnaroundDenominator = 39;
-  TimetagRefType timetagRef = 40;
-  double integrationInterval = 41;
-  IntegrationRefType integrationRef = 42;
-  double freqOffset = 43;
-  RangemodeType rangeMode = 44;
-  double rangeModulus = 45;
-  RangeUnitsType rangeUnits = 46;
-  AngleTypeType angleType = 47;
-  RefFrameType referenceFrame = 48;
-  string interpolation = 49;
-  uint32 interpolationDegree = 50;
-  double dopplerCountBias = 51;
-  uint32 dopplerCountScale = 52;
-  YesNoType dopplerCountRollover = 53;
-  double transmitDelay1 = 54;
-  double transmitDelay2 = 55;
-  double transmitDelay3 = 56;
-  double transmitDelay4 = 57;
-  double transmitDelay5 = 58;
-  double receiveDelay1 = 59;
-  double receiveDelay2 = 60;
-  double receiveDelay3 = 61;
-  double receiveDelay4 = 62;
-  double receiveDelay5 = 63;
-  DataQualityType dataQuality = 64;
-  double correctionAngle1 = 65;
-  double correctionAngle2 = 66;
-  double correctionDoppler = 67;
-  double correctionMag = 68;
-  double correctionRange = 69;
-  double correctionRcs = 70;
-  double correctionReceive = 71;
-  double correctionTransmit = 72;
-  double correctionAberrationYearly = 73;
-  double correctionAberrationDiurnal = 74;
-  YesNoType correctionsApplied = 75;
+  string trackId = 10;
+  string dataTypes = 20;
+  string timeSystem = 30;
+  string startTime = 40;
+  string stopTime = 50;
+  string participant1 = 60;
+  string participant2 = 70;
+  string participant3 = 80;
+  string participant4 = 90;
+  string participant5 = 100;
+  ModeType mode = 110;
+  string path = 120;
+  string path1 = 130;
+  string path2 = 140;
+  string ephemerisName1 = 150;
+  string ephemerisName2 = 160;
+  string ephemerisName3 = 170;
+  string ephemerisName4 = 180;
+  string ephemerisName5 = 190;
+  string transmitBand = 200;
+  string receiveBand = 210;
+  int32 turnaroundNumerator = 220;
+  int32 turnaroundDenominator = 230;
+  TimetagRefType timetagRef = 240;
+  double integrationInterval = 250;
+  IntegrationRefType integrationRef = 260;
+  double freqOffset = 270;
+  RangemodeType rangeMode = 280;
+  double rangeModulus = 290;
+  RangeUnitsType rangeUnits = 300;
+  AngleTypeType angleType = 310;
+  RefFrameType referenceFrame = 320;
+  string interpolation = 330;
+  uint32 interpolationDegree = 340;
+  double dopplerCountBias = 350;
+  uint32 dopplerCountScale = 360;
+  YesNoType dopplerCountRollover = 370;
+  double transmitDelay1 = 380;
+  double transmitDelay2 = 390;
+  double transmitDelay3 = 400;
+  double transmitDelay4 = 410;
+  double transmitDelay5 = 420;
+  double receiveDelay1 = 430;
+  double receiveDelay2 = 440;
+  double receiveDelay3 = 450;
+  double receiveDelay4 = 460;
+  double receiveDelay5 = 470;
+  DataQualityType dataQuality = 480;
+  double correctionAngle1 = 490;
+  double correctionAngle2 = 500;
+  double correctionDoppler = 510;
+  double correctionMag = 520;
+  double correctionRange = 530;
+  double correctionRcs = 540;
+  double correctionReceive = 550;
+  double correctionTransmit = 560;
+  double correctionAberrationYearly = 570;
+  double correctionAberrationDiurnal = 580;
+  YesNoType correctionsApplied = 590;
 }
 message TdmSegment {
   TdmMetadata metadata = 1;
-  TdmData data = 2;
+  TdmData data = 10;
 }
 message TdmType {
   string id = 1;
-  string version = 2;
-  TdmHeader header = 3;
-  TdmBody body = 4;
+  string version = 10;
+  TdmHeader header = 20;
+  TdmBody body = 30;
 }
 message ThrustType {
   ThrustUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 enum ThrustUnits {
   // Default
@@ -962,7 +962,7 @@ enum ThrustUnits {
 }
 message TimeOffsetType {
   TimeUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 enum TimeUnits {
   // Default
@@ -977,7 +977,7 @@ enum TimetagRefType {
 }
 message TorqueType {
   TorqueUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 enum TorqueUnits {
   // Default
@@ -986,53 +986,53 @@ enum TorqueUnits {
 }
 message TrackingDataObservationType {
   string epoch = 1;
-  AngleType angle1 = 2;
-  AngleType angle2 = 3;
-  double carrierPower = 4;
-  double clockBias = 5;
-  double clockDrift = 6;
-  double dopplerCount = 7;
-  double dopplerInstantaneous = 8;
-  double dopplerIntegrated = 9;
-  double dor = 10;
-  double mag = 11;
-  double pcN0 = 12;
-  double prN0 = 13;
-  double pressure = 14;
-  double range = 15;
-  double rcs = 16;
-  double receiveFreq = 17;
-  double receiveFreq1 = 18;
-  double receiveFreq2 = 19;
-  double receiveFreq3 = 20;
-  double receiveFreq4 = 21;
-  double receiveFreq5 = 22;
-  double receivePhaseCt1 = 23;
-  double receivePhaseCt2 = 24;
-  double receivePhaseCt3 = 25;
-  double receivePhaseCt4 = 26;
-  double receivePhaseCt5 = 27;
-  PercentageTypeUO rhumidity = 28;
-  double stec = 29;
-  double temperature = 30;
-  double transmitFreq1 = 31;
-  double transmitFreq2 = 32;
-  double transmitFreq3 = 33;
-  double transmitFreq4 = 34;
-  double transmitFreq5 = 35;
-  double transmitFreqRate1 = 36;
-  double transmitFreqRate2 = 37;
-  double transmitFreqRate3 = 38;
-  double transmitFreqRate4 = 39;
-  double transmitFreqRate5 = 40;
-  double transmitPhaseCt1 = 41;
-  double transmitPhaseCt2 = 42;
-  double transmitPhaseCt3 = 43;
-  double transmitPhaseCt4 = 44;
-  double transmitPhaseCt5 = 45;
-  double tropoDry = 46;
-  double tropoWet = 47;
-  double vlbiDelay = 48;
+  AngleType angle1 = 10;
+  AngleType angle2 = 20;
+  double carrierPower = 30;
+  double clockBias = 40;
+  double clockDrift = 50;
+  double dopplerCount = 60;
+  double dopplerInstantaneous = 70;
+  double dopplerIntegrated = 80;
+  double dor = 90;
+  double mag = 100;
+  double pcN0 = 110;
+  double prN0 = 120;
+  double pressure = 130;
+  double range = 140;
+  double rcs = 150;
+  double receiveFreq = 160;
+  double receiveFreq1 = 170;
+  double receiveFreq2 = 180;
+  double receiveFreq3 = 190;
+  double receiveFreq4 = 200;
+  double receiveFreq5 = 210;
+  double receivePhaseCt1 = 220;
+  double receivePhaseCt2 = 230;
+  double receivePhaseCt3 = 240;
+  double receivePhaseCt4 = 250;
+  double receivePhaseCt5 = 260;
+  PercentageTypeUO rhumidity = 270;
+  double stec = 280;
+  double temperature = 290;
+  double transmitFreq1 = 300;
+  double transmitFreq2 = 310;
+  double transmitFreq3 = 320;
+  double transmitFreq4 = 330;
+  double transmitFreq5 = 340;
+  double transmitFreqRate1 = 350;
+  double transmitFreqRate2 = 360;
+  double transmitFreqRate3 = 370;
+  double transmitFreqRate4 = 380;
+  double transmitFreqRate5 = 390;
+  double transmitPhaseCt1 = 400;
+  double transmitPhaseCt2 = 410;
+  double transmitPhaseCt3 = 420;
+  double transmitPhaseCt4 = 430;
+  double transmitPhaseCt5 = 440;
+  double tropoDry = 450;
+  double tropoWet = 460;
+  double vlbiDelay = 470;
 }
 enum TrajBasisType {
   // Default
@@ -1045,19 +1045,19 @@ enum TrajBasisType {
 }
 message UserDefinedParameterType {
   string parameter = 1;
-  string value = 2;
+  string value = 10;
 }
 message UserDefinedType {
   repeated SequenceWrapper_UserDefinedType sequencewrapper = 1;
 
   message SequenceWrapper_UserDefinedType {
     repeated string comment = 1;
-    repeated UserDefinedParameterType userDefined = 2;
+    repeated UserDefinedParameterType userDefined = 10;
   }
 }
 message VelocityCovarianceType {
   VelocityCovarianceUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 enum VelocityCovarianceUnits {
   // Default
@@ -1066,11 +1066,11 @@ enum VelocityCovarianceUnits {
 }
 message VelocityTypeUO {
   VelocityUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 message VelocityTypeUR {
   VelocityUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 enum VelocityUnits {
   // Default
@@ -1079,7 +1079,7 @@ enum VelocityUnits {
 }
 message WkgType {
   WkgUnits units = 1;
-  double value = 2;
+  double value = 10;
 }
 enum WkgUnits {
   // Default

@@ -18,7 +18,7 @@ message TelecommandMessage {
          * Request reporting of the general status of the CDDS Provider
          * or a specific Telecommand Radiation Request.
          */
-        TelecommandStatusReportRequest reportRequest = 2;
+        TelecommandStatusReportRequest reportRequest = 10;
     }
 }
 
@@ -38,18 +38,18 @@ message TelecommandRadiationRequest {
      * Used to request reports for each Telecommand Message or not.<br/>
      * Default: PRODUCE_REPORT
      */
-    optional ReportRequest reportRequest = 2;
+    optional ReportRequest reportRequest = 10;
 
     /**
      * An optional time specifying the earliest allowed radiation time of this Telecommand.
      * One of the checks on the Telecommand Radiation Request failed
      */
-    optional DateTime earliestRadiationTime = 3;              
+    optional DateTime earliestRadiationTime = 20;
 
     /**
      * An optional time, specifying the latest allowed radiation time of this Telecommand.
      */
-    optional DateTime latestRadiationTime = 4;
+    optional DateTime latestRadiationTime = 30;
 
     /**
      * The CLTU or Telecommand Frame for radiation. In case of a Telecommand Frame, the encoding 
@@ -59,12 +59,12 @@ message TelecommandRadiationRequest {
         /**
          * A valid CLTU as specified in CCSDS 231.0
          */
-        bytes cltu = 5;
+        bytes cltu = 40;
 
         /**
          * A valid telecommand frame as specified in CCSDS 232.0 (TC Frame), CCSDS 732.0 (AOS), CCSDS 732.1 (USLP) or a private specification
          */
-        bytes telecommandFrame = 6;
+        bytes telecommandFrame = 50;
     }
 }
 
@@ -79,7 +79,7 @@ message TelecommandStatusReportRequest {
      *      b) failure    for radiation request failing to radiate
      *      c) radiation  for successfully radiated radiation requests
      */
-    int64 commandId = 1; 
+    int64 commandId = 1;
 }
 
 /**
@@ -91,60 +91,60 @@ message TelecommandReport {
     /**
      * The Command ID uniquely identifying the telecommand within the one dedicated pass.
      */
-    int64 commandId = 1; 
+    int64 commandId = 1;
     
     /**
      * The Production State of the CDDS Provider at the time the report was generated.
      */
-    ProductionState productionState = 4;
+    ProductionState productionState = 10;
 
     /**
      * The amount of buffer available at the CDDS provider to buffer Telecommands for radiation in bytes.
      */
-    int64 bufferAvailable = 5;                  // The available buffer for telecommands in bytes
+    int64 bufferAvailable = 20;
 
     /**
      * The generation time of this report at the CDDS Provider.
      */
-    DateTime reportGenerationTime = 6;
+    DateTime reportGenerationTime = 30;
 
     /**
      * The apertureId shall indicate which aperture or antenna 
      * was used to generate this report.
      */
-    ApertureId apertureId = 7;
+    ApertureId apertureId = 40;
 
     oneof report {
         /**
          * Acknowledge the reception and acceptance of a Telecommand Radiation Request. 
          */
-        TelecommandRadiationRequestAck ack = 8;
+        TelecommandRadiationRequestAck ack = 50;
 
         /**
          * Reports on a failure related to the received radiation request,
          * the processing of it or a failure of the radiation.
          */
-        TelecommandFailure failure = 9; 
+        TelecommandFailure failure = 60;
 
         /**
          * Reports on the radiation of a Telecommand.
          */
-        TelecommandRadiation radiation = 10;
+        TelecommandRadiation radiation = 70;
 
         /**
          * Reports on a Production Status change at the CDDS Provider.
          */ 
-        TelecommandProductionStatusChange productionStatusChange = 11;    
+        TelecommandProductionStatusChange productionStatusChange = 80;
 
         /**
          * The CDDS Provider has no further buffered Telecommands to radiate.
          */
-        TelecommandBufferEmpty bufferEmpty = 12;
+        TelecommandBufferEmpty bufferEmpty = 90;
 
         /**
          * Reporting on the status of the CDDS Provider
          */
-        TelecommandProviderStatus providerStatus = 13;
+        TelecommandProviderStatus providerStatus = 100;
     }
 }
 
@@ -173,12 +173,12 @@ message TelecommandRadiation {
     /**
      * The radiation start time.
      */ 
-    DateTime radiationStartTime = 1;        // ReportType RADIATED
+    DateTime radiationStartTime = 1;
     
     /**
      * The radiation stop time
      */
-    DateTime radiationStopTime = 2;         // ReportType RADIATED
+    DateTime radiationStopTime = 10;
 }
 
 /**
@@ -210,22 +210,22 @@ message TelecommandProviderStatus {
      * The uplinkStatus parameter shall report to the user the state of the forward
      * link obtained from the CLCW present in the return telemetry stream from the spacecraft.
      */
-    UplinkStatus uplinkStatus = 2; 
+    UplinkStatus uplinkStatus = 10;
 
     /**
      * The total number of telecommand messages received during the pass.
      */
-    uint64 numberOfTelecommandsReceived = 3;
+    uint64 numberOfTelecommandsReceived = 20;
 
     /**
      * The number of telecommand messages accepted for radiation during the pass.
      */
-    uint64 numberOfTelecommandsProcessed = 4; 
+    uint64 numberOfTelecommandsProcessed = 30;
 
     /**
      * The number of telecommands radiated during the pass.
      */
-    uint64 numberOfTelecommandsRadiated = 5;
+    uint64 numberOfTelecommandsRadiated = 40;
 }
 
 /**

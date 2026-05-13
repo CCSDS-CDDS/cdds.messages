@@ -17,8 +17,8 @@ message ApertureId {
   option (oid) = "1.2.840.10003.";
 
   oneof apertureIdForm {
-    ObjectIdentifier globalForm = 1;  // The object identifier of the aperture / antenna as per SANA Service Site and Aperture registry
-    string localForm = 2;             // A string to identify the aperture / antenna. Use a hex representation to encode octets
+    ObjectIdentifier globalForm = 1;
+    string localForm = 10;
   } 
 }
 
@@ -43,7 +43,7 @@ message ReceptionMetaData {
    * The apertureId shall indicate which aperture or antenna
    * was used to acquire the frame.
    */
-  ApertureId apertureId = 2;
+  ApertureId apertureId = 10;
 
   /**
    * The dataLinkContinuity shall indicate whether the extracted frame
@@ -59,7 +59,7 @@ message ReceptionMetaData {
    * Frames or USLP Transfer Frames and therefore no information regarding a
    * discontinuity on the channel can be provided. 
    */
-  int64 dataLinkContinuity = 3;  
+  int64 dataLinkContinuity = 20;
 }
 
 /**
@@ -77,17 +77,17 @@ enum FrameQuality {
  * Date / Time definition for epoch 1958 with pico second precision
  */
 message DateTime {
-  uint32 days = 1;          // days since Jan 1st 1958 (01/01/1958 to 01/01/1970: 4383 days)
-  uint32 msOfDay = 2;       // mill seconds of the day
-  uint32 picoSecsOfMs = 3;  // sub pico seconds of the milliseconds
+  uint32 days = 1;
+  uint32 msOfDay = 10;
+  uint32 picoSecsOfMs = 20;
 }
 
 /**
  * An annotation composed out of a name and a value.
  */
 message Annotation {
-  string name = 1;          // The name of the annotation
-  Value value = 2;          // The value of the annotation
+  string name = 1;
+  Value value = 10;
 }
 
 /**
@@ -95,15 +95,15 @@ message Annotation {
  */ 
 message Value {
   oneof value {
-    double doubleValue = 1;       // Double value. Uses IEEE 754 double-precision format
-    float floatValue = 2;         // Float value. Uses IEEE 754 single-precision format
-    int32 int32Value = 3;         // 32 bit signed int. Uses variable-length encoding
-    uint32 uint32Value = 4;       // Unsigned 32 bit int. Uses variable-length encoding
-    int64 int64Value = 5;         // 64 bit signed int 
-    uint64 uint64Value = 6;       // 64 bit unsigned int 
-    bool boolValue = 7;           // boolean (true/false)
-    string stringValue = 8;       // A string must always contain UTF-8 encoded or 7-bit ASCII text, and cannot be longer than 2^32
-    bytes octetStringValue = 9;   // May contain any arbitrary sequence of bytes no longer than 2^32
+    double doubleValue = 1;
+    float floatValue = 10;
+    int32 int32Value = 20;
+    uint32 uint32Value = 30;
+    int64 int64Value = 40;
+    uint64 uint64Value = 50;
+    bool boolValue = 60;
+    string stringValue = 70;
+    bytes octetStringValue = 80;
   }  
 }
 
@@ -111,18 +111,18 @@ message Value {
  * A qualified value has a value and is qualified to indicate validity and alarm states.
  */ 
 message QualifiedValue {
-  Value value = 1;                    // The value
-  ValueQualifier valueQualifier = 2;  // The value qualifier indicating the validity
-  AlarmQualifier alarmQualifier = 3;  // The alarm qualifier indicating alarms associated to the value
+  Value value = 1;
+  ValueQualifier valueQualifier = 10;
+  AlarmQualifier alarmQualifier = 20;
 }
 
 /**
  * A qualified value for encoded values. An encoded value (e.g. in Protobuf) must be encoded and decoded.
  */
 message EncodedQualifiedValue {
-  bytes encodedValue = 1;             // The value
-  ValueQualifier valueQualifier = 2;  // The value qualifier indicating the validity
-  AlarmQualifier alarmQualifier = 3;  // The alarm qualifier indicating alarms associated to the value
+  bytes encodedValue = 1;
+  ValueQualifier valueQualifier = 10;
+  AlarmQualifier alarmQualifier = 20;
 }
 
 /**
@@ -150,17 +150,17 @@ message AlarmQualifier {
   /**
    * Indicates an alarm
    */
-  Alarm alarm = 1; 
+  Alarm alarm = 1;
 
   /**
    * A generic optional reason code for alarms
    */
-  optional int64 alarmReason = 2;
+  optional int64 alarmReason = 10;
 
   /**
    * An optional message describing the alarm for operators
    */
-  optional string alarmMessage = 3;
+  optional string alarmMessage = 20;
 }
 
   /**
@@ -186,16 +186,16 @@ message AlarmQualifier {
    * The Global Virtual Channel identifier
    */
   message GvcId {
-    uint32 spacecraftId = 1;              // The spacecraft identifier (SCID)
-    FrameVersion version = 2;             // The transfer frame version as per USLP, AOS or packet TM
-    optional uint32 virtualChannelId = 3; // optional, if omitted this is a master channel
+    uint32 spacecraftId = 1;
+    FrameVersion version = 10;
+    optional uint32 virtualChannelId = 20;
   }
   
   /**
    * A list of Global Virtual Channel Identifiers.
    */
   message GvcIdList {
-      repeated GvcId gvcId = 1; // Global Virtual Channel Identifiers 
+      repeated GvcId gvcId = 1;
   }
 
   /**
@@ -223,14 +223,14 @@ message AlarmQualifier {
      * The sequence of numbers representing the 
      * Object Identifier
      */
-    repeated uint64 arcs = 2;
+    repeated uint64 arcs = 10;
   }
 
   /**
    * The QoS for data exchange.
    */
   message QoS {
-      EnumQoS qos = 1;    // The QoS value
+      EnumQoS qos = 1;
   }  
 
   /**

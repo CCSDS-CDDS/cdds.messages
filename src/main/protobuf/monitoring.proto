@@ -18,12 +18,12 @@ message MonitoringMessage {
   /**
    * A Monitoring Message can carry generic monitoring parameters.
    */
-  repeated GenericMonitoringParameter genericMonitoringParameters = 2;
+  repeated GenericMonitoringParameter genericMonitoringParameters = 10;
 
   /**
    * A Monitoring Message can carry Functional Resource Parameters. 
    */
-  repeated FunctionalResourceParameter functionalResourceParameters = 3;
+  repeated FunctionalResourceParameter functionalResourceParameters = 20;
 }
 
 /**
@@ -42,14 +42,14 @@ message GenericMonitoringParameter {
   /**
    * The times stamp when the monitoring parameter was generated.
    */
-  DateTime timeStamp = 2;
+  DateTime timeStamp = 10;
 
   /**
    * The value of the monitoring parameter.
    * The value is qualified to indicate if the value is valid
    * and has an alarm associated to it.
    */
-  QualifiedValue qualifiedValue = 3;
+  QualifiedValue qualifiedValue = 20;
 }
 
 
@@ -69,18 +69,18 @@ message FunctionalResourceParameter {
    * The instance number of the Functional Resource
    * for which the parameter is reported for.
    */
-  uint64 functionalResourceInstance = 2;
+  uint64 functionalResourceInstance = 10;
 
   /**
    * The times stamp when the monitoring parameter was generated.
    */  
-  DateTime timeStamp = 3;
+  DateTime timeStamp = 20;
 
   /**
    * The value of the of the functional resource parameter is encoded again
    * as a protobuf type. Such a protobuf specification is external to this
    * specification.
    */
-  EncodedQualifiedValue parameterValue = 4;
+  EncodedQualifiedValue parameterValue = 30;
 
 }

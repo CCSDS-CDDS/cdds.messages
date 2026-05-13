@@ -19,7 +19,7 @@ message ControlDirective {
         /**
          *  Requests the invocation of a Functional Resource directive
          */
-        FunctionalResourceDirective functionalResourceControlDirective = 2; 
+        FunctionalResourceDirective functionalResourceControlDirective = 10;
     }
 }
 
@@ -40,12 +40,12 @@ message GenericControlDirective {
      * The directive identfier uniquely identifies a control directive
      * known to both, the CDDS User and CDDS Provider.
      */
-    string directiveId = 2;
+    string directiveId = 10;
 
     /**
      * The qualifiers of the directive with identifier and value.
      */
-    repeated GenericQualifier directiveQualifiers = 3;
+    repeated GenericQualifier directiveQualifiers = 20;
 
 }
 
@@ -63,7 +63,7 @@ message GenericQualifier {
     /**
      * The value of the qualifier.
      */
-    Value qualifierValue = 2; 
+    Value qualifierValue = 10;
 }
 
 message FunctionalResourceDirective {
@@ -77,23 +77,23 @@ message FunctionalResourceDirective {
     /**
      * The Object Identifier of the Functional Resource.
      */
-    ObjectIdentifier functionalResourceIdentifier = 2;
+    ObjectIdentifier functionalResourceIdentifier = 10;
 
     /**
      * The instance number of the Functional Resource
      * for which the directive is invoked.
      */
-    uint64 functionalResourceInstance = 3;
+    uint64 functionalResourceInstance = 20;
   
     /**
      * The identifier of the directiv to invoke
      */
-    ObjectIdentifier directiveIdentifier = 4;
+    ObjectIdentifier directiveIdentifier = 30;
 
     /**
      * The qualifiers of the invoked directive
      */
-    repeated DirectiveQualifier directiveQualifiers = 5;
+    repeated DirectiveQualifier directiveQualifiers = 40;
 }
 
 /**
@@ -109,7 +109,7 @@ message DirectiveQualifier {
     /**
      * The value of the directive qualifier
      */
-    Value qualifierValue = 2;
+    Value qualifierValue = 10;
 }
 
 message DirectiveReport {
@@ -122,17 +122,17 @@ message DirectiveReport {
      * The invocation identifier is referring to a previously invoked  
      * control directive.
      */
-    uint32 invocationId = 2;    
+    uint32 invocationId = 10;
 
     /**
      * The result is informing about the outcome of a directive execution or a rejected directive.
      */
-    DirectiveResult result = 3;
+    DirectiveResult result = 20;
 
     /**
      * In case of a rejected ot execution error, the diagnostic shall provide more information
      */
-    DirectiveExecutionDiagnostic diagnostic = 4; 
+    DirectiveExecutionDiagnostic diagnostic = 30;
 }
 
 /**

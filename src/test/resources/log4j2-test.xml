@@ -50,6 +50,10 @@
             <AppenderRef ref="ConsoleBrightBlack"/>
         </Logger>
 
+        <Logger name="cdds.tm.test" level="info" additivity="false">
+            <AppenderRef ref="ConsoleMagenta"/>
+        </Logger>
+
         <Logger name="cdds.tm.user" level="info" additivity="false">
             <AppenderRef ref="ConsoleBrightBlack"/>
         </Logger>

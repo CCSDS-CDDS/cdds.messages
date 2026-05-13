@@ -49,7 +49,7 @@ public class TmServiceTest {
             FrameVersion.AOS,
             1);
 
-    private static final Logger LOG = LogManager.getLogger("cdds.tc.test");    
+    private static final Logger LOG = LogManager.getLogger("cdds.tm.test");    
 
     @BeforeEach
         void before(TestInfo info) {

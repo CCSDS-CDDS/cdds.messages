@@ -1,4 +1,4 @@
-package cdds.service.tc;
+package cdds.service.common;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +14,7 @@ import javax.net.ssl.SSLException;
 
 import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
 import ccsds.cdds.tm.CddsTmService.TmServiceEndpoint;
+import cdds.service.tc.TcServiceAuthorization;
 import cdds.service.tm.TmServiceAuthorization;
 import io.grpc.BindableService;
 import io.grpc.Grpc;
@@ -45,7 +46,7 @@ public class ProviderServer {
     }
 
     /**
-     * Creates a TC server running one TC service on the given port using mTLS and SSL .
+     * Creates a  CDDS server running CDDS services on the given port using mTLS and SSL .
      * @param port
      * @param caCertificateFile
      * @param providerCertificateFile

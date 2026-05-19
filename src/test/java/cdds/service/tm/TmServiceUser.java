@@ -329,7 +329,7 @@ public class TmServiceUser {
     }
 
     /**
-     * Shuts down the communcation channel
+     * Shuts down the communication channel
      * @throws InterruptedException
      */
     public void shutdown() throws InterruptedException {

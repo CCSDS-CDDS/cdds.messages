@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 import ccsds.cdds.Types.FrameVersion;
 import ccsds.cdds.tm.CddsTmService.TmServiceEndpoint;
-import cdds.service.tc.ProviderServer;
+import cdds.service.common.ProviderServer;
 import io.grpc.BindableService;
 
 /**

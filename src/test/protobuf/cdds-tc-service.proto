@@ -29,39 +29,39 @@ service TcServiceProvider {
  * of the parameters provided below.
  */
 message TcServiceEndpoint {
+    /**
+     * The CDDS service version of this service
+     */
+    uint32 serviceVersion = 1;
 
     /**
      * The name of the service provider organization providing the TM service
      */
-    optional string serviceProvider = 1;
-
-    /**
-     * The service user (spacecraft) for which TC shall be delivered
-     */
-    string serviceUser = 2;
+    optional string serviceProvider = 10;
 
     /**
      * The name of the terminal providing the TC service
      */
-    optional string terminal = 3;
+    optional string terminal = 20;
+
+    /**
+     * The service user (spacecraft) for which TC shall be delivered
+     */
+    string serviceUser = 30;
+
 
     /**
      * Indicates the use of the endpoint for uplink of CLTU,
      * or a TC VC when the TC User provides TC frames for radiation.
      */
     oneof type {
-        bool        cltu = 4;       // encoded CLTU
-        GvcIdList   gvcIds = 5;     // TC Global VC ID: Spacecraft ID, Transfer Frame Version, VC ID
+        bool        cltu = 40;
+        GvcIdList   gvcIds = 50;
     }
 
     /**
      * An optional endpoint name to distinguish endpoints;
      * for instance for spacecrafts supporting multiple bands.
      */
-    optional string endpointName = 6;
-
-    /**
-     * The CDDS service version of this service
-     */
-    uint32 serviceVersion = 7;
+    optional string endpointName = 60;
 }

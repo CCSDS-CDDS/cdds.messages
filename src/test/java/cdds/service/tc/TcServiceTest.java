@@ -16,6 +16,7 @@ import ccsds.cdds.Telecommand.ReportRequest;
 import ccsds.cdds.Telecommand.TelecommandMessage;
 import ccsds.cdds.Telecommand.TelecommandRadiationRequest;
 import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
+import cdds.service.common.ProviderServer;
 import io.grpc.BindableService;
 
 /**

@@ -1,0 +1,41 @@
+syntax = "proto3";
+package ccsds.cdds;
+
+message ServiceProviderAddress {
+
+    /**
+     * The name of the service provider organization providing the TM service
+     */    
+    string serviceProvider = 1;
+
+    /**
+     * Optional: The name of the terminal providing the CDDS service
+     */
+    optional string terminal = 20;    
+
+    /**
+     * The IP address or DNS resolve able name of the gRPC provider
+     * For a provider the address can be omitted.
+     */
+    string address = 30;
+
+    /**
+     * The TCP port of the gRPC provider
+     */ 
+    string port = 40;
+
+    /**
+     * The trust anchor / root certificate use to sign the CDDS user / CDDS provider certificates
+     */
+    string rootCertificateFile = 50;
+
+    /**
+     * The certificate file of the CDDS user or the CDDS provider
+     */
+    string certificateFile = 60;
+
+    /**
+     * The private key file of the CDDS user or CDDS provider 
+     */
+    string privateKeyFile = 70;
+}

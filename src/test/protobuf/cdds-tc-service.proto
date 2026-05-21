@@ -37,7 +37,7 @@ message TcServiceEndpoint {
     /**
      * The name of the service provider organization providing the TM service
      */
-    optional string serviceProvider = 10;
+    string serviceProvider = 10;
 
     /**
      * The name of the terminal providing the TC service

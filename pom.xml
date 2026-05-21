@@ -147,6 +147,37 @@
               </arguments>
           </configuration>
           </execution>
+
+         <execution>
+            <?m2e ignore?>
+            <id>generate-test-docs</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>protoc</executable>
+              <arguments>
+                <!-- include paths -->
+                <argument>-I${project.basedir}/src/main/protobuf</argument>
+                <argument>-I${project.basedir}/src/test/protobuf</argument>
+
+                <!-- generate HTML docs -->
+                <argument>--plugin=protoc-gen-doc=/Users/Shared/tools/protoc-gen-doc/1.5.2/protoc-gen-doc</argument>
+                <argument>--doc_out=${project.build.directory}/generated-docs/</argument>
+                <!-- Ignore ccsds_schema_ndmxml.proto -->
+                <argument>--doc_opt=src/main/resources/cdds.tmpl,cdds-test.html:ccsds_schema_ndmxml.proto${sort-source}</argument>
+
+                <!-- proto files -->
+                <argument>${project.basedir}/src/test/protobuf/cdds-service-provider.proto</argument>
+                <argument>${project.basedir}/src/test/protobuf/cdds-tc-service-configuration.proto</argument>
+                <argument>${project.basedir}/src/test/protobuf/cdds-tc-service.proto</argument>
+                <argument>${project.basedir}/src/test/protobuf/cdds-tm-service-configuration.proto</argument>
+                <argument>${project.basedir}/src/test/protobuf/cdds-tm-service.proto</argument>
+              </arguments>
+          </configuration>
+          </execution>
+
         </executions>
       </plugin>       
 

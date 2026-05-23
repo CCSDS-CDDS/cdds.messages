@@ -112,6 +112,21 @@
         width: 10em;
       }
 
+      /* Table for services. */
+      .service-table td:nth-child(1) { /* Method Name */
+        width: 6em;
+      }
+      .service-table td:nth-child(2) { /* Request Type */
+        width: 3em;
+      }
+      .service-table td:nth-child(3) { /* Response Type */
+        width: 3em;
+      }
+      .service-table td:nth-child(4) { /* Description */
+        width: 10em;
+      }
+
+
       /* Table of scalar value types. */
       .scalar-value-types-table tr {
         height: 3em;
@@ -388,7 +403,7 @@
       {{range .Services}}
         <h3 id="{{.FullName}}">{{.Name}}</h3>
         {{p .Description}}
-        <table class="enum-table">
+        <table class="service-table">
           <thead>
             <tr><td>Method Name</td><td>Request Type</td><td>Response Type</td><td>Description</td></tr>
           </thead>

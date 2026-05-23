@@ -4,8 +4,7 @@ import "types.proto";
 import "telecommand.proto";
 
 /**
- * This is the gRPC definition of the CDDS TC Service for uplink of 
- * CLTUs or Telecommand frames.
+ * This is the gRPC definition of the CDDS TC Service for uplink of CLTUs or Telecommand frames.
  */
 service TcServiceProvider {
 
@@ -15,8 +14,8 @@ service TcServiceProvider {
      * The returned stream will receive the TC reports reporting on radiation, 
      * provider states uplink failures.
      * 
-     * The service requires the following metadata when calling the service method:
-     *      1) tc-endpoint-bin = JSON encoded TcServiceEndpoint using the binary marshaller
+     * The service requires the following metadata when calling the service method:<br/><br/>
+     *      1) tc-endpoint-bin = JSON encoded TcServiceEndpoint using the binary marshaller<br/><br/>
      *
      * The tc-endpoint-bin is authorized for the authenticated user. If not authorized,
      * the method call will fail.

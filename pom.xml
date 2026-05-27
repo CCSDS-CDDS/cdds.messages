@@ -55,15 +55,15 @@
 
                 <configuration>
 
-                  <!-- Where proto files are -->
+                  <!-- Where proto service files are -->
                   <inputDirectories>
-                    <inputDirectory>${project.basedir}/src/test/protobuf</inputDirectory>
+                    <inputDirectory>${project.basedir}/services</inputDirectory>
                   </inputDirectories>
 
                   <!-- Include path for imports -->
                   <includeDirectories>
                     <!-- Your main protobuf directory -->
-                    <include>${project.basedir}/src/main/protobuf</include>
+                    <include>${project.basedir}/proto</include>
                   </includeDirectories>
 
                   <!-- Protobuf Java output -->
@@ -138,12 +138,12 @@
                 <argument>--doc_opt=src/main/resources/cdds.tmpl,cdds.html:ccsds_schema_ndmxml.proto${sort-source}</argument>
 
                 <!-- proto files -->
-                <argument>${project.basedir}/src/main/protobuf/telemetry.proto</argument>
-                <argument>${project.basedir}/src/main/protobuf/telecommand.proto</argument>
-                <argument>${project.basedir}/src/main/protobuf/monitoring.proto</argument>
-                <argument>${project.basedir}/src/main/protobuf/control.proto</argument>
-                <argument>${project.basedir}/src/main/protobuf/tracking.proto</argument>
-                <argument>${project.basedir}/src/main/protobuf/types.proto</argument>
+                <argument>${project.basedir}/proto/telemetry.proto</argument>
+                <argument>${project.basedir}/proto/telecommand.proto</argument>
+                <argument>${project.basedir}/proto/monitoring.proto</argument>
+                <argument>${project.basedir}/proto/control.proto</argument>
+                <argument>${project.basedir}/proto/tracking.proto</argument>
+                <argument>${project.basedir}/proto/types.proto</argument>
               </arguments>
           </configuration>
           </execution>
@@ -159,8 +159,8 @@
               <executable>protoc</executable>
               <arguments>
                 <!-- include paths -->
-                <argument>-I${project.basedir}/src/main/protobuf</argument>
-                <argument>-I${project.basedir}/src/test/protobuf</argument>
+                <argument>-I${project.basedir}/proto</argument>
+                <argument>-I${project.basedir}/services</argument>
 
                 <!-- generate HTML docs -->
                 <argument>--plugin=protoc-gen-doc=/Users/Shared/tools/protoc-gen-doc/1.5.2/protoc-gen-doc</argument>
@@ -169,11 +169,11 @@
                 <argument>--doc_opt=src/main/resources/cdds.tmpl,cdds-test.html:ccsds_schema_ndmxml.proto${sort-source}</argument>
 
                 <!-- proto files -->
-                <argument>${project.basedir}/src/test/protobuf/cdds-service-provider.proto</argument>
-                <argument>${project.basedir}/src/test/protobuf/cdds-tc-service-configuration.proto</argument>
-                <argument>${project.basedir}/src/test/protobuf/cdds-tc-service.proto</argument>
-                <argument>${project.basedir}/src/test/protobuf/cdds-tm-service-configuration.proto</argument>
-                <argument>${project.basedir}/src/test/protobuf/cdds-tm-service.proto</argument>
+                <argument>${project.basedir}/services/cdds-service-provider.proto</argument>
+                <argument>${project.basedir}/services/cdds-tc-service-configuration.proto</argument>
+                <argument>${project.basedir}/services/cdds-tc-service.proto</argument>
+                <argument>${project.basedir}/services/cdds-tm-service-configuration.proto</argument>
+                <argument>${project.basedir}/services/cdds-tm-service.proto</argument>
               </arguments>
           </configuration>
           </execution>

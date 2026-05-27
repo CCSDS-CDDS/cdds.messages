@@ -22,7 +22,7 @@ import io.grpc.BindableService;
  */
 public class TmServiceTest {
 
-    private static final int PROVIDER_PORT = 6666;
+    private static final int PROVIDER_PORT = 7666;
 
     final long numFrames = 750_000;
     final long timeout = 30_000;

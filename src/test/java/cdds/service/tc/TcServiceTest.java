@@ -26,7 +26,7 @@ import io.grpc.BindableService;
  */
 public class TcServiceTest {
 
-    private static final int PROVIDER_PORT = 6666;
+    private static final int PROVIDER_PORT = 7666;
 
     final TcServiceEndpoint authorizedTcEndpoint1 = TcServiceUser.getTcEndpoint("myProvider",
             "myGroundStation",
@@ -53,7 +53,7 @@ public class TcServiceTest {
                                         .setServiceProvider("theProvider")
                                         .setTerminal("myGroundStation")
                                         .setAddress("localhost")
-                                        .setPort(6666)
+                                        .setPort(PROVIDER_PORT)
                                         .setRootCertificateFile("cert/cdds-ca.pem")
                                         .setCertificateFile("cert/cdds-provider.pem")
                                         .setPrivateKeyFile("cert/cdds-provider.key")
@@ -69,7 +69,7 @@ public class TcServiceTest {
                                         .setServiceProvider("theProvider")
                                         .setTerminal("myGroundStation")
                                         .setAddress("localhost")
-                                        .setPort(6666)
+                                        .setPort(PROVIDER_PORT)
                                         .setRootCertificateFile("cert/cdds-ca.pem")
                                         .setCertificateFile("cert/cdds-user.pem")
                                         .setPrivateKeyFile("cert/cdds-user.key")

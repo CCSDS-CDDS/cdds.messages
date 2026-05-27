@@ -68,10 +68,8 @@ message TelemetryData {
    * If the frameQuality is provided and good, or the gvcId is provided, data carries
    * the un-coded telemetry frame.
    * <br/><br/>  
-   * The data field shall carry 
-   * <br/><br/> 
    * For Reed-Solomon, LDPC or turbo encoding, if the frameQuality is provided and indicates 'ERRED',
-   *  data carries the full coded block of data 
+   * data carries the full coded block of data 
    * as identified by the frame synchronization process. For BCH encoded frames failing the decoding,
    * the result of the BCH decoding including the fill bits for which decoding was not possible is delivered.
    */

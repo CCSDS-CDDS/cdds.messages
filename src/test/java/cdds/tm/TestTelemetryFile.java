@@ -20,8 +20,6 @@ import ccsds.cdds.Telemetry.TelemetryData;
 import ccsds.cdds.Telemetry.TelemetryMessage;
 import ccsds.cdds.Types.Annotation;
 import ccsds.cdds.Types.ApertureId;
-import ccsds.cdds.Types.FrameVersion;
-import ccsds.cdds.Types.GvcId;
 import ccsds.cdds.Types.ReceptionMetaData;
 import ccsds.cdds.Types.Value;
 import cdds.util.TimeUtil;

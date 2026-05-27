@@ -14,7 +14,6 @@ import javax.net.ssl.SSLException;
 
 import ccsds.cdds.CddsServiceProvider.ServiceProviderAddress;
 import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
-import ccsds.cdds.tc.CddsTcServiceConfiguration.TcServiceConfiguration;
 import ccsds.cdds.tm.CddsTmService.TmServiceEndpoint;
 import cdds.service.tc.TcServiceAuthorization;
 import cdds.service.tm.TmServiceAuthorization;

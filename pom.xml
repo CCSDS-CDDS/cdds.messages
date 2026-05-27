@@ -13,6 +13,7 @@
     <maven.compiler.target>11</maven.compiler.target>
     <os.detected.classifier>osx-aarch_64</os.detected.classifier>
     <protoc-version>3.25.8</protoc-version>
+    <protoc-gen-doc>/Users/Shared/tools/protoc-gen-doc/1.5.2/protoc-gen-doc</protoc-gen-doc>
     <!-- Java source encoding -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- For site/reports generation -->
@@ -34,7 +35,7 @@
         <artifactId>protoc-jar-maven-plugin</artifactId>
         <version>3.11.4</version>
         <configuration>
-          <protocVersion>3.25.8</protocVersion>
+          <protocVersion>${protoc-version}</protocVersion>
         </configuration>
         <executions>
           <!-- generate the protobuf Java files -->
@@ -121,7 +122,7 @@
 
           <execution>
             <?m2e ignore?>
-            <phase>generate-sources</phase>
+            <phase>verify</phase>
             <goals>
               <goal>exec</goal>
             </goals>
@@ -132,7 +133,7 @@
                 <argument>-I${project.basedir}/src/main/protobuf</argument>
 
                 <!-- generate HTML docs -->
-                <argument>--plugin=protoc-gen-doc=/Users/Shared/tools/protoc-gen-doc/1.5.2/protoc-gen-doc</argument>
+                <argument>--plugin=protoc-gen-doc=${protoc-gen-doc}</argument>
                 <argument>--doc_out=${project.build.directory}/generated-docs</argument>
                 <!-- Ignore ccsds_schema_ndmxml.proto -->
                 <argument>--doc_opt=src/main/resources/cdds.tmpl,cdds.html:ccsds_schema_ndmxml.proto${sort-source}</argument>
@@ -151,7 +152,7 @@
          <execution>
             <?m2e ignore?>
             <id>generate-test-docs</id>
-            <phase>generate-sources</phase>
+            <phase>verify</phase>
             <goals>
               <goal>exec</goal>
             </goals>
@@ -163,7 +164,7 @@
                 <argument>-I${project.basedir}/src/test/protobuf</argument>
 
                 <!-- generate HTML docs -->
-                <argument>--plugin=protoc-gen-doc=/Users/Shared/tools/protoc-gen-doc/1.5.2/protoc-gen-doc</argument>
+                <argument>--plugin=protoc-gen-doc=${protoc-gen-doc}</argument>
                 <argument>--doc_out=${project.build.directory}/generated-docs/</argument>
                 <!-- Ignore ccsds_schema_ndmxml.proto -->
                 <argument>--doc_opt=src/main/resources/cdds.tmpl,cdds-test.html:ccsds_schema_ndmxml.proto${sort-source}</argument>

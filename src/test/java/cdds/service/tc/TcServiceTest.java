@@ -12,10 +12,12 @@ import org.junit.jupiter.api.TestInfo;
 
 import com.google.protobuf.ByteString;
 
+import ccsds.cdds.CddsServiceProvider.ServiceProviderAddress;
 import ccsds.cdds.Telecommand.ReportRequest;
 import ccsds.cdds.Telecommand.TelecommandMessage;
 import ccsds.cdds.Telecommand.TelecommandRadiationRequest;
 import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
+import ccsds.cdds.tc.CddsTcServiceConfiguration.TcServiceConfiguration;
 import cdds.service.common.ProviderServer;
 import io.grpc.BindableService;
 
@@ -44,6 +46,39 @@ public class TcServiceTest {
             "theSpacecraft",
             4711,
             1);
+
+    // a TC provider configuration for testing
+    final TcServiceConfiguration nominalProviderTcConfig = TcServiceConfiguration.newBuilder()
+                                .addTcProviderAddresses(ServiceProviderAddress.newBuilder()
+                                        .setServiceProvider("theProvider")
+                                        .setTerminal("myGroundStation")
+                                        .setAddress("localhost")
+                                        .setPort(6666)
+                                        .setRootCertificateFile("cert/cdds-ca.pem")
+                                        .setCertificateFile("cert/cdds-provider.pem")
+                                        .setPrivateKeyFile("cert/cdds-provider.key")
+                                        .build()
+                                )
+                                .addTcEndpoints(authorizedTcEndpoint1)
+                                .addTcEndpoints(authorizedTcEndpoint2)
+                                .build();
+    
+    // a TC user configuration for testing                            
+    final TcServiceConfiguration nominalUserTcConfig = TcServiceConfiguration.newBuilder()
+                                .addTcProviderAddresses(ServiceProviderAddress.newBuilder()
+                                        .setServiceProvider("theProvider")
+                                        .setTerminal("myGroundStation")
+                                        .setAddress("localhost")
+                                        .setPort(6666)
+                                        .setRootCertificateFile("cert/cdds-ca.pem")
+                                        .setCertificateFile("cert/cdds-user.pem")
+                                        .setPrivateKeyFile("cert/cdds-user.key")
+                                        .build()
+                                )
+                                .addTcEndpoints(authorizedTcEndpoint1)
+                                .addTcEndpoints(authorizedTcEndpoint2)
+                                .build();               
+                                
 
     private static final Logger LOG = LogManager.getLogger("cdds.tc.test");    
 
@@ -93,32 +128,26 @@ public class TcServiceTest {
      *          <- one TC ACK
      *          <- one Radiation report
      * @throws IOException
-     * @throws InterruptedException
+     * @throws InterruptedException     
      * @throws TimeLimitExceededException
      */        
 
     @Test
     public void testSecureTcServiceTwoUser() throws IOException, InterruptedException, TimeLimitExceededException {
-        final ProviderServer server = new ProviderServer(PROVIDER_PORT, new BindableService[]{new TcServiceProvider()},
-                ProviderServer.resourceToFile("cert/cdds-ca.pem"),
-                ProviderServer.resourceToFile("cert/cdds-provider.pem"),
-                ProviderServer.resourceToFile("cert/cdds-provider.key"));
+        final ProviderServer server = new ProviderServer(nominalProviderTcConfig.getTcProviderAddresses(0),
+                                                new BindableService[]{new TcServiceProvider()});
 
         server.start();
         server.addAuthorizedTcEndpoint(authorizedTcEndpoint1);
         server.addAuthorizedTcEndpoint(authorizedTcEndpoint2);
 
-        final TcServiceUser tcServiceUser1 = TcServiceUser.buildSecureTcService("localhost", PROVIDER_PORT,
-                authorizedTcEndpoint1,
-                ProviderServer.resourceToFile("cert/cdds-ca.pem"),
-                ProviderServer.resourceToFile("cert/cdds-user.pem"),
-                ProviderServer.resourceToFile("cert/cdds-user.key"));
+        final TcServiceUser tcServiceUser1 = TcServiceUser.buildSecureTcService(
+                nominalUserTcConfig.getTcProviderAddresses(0),
+                authorizedTcEndpoint1);
 
-        final TcServiceUser tcServiceUser2 = TcServiceUser.buildSecureTcService("localhost", PROVIDER_PORT,
-                authorizedTcEndpoint2,
-                ProviderServer.resourceToFile("cert/cdds-ca.pem"),
-                ProviderServer.resourceToFile("cert/cdds-user.pem"),
-                ProviderServer.resourceToFile("cert/cdds-user.key"));
+        final TcServiceUser tcServiceUser2 = TcServiceUser.buildSecureTcService(
+                nominalUserTcConfig.getTcProviderAddresses(0),
+                authorizedTcEndpoint2);
 
         // Do two runs using the TC endpoints
         for (int idx = 1; idx <= 2; idx++) {

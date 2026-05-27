@@ -12,7 +12,9 @@ import org.apache.logging.log4j.Logger;
 
 import javax.net.ssl.SSLException;
 
+import ccsds.cdds.CddsServiceProvider.ServiceProviderAddress;
 import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
+import ccsds.cdds.tc.CddsTcServiceConfiguration.TcServiceConfiguration;
 import ccsds.cdds.tm.CddsTmService.TmServiceEndpoint;
 import cdds.service.tc.TcServiceAuthorization;
 import cdds.service.tm.TmServiceAuthorization;
@@ -28,7 +30,7 @@ import io.grpc.netty.shaded.io.netty.handler.ssl.SslContext;
 
 
 /**
- * Test service for TC service. Created one TC service.
+ * Test service provider for CDDS services. 
  */
 public class ProviderServer {
     private final int port;
@@ -44,6 +46,21 @@ public class ProviderServer {
     public ProviderServer(int port, BindableService[] services) {
         this(Grpc.newServerBuilderForPort(port, InsecureServerCredentials.create()), port, services);
     }
+
+    /**
+     * Creates a CDDS service provider
+     * @param address       The address to use (port)
+     * @param services      The services to provide
+     * @throws IOException  Thrown if the certificate files are not found
+     */
+    public ProviderServer(ServiceProviderAddress address, BindableService[] services) throws IOException {
+        this(address.getPort(),
+             services,
+             resourceToFile(address.getRootCertificateFile()),
+             resourceToFile(address.getCertificateFile()),
+             resourceToFile(address.getPrivateKeyFile())
+        );
+    } 
 
     /**
      * Creates a  CDDS server running CDDS services on the given port using mTLS and SSL .

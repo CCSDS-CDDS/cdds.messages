@@ -11,6 +11,8 @@ import javax.naming.TimeLimitExceededException;
 import javax.net.ssl.SSLException;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+
+import ccsds.cdds.CddsServiceProvider.ServiceProviderAddress;
 import ccsds.cdds.Telecommand.TelecommandMessage;
 import ccsds.cdds.Telecommand.TelecommandReport;
 import ccsds.cdds.Types.FrameVersion;
@@ -20,6 +22,7 @@ import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
 import ccsds.cdds.tc.TcServiceProviderGrpc;
 import ccsds.cdds.tc.TcServiceProviderGrpc.TcServiceProviderStub;
 import cdds.service.common.ProtoJsonUtil;
+import cdds.service.common.ProviderServer;
 import io.grpc.Channel;
 import io.grpc.ClientInterceptor;
 import io.grpc.ClientInterceptors;
@@ -57,7 +60,22 @@ public class TcServiceUser {
     } 
 
     /**
-     * Created a TC User using an mTLS channel with the given arguments
+     * Creates a TC User using an mTLS channel with the given address and configuration 
+     * @param address       The address of the TC provider
+     * @param tcEndpoint    The endpoint to use
+     * @return
+     */
+    public static TcServiceUser buildSecureTcService(ServiceProviderAddress address,TcServiceEndpoint tcEndpoint) throws SSLException, InvalidProtocolBufferException {
+        return buildSecureTcService(address.getAddress(),
+                                    address.getPort(),
+                                    tcEndpoint,
+                                    ProviderServer.resourceToFile(address.getRootCertificateFile()),
+                                    ProviderServer.resourceToFile(address.getCertificateFile()),
+                                    ProviderServer.resourceToFile(address.getPrivateKeyFile())); 
+    } 
+
+    /**
+     * Creates a TC User using an mTLS channel with the given arguments
      * @param host                  The host of the TC provider service
      * @param port                  The port of the TC provider service
      * @param tcEndpoint            The TC endpoint for this TC service user

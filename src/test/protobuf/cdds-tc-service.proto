@@ -34,7 +34,7 @@ message TcServiceEndpoint {
     uint32 serviceVersion = 1;
 
     /**
-     * The name of the service provider organization providing the TM service
+     * The name of the service provider organization providing the TC service
      */
     string serviceProvider = 10;
 

@@ -22,20 +22,20 @@ message ServiceProviderAddress {
     /**
      * The TCP port of the gRPC provider
      */ 
-    string port = 40;
+    uint32 port = 40;
 
     /**
      * The trust anchor / root certificate use to sign the CDDS user / CDDS provider certificates
      */
-    string rootCertificateFile = 50;
+    optional string rootCertificateFile = 50;
 
     /**
      * The certificate file of the CDDS user or the CDDS provider
      */
-    string certificateFile = 60;
+    optional string certificateFile = 60;
 
     /**
      * The private key file of the CDDS user or CDDS provider 
      */
-    string privateKeyFile = 70;
+    optional string privateKeyFile = 70;
 }

@@ -20,18 +20,16 @@ import ccsds.cdds.Types.NoArg;
 import ccsds.cdds.tm.CddsTmService.TmServiceEndpoint;
 import ccsds.cdds.tm.TmServiceProviderGrpc;
 import ccsds.cdds.tm.TmServiceProviderGrpc.TmServiceProviderStub;
+import cdds.service.common.ClientMetaDataInterceptor;
 import cdds.service.common.ProtoJsonUtil;
 import cdds.service.tc.TcEndpointUtil;
 import io.grpc.Channel;
-import io.grpc.ClientInterceptor;
 import io.grpc.ClientInterceptors;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-import io.grpc.Metadata;
 import io.grpc.netty.shaded.io.grpc.netty.GrpcSslContexts;
 import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
 import io.grpc.netty.shaded.io.netty.handler.ssl.SslContext;
-import io.grpc.stub.MetadataUtils;
 import io.grpc.stub.StreamObserver;
 
 
@@ -45,6 +43,8 @@ public class TmServiceUser {
     private final StreamObserver<TelemetryMessage> tmUserStream;   // the stream to observer TM messages received
     private final ManagedChannel channel;
     private Throwable lastError;
+    private final ClientMetaDataInterceptor interceptor = new ClientMetaDataInterceptor(TmServiceAuthorization.TM_ENDPOINT_KEY);
+
 
     private final AtomicLong numFramesReceived = new AtomicLong(0);
     private final AtomicLong numFramesExpected = new AtomicLong(0);
@@ -56,28 +56,27 @@ public class TmServiceUser {
     private volatile int frameLength = 0;
     private volatile int protoTmLength = 0;
 
-    private final Logger LOG;
+    private volatile Logger LOG;
 
     /**
      * Constructs and TM service user and connects to the provider, w/o security.
      * @param host      The host of the TM provider
      * @param port      The port of the TM provider * @throws InvalidProtocolBufferException
      */
-    public static TmServiceUser buildUnsecureTmServiceUser(String host, int port, TmServiceEndpoint tmEndpoint) throws InvalidProtocolBufferException {
+    public static TmServiceUser buildUnsecureTmServiceUser(String host, int port) throws InvalidProtocolBufferException {
         ManagedChannel channel = ManagedChannelBuilder
             .forAddress(host, port)
             .usePlaintext()
             .directExecutor() // improves performance by factor three
             .build();
 
-        return new TmServiceUser(channel, tmEndpoint);
+        return new TmServiceUser(channel);
     } 
 
     /**
      * Created a TM User using an mTLS channel with the given arguments
      * @param host                  The host of the TM provider service
      * @param port                  The port of the TM provider service
-     * @param tmEndpoint            The TM endpoint for this TM service user
      * @param caCertificateFile     The CA certificate to verify the provider certificate
      * @param userCertificateFile   The user certificate presented to the provider
      * @param userKeyFile           The private user key for the mTLS handshake
@@ -85,9 +84,11 @@ public class TmServiceUser {
      * @throws SSLException
      * @throws InvalidProtocolBufferException 
      */
-    public static TmServiceUser buildSecureTmService(String host, int port, TmServiceEndpoint tmEndpoint,
-            File caCertificateFile, File userCertificateFile, File userKeyFile)
-            throws SSLException, InvalidProtocolBufferException {
+    public static TmServiceUser buildSecureTmService(String host,
+                                                     int port,
+                                                     File caCertificateFile,
+                                                     File userCertificateFile,
+                                                     File userKeyFile) throws SSLException, InvalidProtocolBufferException {
 
         SslContext sslContext =
             GrpcSslContexts.forClient()
@@ -112,25 +113,21 @@ public class TmServiceUser {
         LogManager.getLogger().info("Secure TM Service User, host: " + host + " port: " + port + 
             " created using \n\tCA: " + caCertificateFile + "\n\tuser cert: " + userCertificateFile + "\n\tuser key: " + userKeyFile);
 
-        return new TmServiceUser(channel, tmEndpoint);            
+        return new TmServiceUser(channel);            
     }
 
     /** 
      * Constructs and TM service user and opens a TM stream.
      * Attaches the TM endpoint meta data to the channel.
      * @param channel       The channel to use to access the CDDS TM provider
-     * @param tmEndpoint    The TM endpoint for which the stream is created
      * @throws InvalidProtocolBufferException In case the endpoint cannot be encoded
      */
-    private TmServiceUser(ManagedChannel channel, TmServiceEndpoint tmEndpoint) throws InvalidProtocolBufferException {
-        LOG = LogManager.getLogger("cdds.tm.user." + TcEndpointUtil.getGvcId(tmEndpoint.getGvcIds()) + "");
+    private TmServiceUser(ManagedChannel channel) throws InvalidProtocolBufferException {
+        LOG = LogManager.getLogger("cdds.tm.user");
 
         this.channel = channel; // needed for later shutdown
 
-        // add an interceptor to the client stream to attach the metadata required for the TM service:
-        // - tm-endpoint-bin=<TmEndpoint>
-        ClientInterceptor interceptor = MetadataUtils.newAttachHeadersInterceptor(getTmEndpointMetaData(tmEndpoint));
-        
+        // this interceptor is updated on openTelemetryEndpoint with the endpoint to add as meta data
         Channel interceptedChannel = ClientInterceptors.intercept(channel, interceptor);
         
         tmProviderStub = TmServiceProviderGrpc.newStub(interceptedChannel);
@@ -199,8 +196,14 @@ public class TmServiceUser {
      * Call waitFor<TmFrames|SynNotify> to wait until reception.
      * @param   numExpectedFrames       The number of expected frames
      * @param   numExpectedSyncNotify   The number of expected sync notifies     
+     * @throws InvalidProtocolBufferException 
      */
-    public void openTelemetryEndpoint(long numExpectedFrames, long numExpectedSyncNotify) {
+    public void openTelemetryEndpoint(TmServiceEndpoint tmEndpoint, long numExpectedFrames, long numExpectedSyncNotify) throws InvalidProtocolBufferException {
+        LOG = LogManager.getLogger("cdds.tm.user." + TcEndpointUtil.getGvcId(tmEndpoint.getGvcIds()) + "");
+
+        // set the endpoint meta data into the interceptor
+        interceptor.setMetaData(ProtoJsonUtil.toJsonUtf8(tmEndpoint));
+
         this.numFramesExpected.set(numExpectedFrames);
         this.numSyncNotifyExpected.set(numExpectedSyncNotify);
 
@@ -236,20 +239,6 @@ public class TmServiceUser {
                 .setQos(EnumQoS.EXACTLY_ONCE)
                 .setServiceVersion(1)
                 .build();
-    }
-
-    /**
-     * Creates a meta data header TM endpoint encoded in JSON
-     * @param tmEndpoint The TM endpoint
-     * @return The meta data with the encoded TM endpoint
-     * @throws InvalidProtocolBufferException 
-     */
-    private Metadata getTmEndpointMetaData(TmServiceEndpoint tmEndpoint) throws InvalidProtocolBufferException {
-        Metadata tmEndpointMetaData = new Metadata();
-
-        tmEndpointMetaData.put(TmServiceAuthorization.TM_ENDPOINT_KEY, ProtoJsonUtil.toJsonUtf8(tmEndpoint));
-
-        return tmEndpointMetaData;
     }
 
     /**

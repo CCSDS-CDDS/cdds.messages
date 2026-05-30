@@ -77,12 +77,11 @@ public class TmServiceTest {
         server.addAuthorizedTmEndpoint(authorizedTmEndpoint1);
 
         final TmServiceUser tmServiceUser = TmServiceUser.buildSecureTmService("localhost", PROVIDER_PORT, 
-                authorizedTmEndpoint1,
                 ProviderServer.resourceToFile("cert/cdds-ca.pem"),
                 ProviderServer.resourceToFile("cert/cdds-user.pem"),
                 ProviderServer.resourceToFile("cert/cdds-user.key"));
 
-        tmServiceUser.openTelemetryEndpoint(numFrames, 0);
+        tmServiceUser.openTelemetryEndpoint(authorizedTmEndpoint1, numFrames, 0);
         
         tmServiceUser.waitForTmFrames(timeout);
         
@@ -103,9 +102,9 @@ public class TmServiceTest {
         server.start();
         server.addAuthorizedTmEndpoint(authorizedTmEndpoint1);
 
-        final TmServiceUser tmServiceUser = TmServiceUser.buildUnsecureTmServiceUser("localhost", PROVIDER_PORT, authorizedTmEndpoint1);
+        final TmServiceUser tmServiceUser = TmServiceUser.buildUnsecureTmServiceUser("localhost", PROVIDER_PORT);
 
-        tmServiceUser.openTelemetryEndpoint(numFrames, 0);
+        tmServiceUser.openTelemetryEndpoint(authorizedTmEndpoint1, numFrames, 0);
         
         tmServiceUser.waitForTmFrames(timeout);
 

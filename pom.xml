@@ -172,9 +172,7 @@
 
                 <!-- proto files -->
                 <argument>${project.basedir}/src/test/protobuf/cdds-service-provider.proto</argument>
-                <argument>${project.basedir}/src/test/protobuf/cdds-tc-service-configuration.proto</argument>
                 <argument>${project.basedir}/src/test/protobuf/cdds-tc-service.proto</argument>
-                <argument>${project.basedir}/src/test/protobuf/cdds-tm-service-configuration.proto</argument>
                 <argument>${project.basedir}/src/test/protobuf/cdds-tm-service.proto</argument>
               </arguments>
           </configuration>

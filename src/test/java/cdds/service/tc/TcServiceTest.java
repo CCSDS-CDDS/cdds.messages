@@ -17,7 +17,6 @@ import ccsds.cdds.Telecommand.ReportRequest;
 import ccsds.cdds.Telecommand.TelecommandMessage;
 import ccsds.cdds.Telecommand.TelecommandRadiationRequest;
 import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
-import ccsds.cdds.tc.CddsTcServiceConfiguration.TcServiceConfiguration;
 import cdds.service.common.ProviderServer;
 import io.grpc.BindableService;
 
@@ -47,9 +46,7 @@ public class TcServiceTest {
             4711,
             1);
 
-    // a TC provider configuration for testing
-    final TcServiceConfiguration nominalProviderTcConfig = TcServiceConfiguration.newBuilder()
-                                .addTcProviderAddresses(ServiceProviderAddress.newBuilder()
+   final ServiceProviderAddress serviceProviderAddressProvider = ServiceProviderAddress.newBuilder()
                                         .setServiceProvider("theProvider")
                                         .setTerminal("myGroundStation")
                                         .setAddress("localhost")
@@ -57,15 +54,9 @@ public class TcServiceTest {
                                         .setRootCertificateFile("cert/cdds-ca.pem")
                                         .setCertificateFile("cert/cdds-provider.pem")
                                         .setPrivateKeyFile("cert/cdds-provider.key")
-                                        .build()
-                                )
-                                .addTcEndpoints(authorizedTcEndpoint1)
-                                .addTcEndpoints(authorizedTcEndpoint2)
-                                .build();
-    
-    // a TC user configuration for testing                            
-    final TcServiceConfiguration nominalUserTcConfig = TcServiceConfiguration.newBuilder()
-                                .addTcProviderAddresses(ServiceProviderAddress.newBuilder()
+                                        .build(); 
+
+    final ServiceProviderAddress serviceProviderAddressUser = ServiceProviderAddress.newBuilder()
                                         .setServiceProvider("theProvider")
                                         .setTerminal("myGroundStation")
                                         .setAddress("localhost")
@@ -73,12 +64,7 @@ public class TcServiceTest {
                                         .setRootCertificateFile("cert/cdds-ca.pem")
                                         .setCertificateFile("cert/cdds-user.pem")
                                         .setPrivateKeyFile("cert/cdds-user.key")
-                                        .build()
-                                )
-                                .addTcEndpoints(authorizedTcEndpoint1)
-                                .addTcEndpoints(authorizedTcEndpoint2)
-                                .build();               
-                                
+                                        .build();                                            
 
     private static final Logger LOG = LogManager.getLogger("cdds.tc.test");    
 
@@ -108,9 +94,8 @@ public class TcServiceTest {
         server.start();
         server.addAuthorizedTcEndpoint(authorizedTcEndpoint1);
 
-        final TcServiceUser tcServiceUser = TcServiceUser.buildUnsecureTcServiceUser("localhost", PROVIDER_PORT,
-                authorizedTcEndpoint1);
-        tcServiceUser.openTelecommandEndpoint();
+        final TcServiceUser tcServiceUser = TcServiceUser.buildUnsecureTcServiceUser("localhost", PROVIDER_PORT);
+        tcServiceUser.openTelecommandEndpoint(authorizedTcEndpoint1);
 
         TelecommandMessage tc = getTcRadiationRequestMessage(1);
         tcServiceUser.sendTelecommand(tc);
@@ -131,10 +116,9 @@ public class TcServiceTest {
      * @throws InterruptedException     
      * @throws TimeLimitExceededException
      */        
-
     @Test
     public void testSecureTcServiceTwoUser() throws IOException, InterruptedException, TimeLimitExceededException {
-        final ProviderServer server = new ProviderServer(nominalProviderTcConfig.getTcProviderAddresses(0),
+        final ProviderServer server = new ProviderServer(serviceProviderAddressProvider,
                                                 new BindableService[]{new TcServiceProvider()});
 
         server.start();
@@ -142,17 +126,15 @@ public class TcServiceTest {
         server.addAuthorizedTcEndpoint(authorizedTcEndpoint2);
 
         final TcServiceUser tcServiceUser1 = TcServiceUser.buildSecureTcService(
-                nominalUserTcConfig.getTcProviderAddresses(0),
-                authorizedTcEndpoint1);
+                serviceProviderAddressUser);
 
         final TcServiceUser tcServiceUser2 = TcServiceUser.buildSecureTcService(
-                nominalUserTcConfig.getTcProviderAddresses(0),
-                authorizedTcEndpoint2);
+                serviceProviderAddressUser);
 
         // Do two runs using the TC endpoints
         for (int idx = 1; idx <= 2; idx++) {
-            tcServiceUser1.openTelecommandEndpoint();
-            tcServiceUser2.openTelecommandEndpoint();
+            tcServiceUser1.openTelecommandEndpoint(authorizedTcEndpoint1);
+            tcServiceUser2.openTelecommandEndpoint(authorizedTcEndpoint2);
 
             TelecommandMessage tc1 = getTcRadiationRequestMessage(idx);
             tcServiceUser1.sendTelecommand(tc1);
@@ -188,12 +170,11 @@ public class TcServiceTest {
 
         // Use an un authorized endpoint
         final TcServiceUser tcServiceUser = TcServiceUser.buildSecureTcService("localhost", PROVIDER_PORT,
-                unAuthorizedTcEndpoint,
                 ProviderServer.resourceToFile("cert/cdds-ca.pem"),
                 ProviderServer.resourceToFile("cert/cdds-user.pem"),
                 ProviderServer.resourceToFile("cert/cdds-user.key"));        
         
-        tcServiceUser.openTelecommandEndpoint();
+        tcServiceUser.openTelecommandEndpoint(unAuthorizedTcEndpoint);
         
         Throwable error = tcServiceUser.getLastError(1000);
         assert(error != null);
@@ -221,12 +202,11 @@ public class TcServiceTest {
 
         // Use an un authorized endpoint
         final TcServiceUser tcServiceUser = TcServiceUser.buildSecureTcService("localhost", PROVIDER_PORT,
-                authorizedTcEndpoint1,
                 ProviderServer.resourceToFile("cert/cdds-ca-not-ok.pem"),
                 ProviderServer.resourceToFile("cert/cdds-user-not-ok.pem"),
                 ProviderServer.resourceToFile("cert/cdds-user.key"));        
         
-        tcServiceUser.openTelecommandEndpoint();
+        tcServiceUser.openTelecommandEndpoint(authorizedTcEndpoint1);
         
         Throwable error = tcServiceUser.getLastError(1000);
         assert(error != null);

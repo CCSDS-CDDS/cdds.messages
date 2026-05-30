@@ -21,18 +21,16 @@ import ccsds.cdds.Types.GvcIdList;
 import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
 import ccsds.cdds.tc.TcServiceProviderGrpc;
 import ccsds.cdds.tc.TcServiceProviderGrpc.TcServiceProviderStub;
+import cdds.service.common.ClientMetaDataInterceptor;
 import cdds.service.common.ProtoJsonUtil;
 import cdds.service.common.ProviderServer;
 import io.grpc.Channel;
-import io.grpc.ClientInterceptor;
 import io.grpc.ClientInterceptors;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-import io.grpc.Metadata;
 import io.grpc.netty.shaded.io.grpc.netty.GrpcSslContexts;
 import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
 import io.grpc.netty.shaded.io.netty.handler.ssl.SslContext;
-import io.grpc.stub.MetadataUtils;
 import io.grpc.stub.StreamObserver;
 
 /**
@@ -46,29 +44,28 @@ public class TcServiceUser {
     private StreamObserver<TelecommandMessage> tcProviderStream;    // the stream to send TCs
     private final ManagedChannel channel;
     private Throwable lastError;
+    private final ClientMetaDataInterceptor interceptor = new ClientMetaDataInterceptor(TcServiceAuthorization.TC_ENDPOINT_KEY);
 
     private final AtomicLong numReportsReceived = new AtomicLong(0);
-    private final Logger LOG;
+    private volatile Logger LOG;
 
     /**
      * Constructs and TC service user and connects to the provider, w/o security.
      * @param host      The host of the TC provider
      * @param port      The port of the TC provider * @throws InvalidProtocolBufferException
      */
-    public static TcServiceUser buildUnsecureTcServiceUser(String host, int port, TcServiceEndpoint tcEndpoint) throws InvalidProtocolBufferException {
-        return new TcServiceUser(ManagedChannelBuilder.forAddress(host, port).usePlaintext().build(), tcEndpoint);
+    public static TcServiceUser buildUnsecureTcServiceUser(String host, int port) throws InvalidProtocolBufferException {
+        return new TcServiceUser(ManagedChannelBuilder.forAddress(host, port).usePlaintext().build());
     } 
 
     /**
      * Creates a TC User using an mTLS channel with the given address and configuration 
      * @param address       The address of the TC provider
-     * @param tcEndpoint    The endpoint to use
-     * @return
+     * @return the created service user
      */
-    public static TcServiceUser buildSecureTcService(ServiceProviderAddress address,TcServiceEndpoint tcEndpoint) throws SSLException, InvalidProtocolBufferException {
+    public static TcServiceUser buildSecureTcService(ServiceProviderAddress address) throws SSLException, InvalidProtocolBufferException {
         return buildSecureTcService(address.getAddress(),
                                     address.getPort(),
-                                    tcEndpoint,
                                     ProviderServer.resourceToFile(address.getRootCertificateFile()),
                                     ProviderServer.resourceToFile(address.getCertificateFile()),
                                     ProviderServer.resourceToFile(address.getPrivateKeyFile())); 
@@ -78,7 +75,6 @@ public class TcServiceUser {
      * Creates a TC User using an mTLS channel with the given arguments
      * @param host                  The host of the TC provider service
      * @param port                  The port of the TC provider service
-     * @param tcEndpoint            The TC endpoint for this TC service user
      * @param caCertificateFile     The CA certificate to verify the provider certificate
      * @param userCertificateFile   The user certificate presented to the provider
      * @param userKeyFile           The private user key for the mTLS handshake
@@ -86,8 +82,11 @@ public class TcServiceUser {
      * @throws SSLException
      * @throws InvalidProtocolBufferException 
      */
-    public static TcServiceUser buildSecureTcService(String host, int port, TcServiceEndpoint tcEndpoint
-        , File caCertificateFile, File userCertificateFile, File userKeyFile) throws SSLException, InvalidProtocolBufferException {
+    public static TcServiceUser buildSecureTcService(String host,
+                                                     int port,
+                                                     File caCertificateFile,
+                                                     File userCertificateFile,
+                                                     File userKeyFile) throws SSLException, InvalidProtocolBufferException {
 
         SslContext sslContext =
             GrpcSslContexts.forClient()
@@ -105,7 +104,7 @@ public class TcServiceUser {
         LogManager.getLogger().info("Secure TC Service User, host: " + host + " port: " + port + 
             " created using \n\tCA: " + caCertificateFile + "\n\tuser cert: " + userCertificateFile + "\n\tuser key: " + userKeyFile);
 
-        return new TcServiceUser(channel, tcEndpoint);            
+        return new TcServiceUser(channel);            
     }
 
     /** 
@@ -115,15 +114,12 @@ public class TcServiceUser {
      * @param tcEndpoint    The TC endpoint for which the stream is created
      * @throws InvalidProtocolBufferException In case the endpoint cannot be encoded
      */
-    private TcServiceUser(ManagedChannel channel, TcServiceEndpoint tcEndpoint) throws InvalidProtocolBufferException {
-        LOG = LogManager.getLogger("cdds.tc.user." + TcEndpointUtil.getEndpointType(tcEndpoint) + "");
+    private TcServiceUser(ManagedChannel channel) throws InvalidProtocolBufferException {
+        LOG = LogManager.getLogger("cdds.tc.user");
 
         this.channel = channel; // needed for later shutdown
-
-        // add an interceptor to the client stream to attach the metadata required for the TC service:
-        // - tc-endpoint-bin=<TcEndpoint>
-        ClientInterceptor interceptor = MetadataUtils.newAttachHeadersInterceptor(getTcEndpointMetaData(tcEndpoint));
         
+        // this interceptor is updated on openTelecommandEndpoint with the endpoint to add as meta data
         Channel interceptedChannel = ClientInterceptors.intercept(channel, interceptor);
         
         tcProviderStub = TcServiceProviderGrpc.newStub(interceptedChannel);
@@ -157,8 +153,15 @@ public class TcServiceUser {
     /**
      * Open a telecommand stream to the connected CDDS TC Provider.
      * Errors are reported by calls to onError of the tcUserStream.
+     * @throws InvalidProtocolBufferException 
      */
-    public void openTelecommandEndpoint() {
+    public void openTelecommandEndpoint(TcServiceEndpoint tcEndpoint) throws InvalidProtocolBufferException {
+        LOG = LogManager.getLogger("cdds.tc.user." + TcEndpointUtil.getEndpointType(tcEndpoint) + "");
+
+        // set the endpoint meta data into the interceptor
+        interceptor.setMetaData(ProtoJsonUtil.toJsonUtf8(tcEndpoint));
+
+        // call the gRPC method with set meta data
         tcProviderStream = tcProviderStub.openTelecommandEndpoint(tcUserStream);
         numReportsReceived.set(0);        
         LOG.info("Opened telecommand endpoint called");
@@ -190,20 +193,6 @@ public class TcServiceUser {
                     .build())
                 .setServiceVersion(1)
                 .build();
-    }
-
-    /**
-     * Creates a meta data header TC endpoint encoded in JSON
-     * @param tcEndpoint The TC endpoint
-     * @return The meta data with the encoded TC endpoint
-     * @throws InvalidProtocolBufferException 
-     */
-    private Metadata getTcEndpointMetaData(TcServiceEndpoint tcEndpoint) throws InvalidProtocolBufferException {
-        Metadata tcEndpointMetaData = new Metadata();
-
-        tcEndpointMetaData.put(TcServiceAuthorization.TC_ENDPOINT_KEY, ProtoJsonUtil.toJsonUtf8(tcEndpoint));
-
-        return tcEndpointMetaData;
     }
 
     /**

@@ -32,7 +32,7 @@ public class ProviderServer {
     private static final Logger LOG = LogManager.getLogger("cdds.provider.server.");
 
     /**
-     * Creates a TC server running one TC service on the given port.
+     * Creates a CDDS provider server without authentication for testing
      * @param port
      * @param services      The services to provide
      */
@@ -41,7 +41,7 @@ public class ProviderServer {
     }
 
     /**
-     * Creates a CDDS service provider
+     * Creates a CDDS service provider with mTLS and SSL
      * @param address       The address to use (port)
      * @param services      The services to provide
      * @throws IOException  Thrown if the certificate files are not found
@@ -63,8 +63,11 @@ public class ProviderServer {
      * @param providerKeyFile
      * @throws IOException 
      */
-    public ProviderServer(int port, InterceptedService[] services, File caCertificateFile, File providerCertificateFile, File providerKeyFile)
-            throws IOException {
+    public ProviderServer(int port,
+                          InterceptedService[] services,
+                          File caCertificateFile,
+                          File providerCertificateFile,
+                          File providerKeyFile) throws IOException {
         this.port = port;
         
         if(caCertificateFile.exists() == false) {

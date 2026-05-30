@@ -17,8 +17,8 @@ import ccsds.cdds.Telecommand.ReportRequest;
 import ccsds.cdds.Telecommand.TelecommandMessage;
 import ccsds.cdds.Telecommand.TelecommandRadiationRequest;
 import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
+import cdds.service.common.InterceptedService;
 import cdds.service.common.ProviderServer;
-import io.grpc.BindableService;
 
 /**
  * Test the communication among a TC service user and a TC service provider
@@ -90,9 +90,10 @@ public class TcServiceTest {
     @Test
     public void testUnsecureTcService() throws IOException, InterruptedException, TimeLimitExceededException {
 
-        ProviderServer server = new ProviderServer(PROVIDER_PORT, new BindableService[]{new TcServiceProvider()});
+        final TcServiceProvider tcService = new TcServiceProvider();
+        ProviderServer server = new ProviderServer(PROVIDER_PORT, new InterceptedService[]{tcService});
         server.start();
-        server.addAuthorizedTcEndpoint(authorizedTcEndpoint1);
+        tcService.addAuthorizedTcEndpoint(authorizedTcEndpoint1);
 
         final TcServiceUser tcServiceUser = TcServiceUser.buildUnsecureTcServiceUser("localhost", PROVIDER_PORT);
         tcServiceUser.openTelecommandEndpoint(authorizedTcEndpoint1);
@@ -118,12 +119,13 @@ public class TcServiceTest {
      */        
     @Test
     public void testSecureTcServiceTwoUser() throws IOException, InterruptedException, TimeLimitExceededException {
+        final TcServiceProvider tcService = new TcServiceProvider();
         final ProviderServer server = new ProviderServer(serviceProviderAddressProvider,
-                                                new BindableService[]{new TcServiceProvider()});
+                                                new InterceptedService[]{tcService});
 
         server.start();
-        server.addAuthorizedTcEndpoint(authorizedTcEndpoint1);
-        server.addAuthorizedTcEndpoint(authorizedTcEndpoint2);
+        tcService.addAuthorizedTcEndpoint(authorizedTcEndpoint1);
+        tcService.addAuthorizedTcEndpoint(authorizedTcEndpoint2);
 
         final TcServiceUser tcServiceUser1 = TcServiceUser.buildSecureTcService(
                 serviceProviderAddressUser);
@@ -159,14 +161,15 @@ public class TcServiceTest {
      */
     @Test
     public void testNotAuthorizedTcEndpoint() throws IOException, InterruptedException {
-       final ProviderServer server = new ProviderServer(PROVIDER_PORT,
-                new BindableService[]{new TcServiceProvider()},
+        final TcServiceProvider tcService = new TcServiceProvider();
+        final ProviderServer server = new ProviderServer(PROVIDER_PORT,
+                new InterceptedService[]{tcService},
                 ProviderServer.resourceToFile("cert/cdds-ca.pem"),
                 ProviderServer.resourceToFile("cert/cdds-provider.pem"),
                 ProviderServer.resourceToFile("cert/cdds-provider.key"));
                 
         server.start();
-        server.addAuthorizedTcEndpoint(authorizedTcEndpoint1);
+        tcService.addAuthorizedTcEndpoint(authorizedTcEndpoint1);
 
         // Use an un authorized endpoint
         final TcServiceUser tcServiceUser = TcServiceUser.buildSecureTcService("localhost", PROVIDER_PORT,
@@ -191,14 +194,15 @@ public class TcServiceTest {
      */
     @Test
     public void testNotAuthenticatedTcEndpoint() throws IOException, InterruptedException {
-       final ProviderServer server = new ProviderServer(PROVIDER_PORT,
-                new BindableService[]{new TcServiceProvider()},
+        final TcServiceProvider tcService = new TcServiceProvider();
+        final ProviderServer server = new ProviderServer(PROVIDER_PORT,
+                new InterceptedService[]{tcService},
                 ProviderServer.resourceToFile("cert/cdds-ca.pem"),
                 ProviderServer.resourceToFile("cert/cdds-provider.pem"),
                 ProviderServer.resourceToFile("cert/cdds-provider.key"));
                 
         server.start();
-        server.addAuthorizedTcEndpoint(authorizedTcEndpoint1);
+        tcService.addAuthorizedTcEndpoint(authorizedTcEndpoint1);
 
         // Use an un authorized endpoint
         final TcServiceUser tcServiceUser = TcServiceUser.buildSecureTcService("localhost", PROVIDER_PORT,

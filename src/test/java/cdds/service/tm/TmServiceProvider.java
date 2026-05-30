@@ -1,5 +1,8 @@
 package cdds.service.tm;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -10,14 +13,21 @@ import com.google.protobuf.InvalidProtocolBufferException;
 
 import ccsds.cdds.tm.CddsTmService.TmServiceEndpoint;
 import ccsds.cdds.tm.TmServiceProviderGrpc.TmServiceProviderImplBase;
+import cdds.service.common.InterceptedService;
 import cdds.service.common.ProtoJsonUtil;
+import io.grpc.BindableService;
+import io.grpc.ServerInterceptor;
 
 /**
  * Simple TM test server
  */
-public class TmServiceProvider extends TmServiceProviderImplBase {
+public class TmServiceProvider extends TmServiceProviderImplBase implements InterceptedService {
 
     private static final Logger LOG = LogManager.getLogger("cdds.tm.provider");
+
+    private final TmServiceAuthorization tmAuthorization = new TmServiceAuthorization();
+
+    private final List<TmServiceEndpoint> tmEndpoints = Collections.synchronizedList(new ArrayList<>());
 
     private final Map<TmServiceEndpoint, TmProduction> tmProductions = new ConcurrentHashMap<>();
 
@@ -62,5 +72,33 @@ public class TmServiceProvider extends TmServiceProviderImplBase {
      */
     public void removeTmProduction(TmServiceEndpoint tmEndpoint) {
        tmProductions.remove(tmEndpoint); 
+    }
+
+    @Override
+    public BindableService getBindableService() {
+        return this;
+    }
+
+    @Override
+    public ServerInterceptor getServiceInterceptor() {
+        return tmAuthorization;
+    }
+
+    /**
+     * Add an allowed TM endpoint
+     * @param tmEndpoint
+     */
+    public void addAuthorizedTmEndpoint(TmServiceEndpoint tmEndpoint) {
+        tmAuthorization.addAuthorizedTmEndpoint(tmEndpoint);
+        tmEndpoints.add(tmEndpoint);
+    }
+
+    /**
+     * Removes an allowed TM endpoint
+     * @param tmEndpoint
+     */
+    public void removeAuthorizedTmEndpoint(TmServiceEndpoint tmEndpoint) {
+       tmAuthorization.removeAuthorizedTcEndpoint(tmEndpoint);
+       tmEndpoints.remove(tmEndpoint);
     }
 }

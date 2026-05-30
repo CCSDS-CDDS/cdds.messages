@@ -13,11 +13,6 @@ import org.apache.logging.log4j.Logger;
 import javax.net.ssl.SSLException;
 
 import ccsds.cdds.CddsServiceProvider.ServiceProviderAddress;
-import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
-import ccsds.cdds.tm.CddsTmService.TmServiceEndpoint;
-import cdds.service.tc.TcServiceAuthorization;
-import cdds.service.tm.TmServiceAuthorization;
-import io.grpc.BindableService;
 import io.grpc.Grpc;
 import io.grpc.InsecureServerCredentials;
 import io.grpc.Server;
@@ -35,14 +30,13 @@ public class ProviderServer {
     private final int port;
     private final Server gRpcServer;
     private static final Logger LOG = LogManager.getLogger("cdds.provider.server.");
-    private final TcServiceAuthorization tcAuthorization = new TcServiceAuthorization();
-    private final TmServiceAuthorization tmAuthorization = new TmServiceAuthorization();
 
     /**
      * Creates a TC server running one TC service on the given port.
      * @param port
+     * @param services      The services to provide
      */
-    public ProviderServer(int port, BindableService[] services) {
+    public ProviderServer(int port, InterceptedService[] services) {
         this(Grpc.newServerBuilderForPort(port, InsecureServerCredentials.create()), port, services);
     }
 
@@ -52,7 +46,7 @@ public class ProviderServer {
      * @param services      The services to provide
      * @throws IOException  Thrown if the certificate files are not found
      */
-    public ProviderServer(ServiceProviderAddress address, BindableService[] services) throws IOException {
+    public ProviderServer(ServiceProviderAddress address, InterceptedService[] services) throws IOException {
         this(address.getPort(),
              services,
              resourceToFile(address.getRootCertificateFile()),
@@ -69,7 +63,7 @@ public class ProviderServer {
      * @param providerKeyFile
      * @throws IOException 
      */
-    public ProviderServer(int port, BindableService[] services, File caCertificateFile, File providerCertificateFile, File providerKeyFile)
+    public ProviderServer(int port, InterceptedService[] services, File caCertificateFile, File providerCertificateFile, File providerKeyFile)
             throws IOException {
         this.port = port;
         
@@ -94,11 +88,15 @@ public class ProviderServer {
                     .build();
             
         NettyServerBuilder serverBuilder = NettyServerBuilder.forPort(port)
-                .sslContext(sslContext)
-                .intercept(tcAuthorization)
-                .intercept(tmAuthorization);           /* call intercept before adding the service to intercept */
+                .sslContext(sslContext);
+        
+        // call intercept before adding the service to intercept
+        Arrays.stream(services)
+            .filter(service -> service.getServiceInterceptor() != null) // allow services w/o meta data
+            .forEach(service -> {serverBuilder.intercept(service.getServiceInterceptor());});
 
-        Arrays.stream(services).forEach(service -> {serverBuilder.addService(service);});
+        // add the services, interceptors are added just above
+        Arrays.stream(services).forEach(service -> {serverBuilder.addService(service.getBindableService());});
 
         gRpcServer = serverBuilder.build();        
                 
@@ -117,15 +115,13 @@ public class ProviderServer {
      * @param serverBuilder The server builder to use
      * @param port          The port to use
      */
-    public ProviderServer(ServerBuilder<?> serverBuilder, int port, BindableService[] services) {
+    public ProviderServer(ServerBuilder<?> serverBuilder, int port, InterceptedService[] services) {
         this.port = port;
         
+        //
+        Arrays.stream(services).forEach(service -> {serverBuilder.intercept(service.getServiceInterceptor());});
         
-        serverBuilder
-            .intercept(tcAuthorization)
-            .intercept(tmAuthorization);
-        
-        Arrays.stream(services).forEach(service -> {serverBuilder.addService(service);});
+        Arrays.stream(services).forEach(service -> {serverBuilder.addService(service.getBindableService());});
         
         gRpcServer = serverBuilder.build();
     }
@@ -160,38 +156,6 @@ public class ProviderServer {
         if (gRpcServer != null) {
             gRpcServer.shutdown().awaitTermination(30, TimeUnit.SECONDS);
         }
-    }
-
-    /**
-     * Add an allowed TC endpoint
-     * @param tcEndpoint
-     */
-    public void addAuthorizedTcEndpoint(TcServiceEndpoint tcEndpoint) {
-        tcAuthorization.addAuthorizedTcEndpoint(tcEndpoint);
-    }
-
-    /**
-     * Removes an allowed TC endpoint
-     * @param tcEndpoint
-     */
-    public void removeAuthorizedTcEndpoint(TcServiceEndpoint tcEndpoint) {
-       tcAuthorization.removeAuthorizedTcEndpoint(tcEndpoint);
-    }
-
-    /**
-     * Add an allowed TM endpoint
-     * @param tmEndpoint
-     */
-    public void addAuthorizedTmEndpoint(TmServiceEndpoint tmEndpoint) {
-        tmAuthorization.addAuthorizedTmEndpoint(tmEndpoint);
-    }
-
-    /**
-     * Removes an allowed TM endpoint
-     * @param tmEndpoint
-     */
-    public void removeAuthorizedTmEndpoint(TmServiceEndpoint tmEndpoint) {
-       tmAuthorization.removeAuthorizedTcEndpoint(tmEndpoint);
     }
 
     /**

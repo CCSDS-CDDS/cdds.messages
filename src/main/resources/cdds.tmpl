@@ -24,7 +24,7 @@
         margin: 1.5em 0;
       }
 
-      h3 {
+      h4 {
         font-weight: normal;
         border-bottom: 1px solid #aaa;
         padding-bottom: 0.5ex;
@@ -233,7 +233,7 @@
 
       {{range .Messages}}
         {{ $parentFields := .Fields }}
-        <h3 id="{{.FullName}}">{{.LongName}}</h3>
+        <h4 id="{{.FullName}}">{{.LongName}}</h4>
         {{p .Description}}
 
         {{if .HasFields}}
@@ -295,7 +295,7 @@
           {{- range .FieldOptions}}
             {{$option := .}}
             {{if eq . "validator.field" "validate.rules" }}
-            <h4>Validated Fields</h4>
+            <h5>Validated Fields</h5>
             <table>
               <thead>
                 <tr>
@@ -319,7 +319,7 @@
               </tbody>
             </table>
             {{else}}
-            <h4>Fields with {{.}} option</h4>
+            <h5>Fields with {{.}} option</h5>
             <table>
               <thead>
                 <tr>
@@ -362,7 +362,7 @@
       {{end}}
 
       {{range .Enums}}
-        <h3 id="{{.FullName}}">{{.LongName}}</h3>
+        <h4 id="{{.FullName}}">{{.LongName}}</h4>
         {{p .Description}}
         <table class="enum-table">
           <thead>
@@ -381,7 +381,7 @@
       {{end}}
 
       {{if .HasExtensions}}
-        <h3 id="{{$file_name}}-extensions">File-level Extensions</h3>
+        <h4 id="{{$file_name}}-extensions">File-level Extensions</h4>
         <table class="extension-table">
           <thead>
             <tr><td>Extension</td><td>Type</td><td>Base</td><td>Number</td><td>Description</td></tr>
@@ -401,7 +401,7 @@
       {{end}}
 
       {{range .Services}}
-        <h3 id="{{.FullName}}">{{.Name}}</h3>
+        <h4 id="{{.FullName}}">{{.Name}}</h4>
         {{p .Description}}
         <table class="service-table">
           <thead>
@@ -423,7 +423,7 @@
         {{- range .MethodOptions}}
           {{$option := .}}
           {{if eq . "google.api.http"}}
-          <h4>Methods with HTTP bindings</h4>
+          <h5>Methods with HTTP bindings</h5>
           <table>
             <thead>
               <tr>
@@ -448,7 +448,7 @@
             </tbody>
           </table>
           {{else}}
-          <h4>Methods with {{.}} option</h4>
+          <h5>Methods with {{.}} option</h5>
           <table>
             <thead>
               <tr>

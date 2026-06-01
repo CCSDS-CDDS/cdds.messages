@@ -8,6 +8,11 @@ import "telecommand.proto";
  */
 service TcServiceProvider {
 
+     /**
+     * Returns a list of endpoints authorized for an authenticated user.
+     */
+    rpc getEndpoints(NoArg) returns (TcServiceEndpointList);
+   
     /**
      * Opens a TC endpoint: a bi-directional telecommand stream to send TC radiation request
      * carrying a CLTU or a TC frame.
@@ -64,3 +69,15 @@ message TcServiceEndpoint {
      */
     optional string endpointName = 60;
 }
+
+/**
+ * List of endpoints
+ */
+message TcServiceEndpointList {
+
+    /**
+     * The list of endpoints
+     */ 
+    repeated TcServiceEndpoint endpoints = 1;
+} 
+

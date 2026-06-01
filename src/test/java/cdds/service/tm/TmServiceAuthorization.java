@@ -1,5 +1,6 @@
 package cdds.service.tm;
 
+import java.security.cert.X509Certificate;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,6 +24,9 @@ import io.grpc.Status;
 
 public class TmServiceAuthorization implements ServerInterceptor {
 
+    public static final Context.Key<X509Certificate> CLIENT_CERT =
+            Context.key("client-cert");
+
     public static final String TM_ENDPOINT = "tm-endpoint-bin";
 
     public static final String HANDLED_TM_METHOD = "openTelemetryEndpoint"; 
@@ -43,6 +47,16 @@ public class TmServiceAuthorization implements ServerInterceptor {
     @Override
     public <ReqT, RespT> Listener<ReqT> interceptCall(ServerCall<ReqT, RespT> call, Metadata headers,
             ServerCallHandler<ReqT, RespT> next) {
+
+        Context ctx = Context.current();        
+                // set the X509 certificate into the call to be available (SAN)
+        try {
+            X509Certificate cert = (X509Certificate)GrpcUtil.getClientCert(call)[0];
+            LOG.info("adding cert in context: " + cert.getSubjectX500Principal().getName());
+            ctx = ctx.withValue(CLIENT_CERT, cert);
+        } catch(Exception ex) {
+            LOG.warn("SSL Peer unverified for call " + call.getMethodDescriptor().getBareMethodName() + ex);
+        }
 
         if(isHandlingCall(call.getMethodDescriptor().getFullMethodName())) {
             byte[] endpointBytes = headers.get(TM_ENDPOINT_KEY);
@@ -74,12 +88,13 @@ public class TmServiceAuthorization implements ServerInterceptor {
                 e.printStackTrace();
             }
 
-            Context ctx = Context.current().withValue(TM_ENDPOINT_CTX_KEY, endpointBytes);
+            ctx = ctx.withValue(TM_ENDPOINT_CTX_KEY, endpointBytes);
 
             return Contexts.interceptCall(ctx, call, headers, next);        
         }
-        
-        return next.startCall(call, headers);
+       
+        return Contexts.interceptCall(ctx, call, headers, next);       
+        //return next.startCall(call, headers);
     }
 
     /**

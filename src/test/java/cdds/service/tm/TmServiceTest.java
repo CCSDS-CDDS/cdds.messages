@@ -6,6 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 import javax.naming.TimeLimitExceededException;
 
@@ -62,7 +65,7 @@ public class TmServiceTest {
     }
 
     @Test
-    public void testNTmFramesSecure() throws IOException, TimeLimitExceededException, InterruptedException {
+    public void testNTmFramesSecure() throws IOException, TimeLimitExceededException, InterruptedException, ExecutionException, TimeoutException {
         
         // create a TM provider and add a TM frame production for the endpoint producing 10 frames
         TmServiceProvider tmProvider = new TmServiceProvider();
@@ -81,7 +84,12 @@ public class TmServiceTest {
                 ProviderServer.resourceToFile("cert/cdds-user.pem"),
                 ProviderServer.resourceToFile("cert/cdds-user.key"));
 
-        tmServiceUser.openTelemetryEndpoint(authorizedTmEndpoint1, numFrames, 0);
+        List<TmServiceEndpoint>  endpoints = tmServiceUser.getEndpoints(5000);
+
+        assert(endpoints.get(0).equals(authorizedTmEndpoint1));
+
+        // use the first provided endpoint for this test
+        tmServiceUser.openTelemetryEndpoint(endpoints.get(0), numFrames, 0);
         
         tmServiceUser.waitForTmFrames(timeout);
         

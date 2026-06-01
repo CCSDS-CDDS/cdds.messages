@@ -11,6 +11,11 @@ import "types.proto";
 service TmServiceProvider {
 
     /**
+     * Returns a list of endpoints authorized for an authenticated user.
+     */
+    rpc getEndpoints(NoArg) returns (TmServiceEndpointList);
+
+    /**
      * Opens a TM endpoint: A stream to receive TM frames according to the
      *  provided Quality or GvcId.
      * The returned stream will receive the TM frames of the provided Quality or GvcId
@@ -73,3 +78,15 @@ message TmServiceEndpoint {
      */
     optional string endpointName = 70;
 }
+
+/**
+ * List of endpoints
+ */
+message TmServiceEndpointList {
+
+    /**
+     * The list of endpoints
+     */ 
+    repeated TmServiceEndpoint endpoints = 1;
+} 
+

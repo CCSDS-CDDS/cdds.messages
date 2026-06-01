@@ -1,7 +1,12 @@
 package cdds.service.tm;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicLong;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,6 +23,7 @@ import ccsds.cdds.Types.GvcId;
 import ccsds.cdds.Types.GvcIdList;
 import ccsds.cdds.Types.NoArg;
 import ccsds.cdds.tm.CddsTmService.TmServiceEndpoint;
+import ccsds.cdds.tm.CddsTmService.TmServiceEndpointList;
 import ccsds.cdds.tm.TmServiceProviderGrpc;
 import ccsds.cdds.tm.TmServiceProviderGrpc.TmServiceProviderStub;
 import cdds.service.common.ClientMetaDataInterceptor;
@@ -188,6 +194,47 @@ public class TmServiceUser {
                 LOG.info("TM service user completed called\"");
             }
         };
+    }
+
+    /**
+     * Requests endpoints from the CDDS provider applicable to this authenticated CDDS user.
+     * @param timeoutMs                 The timeout for the request in milli seconds
+     * @return                          The list of authorized endpoints, potentially an empty list
+     * @throws InterruptedException
+     * @throws ExecutionException
+     * @throws TimeoutException         Thrown if the request did not complete with time out
+     */
+    public List<TmServiceEndpoint> getEndpoints(long timeoutMs) throws InterruptedException, ExecutionException, TimeoutException {
+
+        final List<TmServiceEndpoint> tmEndpoints = new ArrayList<>();
+
+        CompletableFuture<List<TmServiceEndpoint>> future =
+            new CompletableFuture<>();
+        tmProviderStub.getEndpoints(NoArg.newBuilder().build(), new StreamObserver<TmServiceEndpointList>() {
+
+            @Override
+            public void onNext(TmServiceEndpointList value) {
+                LOG.info("getEndpoints onNext");
+                for(TmServiceEndpoint endpoint : value.getEndpointsList()) {
+                    tmEndpoints.add(endpoint);
+                }
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                LOG.warn("getEndpoints onError");
+                future.completeExceptionally(t);
+            }
+
+            @Override
+            public void onCompleted() {
+                LOG.info("getEndpoints onCompleted");
+                future.complete(tmEndpoints);
+            }
+            
+        });
+
+        return future.get(timeoutMs, TimeUnit.MILLISECONDS);
     }
 
     /**

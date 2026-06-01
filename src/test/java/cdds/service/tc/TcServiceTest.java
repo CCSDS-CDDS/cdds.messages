@@ -1,6 +1,10 @@
 package cdds.service.tc;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
+
 import javax.naming.TimeLimitExceededException;
 
 import org.apache.logging.log4j.LogManager;
@@ -116,9 +120,11 @@ public class TcServiceTest {
      * @throws IOException
      * @throws InterruptedException     
      * @throws TimeLimitExceededException
+ * @throws TimeoutException 
+ * @throws ExecutionException 
      */        
     @Test
-    public void testSecureTcServiceTwoUser() throws IOException, InterruptedException, TimeLimitExceededException {
+    public void testSecureTcServiceTwoUser() throws IOException, InterruptedException, TimeLimitExceededException, ExecutionException, TimeoutException {
         final TcServiceProvider tcService = new TcServiceProvider();
         final ProviderServer server = new ProviderServer(serviceProviderAddressProvider,
                                                 new InterceptedService[]{tcService});
@@ -133,10 +139,17 @@ public class TcServiceTest {
         final TcServiceUser tcServiceUser2 = TcServiceUser.buildSecureTcService(
                 serviceProviderAddressUser);
 
+        List<TcServiceEndpoint> endpoints1 = tcServiceUser1.getEndpoints(5000);
+        assert(endpoints1.get(0).equals(authorizedTcEndpoint1));
+
+        List<TcServiceEndpoint> endpoints2 = tcServiceUser2.getEndpoints(5000);
+        assert(endpoints2.get(1).equals(authorizedTcEndpoint2));
+
+
         // Do two runs using the TC endpoints
         for (int idx = 1; idx <= 2; idx++) {
-            tcServiceUser1.openTelecommandEndpoint(authorizedTcEndpoint1);
-            tcServiceUser2.openTelecommandEndpoint(authorizedTcEndpoint2);
+            tcServiceUser1.openTelecommandEndpoint(endpoints1.get(0));
+            tcServiceUser2.openTelecommandEndpoint(endpoints2.get(1));
 
             TelecommandMessage tc1 = getTcRadiationRequestMessage(idx);
             tcServiceUser1.sendTelecommand(tc1);

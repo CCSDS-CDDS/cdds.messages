@@ -1,0 +1,22 @@
+syntax = "proto3";
+package ccsds.cdds.tc;
+import "cdds-service-provider.proto";
+import "cdds-tc-service.proto";
+
+message TcServiceConfiguration {
+
+    /**
+     * A list of TC provider addresses.
+     * The serviceProvider and optionally the terminal field link the 
+     * provider addresses to the endpoints.
+     * Note: the addresses and the endpoints can have an m:n relationship
+     */
+    repeated ServiceProviderAddress tcProviderAddresses = 1;    
+
+    /**
+     * The list of available TC endpoints, linked by serviceProvider and optionally
+     * terminal to the tcProviderAddressList
+     */
+    repeated TcServiceEndpoint tcEndpoints = 10;
+}
+

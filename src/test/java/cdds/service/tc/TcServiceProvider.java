@@ -1,5 +1,6 @@
 package cdds.service.tc;
 
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,8 +12,11 @@ import com.google.protobuf.InvalidProtocolBufferException;
 
 import ccsds.cdds.Telecommand.TelecommandMessage;
 import ccsds.cdds.Telecommand.TelecommandReport;
+import ccsds.cdds.Types.NoArg;
 import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
+import ccsds.cdds.tc.CddsTcService.TcServiceEndpointList;
 import ccsds.cdds.tc.TcServiceProviderGrpc.TcServiceProviderImplBase;
+import cdds.service.common.GrpcUtil;
 import cdds.service.common.InterceptedService;
 import cdds.service.common.ProtoJsonUtil;
 import io.grpc.BindableService;
@@ -32,12 +36,45 @@ public class TcServiceProvider extends TcServiceProviderImplBase implements Inte
     private final List<TcServiceEndpoint> tcEndpoints = Collections.synchronizedList(new ArrayList<>());
 
     @Override
+    public void getEndpoints(NoArg request, StreamObserver<TcServiceEndpointList> responseObserver) {
+        LOG.info("get endpoints called. Total endpoints: " + tcEndpoints.size());
+
+        ccsds.cdds.tc.CddsTcService.TcServiceEndpointList.Builder endpoints = TcServiceEndpointList.newBuilder();
+
+        try {
+            X509Certificate cert = TcServiceAuthorization.CLIENT_CERT.get();
+            for(TcServiceEndpoint endpoint : tcEndpoints) {
+                if(GrpcUtil.endpointAuthorized(cert, endpoint.getServiceUser())) {
+                    endpoints.addEndpoints(endpoint);
+                    LOG.info("TC endpoint authorized for " + cert.getSubjectX500Principal().getName());
+                } else {
+                    LOG.warn("TC endpoint not authorized for cert: " + cert);
+                }
+            }    
+            
+            responseObserver.onNext(endpoints.build());
+            responseObserver.onCompleted();
+        } catch(Exception ex) {
+            LOG.warn("TM Endpoint authorization: ", ex);
+            responseObserver.onError(ex);
+        }
+    }
+
+    @Override
     public StreamObserver<TelecommandMessage> openTelecommandEndpoint(StreamObserver<TelecommandReport> tcUserStream) {
         
         try {
             byte[] endpointBytes = TcServiceAuthorization.TC_ENDPOINT_CTX_KEY.get();            // get the tc-endpoint-bin meta data
             TcServiceEndpoint tcEndpoint = ProtoJsonUtil.fromJson(endpointBytes, TcServiceEndpoint.newBuilder());    // decode the endpoint from JSON
-            LOG.info("Open TC stream for endpoint\n" + tcEndpoint);
+
+            try {
+                X509Certificate cert = TcServiceAuthorization.CLIENT_CERT.get();
+                LOG.info("Open TC stream for endpoint, SAN: " + cert.getSubjectX500Principal().getName()
+                            + "\n" + tcEndpoint);
+            } catch(Exception ex) {
+                // OK for unauthenticated tests
+                LOG.info("Open TC stream for endpoint\n" + tcEndpoint);
+            }
             // in this simple example the TC Provider has only one (static) endpoint.
             return new TcServiceEndpointStream(tcUserStream, tcEndpoint);
         } catch (InvalidProtocolBufferException e) {

@@ -117,13 +117,13 @@
         width: 6em;
       }
       .service-table td:nth-child(2) { /* Request Type */
-        width: 3em;
+        width: 2em;
       }
       .service-table td:nth-child(3) { /* Response Type */
-        width: 3em;
+        width: 2em;
       }
       .service-table td:nth-child(4) { /* Description */
-        width: 10em;
+        width: 12em;
       }
 
 
@@ -411,8 +411,8 @@
             {{range .Methods}}
               <tr>
                 <td>{{.Name}}</td>
-                <td><a href="#{{.RequestFullType}}">{{.RequestLongType}}</a>{{if .RequestStreaming}} stream{{end}}</td>
-                <td><a href="#{{.ResponseFullType}}">{{.ResponseLongType}}</a>{{if .ResponseStreaming}} stream{{end}}</td>
+                <td><a href="#{{.RequestFullType}}">{{.RequestType}}</a>{{if .RequestStreaming}} stream{{end}}</td>
+                <td><a href="#{{.ResponseFullType}}">{{.ResponseType}}</a>{{if .ResponseStreaming}} stream{{end}}</td>
                 <td><p>{{.Description}}</p></td>
               </tr>
             {{end}}

@@ -67,7 +67,7 @@ public class TmServiceTest {
     @Test
     public void testNTmFramesSecure() throws IOException, TimeLimitExceededException, InterruptedException, ExecutionException, TimeoutException {
         
-        // create a TM provider and add a TM frame production for the endpoint producing 10 frames
+        // create a TM provider and add a TM frame production for the endpoint producing numFrames
         TmServiceProvider tmProvider = new TmServiceProvider();
         tmProvider.addTmProduction(authorizedTmEndpoint1, new TmProductionNFrames(numFrames, frameLength)); 
 
@@ -84,11 +84,11 @@ public class TmServiceTest {
                 ProviderServer.resourceToFile("cert/cdds-user.pem"),
                 ProviderServer.resourceToFile("cert/cdds-user.key"));
 
-        List<TmServiceEndpoint>  endpoints = tmServiceUser.getEndpoints(5000);
+        List<TmServiceEndpoint> endpoints = tmServiceUser.getEndpoints(5000);
 
         assert(endpoints.get(0).equals(authorizedTmEndpoint1));
 
-        // use the first provided endpoint for this test
+        // use the first provided endpoint for this test, wait for numFrames
         tmServiceUser.openTelemetryEndpoint(endpoints.get(0), numFrames, 0);
         
         tmServiceUser.waitForTmFrames(timeout);

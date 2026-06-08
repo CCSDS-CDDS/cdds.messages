@@ -59,7 +59,15 @@ message TcServiceEndpoint {
      * or a TC VC when the TC User provides TC frames for radiation.
      */
     oneof type {
+
+        /**
+         *  If the cltu filed is set to true, the endpoint supports CLTUs
+         */
         bool        cltu = 40;
+
+        /*
+         * If the GVCIDs field is set, the endpoint supports TC frames conforming to the specified GVCIDs
+         */
         GvcIdList   gvcIds = 50;
     }
 

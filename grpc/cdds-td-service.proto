@@ -1,0 +1,80 @@
+syntax = "proto3";
+package ccsds.cdds.td; 
+import "ccsds_schema_ndmxml.proto";
+import "types.proto";
+import "tracking.proto";
+
+/**
+ * This is the gRPC definition of the CDDS Tracking Data Service returning raw tracking data 
+ * as produced by the terminal facilitating the space link communication.
+ */
+service TrackingDataServiceProvider {
+
+    /**
+     * Returns a list of endpoints authorized for an authenticated user.
+     */
+    rpc getEndpoints(NoArg) returns (TrackingDataServiceEndpointList);
+
+    /**
+     * Opens a tracking data endpoint: A stream to receive raw tracking data according 
+     * to the requested tracking data type.
+     *
+     * The service requires the following metadata when calling the open tracking data endpoint method:
+     *      1) td-endpoint-bin = JSON encoded TrackingDataServiceEndpoint using the binary marshaller
+     * The td-endpoint-bin is authorized for the authenticated user. If not authorized,
+     * the method call will fail.
+     */ 
+    rpc openTrackingDataServiceEndpoint(NoArg) returns (stream TrackingDataMessage); ;
+}
+
+message TrackingDataServiceEndpoint {
+    /**
+     * The CDDS service version of this service
+     */
+    uint32 serviceVersion = 1;
+
+    /**
+     * The name of the service provider organization providing the tracking data service
+     */
+    string serviceProvider = 10;
+
+    /**
+     * The terminal providing the tracking data service
+     */
+    optional string terminal = 20;
+
+    /**
+     * The serviceUser (spacecraft) for which tracking data shall be delivered
+     */
+    string serviceUser = 30;
+
+    /**
+     * The endpoint provided by the provider contains all available tracking data types available for the service user.
+     * The endpoint included as metadata to the gRPC method open tracking data endpoint method shall
+     * include tracking data types requested by the service user. The requested tracking data types shall be subset of the 
+     * tracking data types available from the provider.
+     */ 
+    repeated ccsds.schema.ndmxml.TrackingDataObservationType trackingDataType = 40; 
+
+    /**
+     * The QoS used for the provisioning of tracking data messages
+     */
+    EnumQoS qos = 50;
+
+    /**
+     * An optional endpoint name to distinguish endpoints;
+     * for instance for spacecrafts supporting multiple bands.
+     */
+    optional string endpointName = 60;
+}
+
+/**
+ * List of endpoints
+ */
+message TrackingDataServiceEndpointList {
+
+    /**
+     * The list of endpoints
+     */ 
+    repeated TrackingDataServiceEndpoint endpoints = 1;
+} 

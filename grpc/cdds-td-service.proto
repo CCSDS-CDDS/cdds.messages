@@ -52,7 +52,8 @@ message TrackingDataServiceEndpoint {
      * The endpoint provided by the provider contains all available tracking data types available for the service user.
      * The endpoint included as metadata to the gRPC method open tracking data endpoint method shall
      * include tracking data types requested by the service user. The requested tracking data types shall be subset of the 
-     * tracking data types available from the provider.
+     * tracking data types available from the provider. If the user provides an empty list of tracking data types,
+     * the provider shall deliver all tracking data types configured for this endpoint.
      */ 
     repeated ccsds.schema.ndmxml.TrackingDataObservationType trackingDataType = 40; 
 

@@ -22,7 +22,10 @@ import ccsds.cdds.Telecommand.TelecommandMessage;
 import ccsds.cdds.Telecommand.TelecommandRadiationRequest;
 import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
 import cdds.service.common.InterceptedService;
+import cdds.service.common.ProtoJsonUtil;
 import cdds.service.common.ProviderServer;
+import io.grpc.Metadata;
+import io.grpc.Status;
 
 /**
  * Test the communication among a TC service user and a TC service provider
@@ -194,8 +197,14 @@ public class TcServiceTest {
         
         Throwable error = tcServiceUser.getLastError(1000);
         assert(error != null);
+        
         System.out.println("Unauthorized TC Service. Got expected error " + error);
         
+        Metadata endpointTrailer = Status.trailersFromThrowable(error);        
+        byte[] endpointBytes = endpointTrailer.get(TcServiceAuthorization.TC_ENDPOINT_KEY);
+        TcServiceEndpoint endpoint = ProtoJsonUtil.fromJson(endpointBytes, TcServiceEndpoint.newBuilder());
+        LOG.info("TC endpoint custom trailer for " + TcServiceAuthorization.TC_ENDPOINT_KEY + "\n\t custom endpoint trailer " + endpoint);
+
         server.stop(); 
     }
 

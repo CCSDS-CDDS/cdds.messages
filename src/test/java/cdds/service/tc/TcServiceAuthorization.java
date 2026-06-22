@@ -80,9 +80,15 @@ public class TcServiceAuthorization implements ServerInterceptor {
                 } else {
                     LOG.warn("TC service meta data, invalid TC_ENDPOINT provided:\n" + tcEndpoint 
                         + "\nauthorized endpoints:\n" + authorizedTcEndpoints);
-                    
+
+                    Metadata endpointTrailer = new Metadata();
+                    endpointTrailer.put(TC_ENDPOINT_KEY, ProtoJsonUtil.toJsonUtf8(TcServiceEndpoint.newBuilder()
+                                                                                .setTerminal(tcEndpoint.getTerminal()) // this is for testing, the ground station / terminal is not authorized
+                                                                                .build())
+                                    );    
+                        
                     call.close(Status.PERMISSION_DENIED.withDescription("Invalid TC_ENDPOINT meta data provided"),
-                            new Metadata());
+                            endpointTrailer);
                 }
 
             } catch (InvalidProtocolBufferException e) {

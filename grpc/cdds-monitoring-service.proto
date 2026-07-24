@@ -16,14 +16,14 @@ service MonitoringServiceProvider {
     rpc getEndpoints(NoArg) returns (MonitoringServiceEndpointList);
 
     /**
-     * Opens a monitoring endpoint: A stream to receive moniotring messages according to the
+     * Opens a monitoring endpoint: A stream to receive monitoring messages according to the
      * monitoring parameters available for this monitoring endpoint.
-     * The monitoring can be perormed cyclic or on change; both modes operate according to a monitoring interval.
+     * The monitoring can be performed cyclic or on change; both modes operate according to a monitoring interval.
      * For every interval, either the complete set of parameters are provided (cyclic),
-     * or this parameters changed compared to the last inerval (on change).
+     * or this parameters changed compared to the last interval (on change).
      *
      * The service requires the following metadata when calling the service method:
-     *      1) monitoring-endpoint-bin = JSON encoded TmServiceEndpoint using the binary marshaller
+     *      1) monitoring-endpoint-bin = JSON encoded MonitoringServiceEndpoint using the binary marshaller
      * The monitoring-endpoint-bin is authorized for the authenticated user. If not authorized,
      * the method call will fail.
      */ 
@@ -67,13 +67,13 @@ message MonitoringServiceEndpoint {
     /**
      * The monitoring cycle in milli seconds. At the end of the monitoring cycle the monitoring parameters
      * of the endpoint will be delivered. For mode cyclic, all parameters are delivered, for on-change
-     * those parameters changed comapred tot he last cycle are delivered. For on-change all parameters are delivered
+     * those parameters changed compared tot he last cycle are delivered. For on-change all parameters are delivered
      * at the end of the first cycle.
      */
-    uint32 monitoringCyle = 50;
+    uint32 monitoringCycle = 50;
 
     /**
-     * Monitoring mode of this endpoint. The moniring provider shall support
+     * Monitoring mode of this endpoint. The monitoring provider shall support
      * both, cyclic and on-change. The service user chooses the desired mode when 
      * opening the endpoint.
      */
@@ -81,7 +81,7 @@ message MonitoringServiceEndpoint {
 
     /**
      * The QoS used for the provisioning of telemetry monitoring.
-     * If the qos is ommitted, QoS 'exactly once' shall be used for monitoring message delivery
+     * If the qos is omitted, QoS 'exactly once' shall be used for monitoring message delivery
      */
     optional EnumQoS qos = 70;
 
@@ -103,13 +103,13 @@ message ParameterIdentification {
         
         /**
          * The OID of the Functional Resource Parameter. If only the OID is specified but not the Functional Resource Instance
-         * the parameter is delivered for all Functional Resurce instances available for monitoring. The underlying rationale is
-         * that a monitoring service user does not need to know Functional Resoruce Instance numbers.
+         * the parameter is delivered for all Functional Resource instances available for monitoring. The underlying rationale is
+         * that a monitoring service user does not need to know Functional Resource Instance numbers.
          */
         ObjectIdentifier functionalResourceParameterObjectIdentifier = 10;
 
         /**
-         * The Functional Resource Parameter Name spacifies a Fuctional Resource Paramater by OID and 
+         * The Functional Resource Parameter Name specifies a Functional Resource Parameter by OID and 
          * Functional Resource Instance Number.
          */
         FunctionalResourceParameterName functionalResourceParameterName = 20;
@@ -119,7 +119,7 @@ message ParameterIdentification {
 /**
  * The Functional Resource Parameter Name groups the 
  * OID of the Functional Resource Parameter and the 
- * Functional Resurce Intance Number.
+ * Functional Resource Instance Number.
  */
 message FunctionalResourceParameterName {
   /**

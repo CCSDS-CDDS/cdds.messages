@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package ccsds.cdds;
 
+import "types.proto";
 import "ccsds_schema_ndmxml.proto";
 
 /**
@@ -9,17 +10,26 @@ import "ccsds_schema_ndmxml.proto";
  * or a protobuf encoded TDM.
  */ 
 message TrackingDataMessage {
+
+    /**
+     * The production state of the CDDS Tracking Service Provider.
+     */
+    ProductionState productionState = 1;
+
+    /**
+     * The TDM. In case of a non-operational production state, the TDM shall be ommitted.
+     */
     oneof message {
 
         /**
          * A text TDM (KVN or XML) 
          */ 
-        TdmTypeText tdmText = 1;
+        TdmTypeText tdmText = 10;
 
         /**
          * A protobuf encoded TDM. 
          */
-        ccsds.schema.ndmxml.TdmType tdmProto = 10;
+        ccsds.schema.ndmxml.TdmType tdmProto = 20;
     }
 }
 

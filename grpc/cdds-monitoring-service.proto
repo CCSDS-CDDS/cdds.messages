@@ -5,8 +5,8 @@ import "types.proto";
 
 
 /**
- * This is the gRPC definition of the CDDS Monitoring Service returning TM frames received 
- * from the space link.
+ * This is the service definition of the gRPC CDDS Monitoring Service providing ground station
+ * monitoring parameters.
  */
 service MonitoringServiceProvider {
 
@@ -17,8 +17,8 @@ service MonitoringServiceProvider {
 
     /**
      * Opens a monitoring endpoint: A stream to receive moniotring messages according to the
-     *  monitoring parameters requested from the monitoring endpoint.
-     * The monitoring can be cyclic or on change. Both modes operate according to an interval.
+     * monitoring parameters available for this monitoring endpoint.
+     * The monitoring can be perormed cyclic or on change; both modes operate according to a monitoring interval.
      * For every interval, either the complete set of parameters are provided (cyclic),
      * or this parameters changed compared to the last inerval (on change).
      *

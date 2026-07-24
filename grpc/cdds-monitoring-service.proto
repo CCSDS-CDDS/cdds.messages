@@ -1,0 +1,156 @@
+syntax = "proto3";
+package ccsds.cdds.monitoring; 
+import "monitoring.proto";
+import "types.proto";
+
+
+/**
+ * This is the gRPC definition of the CDDS Monitoring Service returning TM frames received 
+ * from the space link.
+ */
+service MonitoringServiceProvider {
+
+    /**
+     * Returns a list of endpoints authorized for an authenticated user.
+     */
+    rpc getEndpoints(NoArg) returns (MonitoringServiceEndpointList);
+
+    /**
+     * Opens a monitoring endpoint: A stream to receive moniotring messages according to the
+     *  monitoring parameters requested from the monitoring endpoint.
+     * The monitoring can be cyclic or on change. Both modes operate according to an interval.
+     * For every interval, either the complete set of parameters are provided (cyclic),
+     * or this parameters changed compared to the last inerval (on change).
+     *
+     * The service requires the following metadata when calling the service method:
+     *      1) monitoring-endpoint-bin = JSON encoded TmServiceEndpoint using the binary marshaller
+     * The monitoring-endpoint-bin is authorized for the authenticated user. If not authorized,
+     * the method call will fail.
+     */ 
+    rpc openMonitoringEndpoint(NoArg) returns (stream MonitoringMessage); 
+}
+
+/**
+ * Allows the identification of a service endpoint in terms
+ * of the parameters provided below.
+ */
+message MonitoringServiceEndpoint {
+    /**
+     * The CDDS service version of this service
+     */
+    uint32 serviceVersion = 1;
+
+    /**
+     * The name of the service provider organization providing the monitoring service
+     */
+    string serviceProvider = 10;
+
+    /**
+     * The terminal providing the monitoring service
+     */
+    optional string terminal = 20;
+
+    /**
+     * The serviceUser (spacecraft) for which monitoring shall be delivered
+     */
+    string serviceUser = 30;
+    
+    /**
+     * One endpoint can provide one Parameter Group.
+     * The endpoint provided in the request openMonitoringEndpoint method meta data
+     * can use a subset of parameters specified for the endpoint of the monitoring provider.
+     * If the The endpoint provided in request empty, all parameters specified
+     * for the endpoint shall be delivered.
+     */
+    repeated ParameterIdentification monitoringParameters = 40;
+
+    /**
+     * The monitoring cycle in milli seconds. At the end of the monitoring cycle the monitoring parameters
+     * of the endpoint will be delivered. For mode cyclic, all parameters are delivered, for on-change
+     * those parameters changed comapred tot he last cycle are delivered. For on-change all parameters are delivered
+     * at the end of the first cycle.
+     */
+    uint32 monitoringCyle = 50;
+
+    /**
+     * Monitoring mode of this endpoint. The moniring provider shall support
+     * both, cyclic and on-change. The service user chooses the desired mode when 
+     * opening the endpoint.
+     */
+    MonitoringMode mode = 60;
+
+    /**
+     * The QoS used for the provisioning of telemetry monitoring.
+     * If the qos is ommitted, QoS 'exactly once' shall be used for monitoring message delivery
+     */
+    optional EnumQoS qos = 70;
+
+    /**
+     * An optional endpoint name to distinguish endpoints;
+     * for instance for spacecrafts supporting multiple bands.
+     */
+    optional string endpointName = 80;
+}
+
+message ParameterIdentification {
+
+    oneof kind {
+
+        /**
+         * Identifies a generic parameter by it's ID
+         */
+        string genericParameterIdentifier = 1;
+        
+        /**
+         * The OID of the Functional Resource Parameter. If only the OID is specified but not the Functional Resource Instance
+         * the parameter is delivered for all Functional Resurce instances available for monitoring. The underlying rationale is
+         * that a monitoring service user does not need to know Functional Resoruce Instance numbers.
+         */
+        ObjectIdentifier functionalResourceParameterObjectIdentifier = 10;
+
+        /**
+         * The Functional Resource Parameter Name spacifies a Fuctional Resource Paramater by OID and 
+         * Functional Resource Instance Number.
+         */
+        FunctionalResourceParameterName functionalResourceParameterName = 20;
+    }
+}
+
+/**
+ * The Functional Resource Parameter Name groups the 
+ * OID of the Functional Resource Parameter and the 
+ * Functional Resurce Intance Number.
+ */
+message FunctionalResourceParameterName {
+  /**
+   * The Object Identifier of the Functional Resource Parameter.
+   */
+  ObjectIdentifier functionalResourceParameterIdentifier = 1;
+
+  /**
+   * The instance number of the Functional Resource
+   * for which the parameter is reported for.
+   */
+  uint64 functionalResourceInstance = 10;    
+}
+
+/**
+ * List of endpoints
+ */
+message MonitoringServiceEndpointList {
+
+    /**
+     * The list of endpoints
+     */ 
+    repeated MonitoringServiceEndpoint endpoints = 1;
+} 
+
+/**
+ * The enum defining the monitoring modes.
+ */
+enum MonitoringMode {
+    INVALID_MONITORING_MODE = 0;
+    CYCLIC_MONITORING_MODE = 1;
+    ON_CHANGE_MONITORING_MODE = 2;
+}
+

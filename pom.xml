@@ -178,6 +178,7 @@
                 <argument>${project.basedir}/grpc/cdds-tc-service.proto</argument>
                 <argument>${project.basedir}/grpc/cdds-tm-service.proto</argument>
                 <argument>${project.basedir}/grpc/cdds-td-service.proto</argument>
+                <argument>cdds-monitoring-service.proto</argument>
               </arguments>
           </configuration>
           </execution>

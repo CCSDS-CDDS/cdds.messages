@@ -75,20 +75,22 @@ message FunctionalResourceDirective {
     uint32 invocationId = 1;
 
     /**
-     * The Object Identifier of the Functional Resource.
+     * The Object Identifier of the Functional Resource Directive.
+     * Note: The Object Identifier includes the Functional Resource Object Identifier.
      */
-    ObjectIdentifier functionalResourceIdentifier = 10;
+    ObjectIdentifier functionalResourceDirectiveIdentifier = 10;
+
+    /**
+     * An optional human readable description of the directive
+     */
+    optional string directiveDescription = 20;
 
     /**
      * The instance number of the Functional Resource
      * for which the directive is invoked.
      */
-    uint64 functionalResourceInstance = 20;
+    uint64 functionalResourceInstance = 30;
   
-    /**
-     * The identifier of the directiv to invoke
-     */
-    ObjectIdentifier directiveIdentifier = 30;
 
     /**
      * The qualifiers of the invoked directive
@@ -107,9 +109,14 @@ message DirectiveQualifier {
     ObjectIdentifier qualifierId = 1;
 
     /**
+     * An optional human readable description of the directive qualifier.
+     */
+    optional string description = 10;
+
+    /**
      * The value of the directive qualifier
      */
-    Value qualifierValue = 10;
+    Value qualifierValue = 20;
 }
 
 message DirectiveReport {
@@ -120,7 +127,7 @@ message DirectiveReport {
 
     /**
      * The invocation identifier is referring to a previously invoked  
-     * control directive.
+     * control directive. If no directive has been ever invoked, this and all following fields shall be omitted.
      */
     uint32 invocationId = 10;
 

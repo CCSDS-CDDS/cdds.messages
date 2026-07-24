@@ -1,0 +1,83 @@
+syntax = "proto3";
+package ccsds.cdds.control;
+import "types.proto"; 
+import "control.proto";
+
+/**
+ * This is the gRPC definition of the CDDS Control Service to invoke ground station control directives.
+ */
+service ControlServiceProvider {
+
+    /**
+     * Returns a list of endpoints authorized for an authenticated user.
+     */
+    rpc getEndpoints(NoArg) returns (ControlServiceEndpointList);
+   
+    /**
+     * Opens a control service endpoint: a bi-directional stream to send control directives and receive directive reports.
+     * 
+     * The returned directive reports provide information about directive request acceptance, 
+     * directive execution and execution failures.
+     * 
+     * The service requires the following metadata when calling the service method:<br/><br/>
+     *      1) control-endpoint-bin = JSON encoded ControlServiceEndpoint using the binary marshaller<br/><br/>
+     *
+     * The tc-endpoint-bin is authorized for the authenticated user. If not authorized,
+     * the method call will fail.
+     */ 
+    rpc openControlEndpoint(stream ControlDirective) returns (stream DirectiveReport); 
+}
+
+/**
+ * Allows the identification of a service endpoint in terms
+ * of the parameters provided below.
+ */
+message ControlServiceEndpoint {
+    /**
+     * The CDDS service version of this service
+     */
+    uint32 serviceVersion = 1;
+
+    /**
+     * The name of the service provider organization providing the control service
+     */
+    string serviceProvider = 10;
+
+    /**
+     * The name of the terminal providing the control service
+     */
+    optional string terminal = 20;
+
+    /**
+     * The service user (spacecraft) for which control shall be provided
+     */
+    string serviceUser = 30;
+
+    /**
+     * The control directives available for this endpoint.
+     * For the purpose of endpoint definition, the following fields of a control directive shall be omitted:<br/>
+     * - invocationId <br/>
+     * - values of directive qualifiers <br/>
+     * When using this endpoint as meta data to the openControlEndpoint request, this field shall be empty.
+     * As a consequence, all directives of this endpoint shall be available to the service user.
+     */
+    repeated ControlDirective directives = 40;
+
+    /**
+     * An optional endpoint name to distinguish endpoints;
+     * for instance for spacecrafts supporting multiple bands.
+     */
+    optional string endpointName = 50;
+}
+
+/**
+ * List of endpoints
+ */
+message ControlServiceEndpointList {
+
+    /**
+     * The list of endpoints
+     */ 
+    repeated ControlServiceEndpoint endpoints = 1;
+} 
+

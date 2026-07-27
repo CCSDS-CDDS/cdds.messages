@@ -37,7 +37,7 @@ message GenericControlDirective {
     uint32 invocationId = 1;
     
     /**
-     * The directive identfier uniquely identifies a control directive
+     * The directive identifier uniquely identifies a control directive
      * known to both, the CDDS User and CDDS Provider.
      */
     string directiveId = 10;

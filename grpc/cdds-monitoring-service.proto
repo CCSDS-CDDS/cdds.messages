@@ -22,9 +22,10 @@ service MonitoringServiceProvider {
      * For every interval, either the complete set of parameters are provided (cyclic),
      * or this parameters changed compared to the last interval (on change).
      *
-     * The service requires the following metadata when calling the service method:
-     *      1) monitoring-endpoint-bin = JSON encoded MonitoringServiceEndpoint using the binary marshaller
-     * The monitoring-endpoint-bin is authorized for the authenticated user. If not authorized,
+     * The service requires the following metadata when calling the service method:<br/><br/>
+     *      1) monitoring-endpoint-bin = JSON encoded MonitoringServiceEndpoint using the binary marshaller<br/><br/>
+     *
+     * The monitoring service endpoint is authorized for the authenticated user. If not authorized,
      * the method call will fail.
      */ 
     rpc openMonitoringEndpoint(NoArg) returns (stream MonitoringMessage); 

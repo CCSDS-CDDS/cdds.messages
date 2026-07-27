@@ -19,9 +19,10 @@ service TrackingDataServiceProvider {
      * Opens a tracking data endpoint: A stream to receive raw tracking data according 
      * to the requested tracking data type.
      *
-     * The service requires the following metadata when calling the open tracking data endpoint method:
-     *      1) td-endpoint-bin = JSON encoded TrackingDataServiceEndpoint using the binary marshaller
-     * The td-endpoint-bin is authorized for the authenticated user. If not authorized,
+     * The service requires the following metadata when calling the open tracking data endpoint method:<br/><br/>
+     *      1) td-endpoint-bin = JSON encoded TrackingDataServiceEndpoint using the binary marshaller<br/><br/>
+     *
+     * The TD service endpoint is authorized for the authenticated user. If not authorized,
      * the method call will fail.
      */ 
     rpc openTrackingDataServiceEndpoint(NoArg) returns (stream TrackingDataMessage); ;

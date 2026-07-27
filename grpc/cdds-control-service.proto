@@ -22,7 +22,7 @@ service ControlServiceProvider {
      * The service requires the following metadata when calling the service method:<br/><br/>
      *      1) control-endpoint-bin = JSON encoded ControlServiceEndpoint using the binary marshaller<br/><br/>
      *
-     * The tc-endpoint-bin is authorized for the authenticated user. If not authorized,
+     * The control service endpoint is authorized for the authenticated user. If not authorized,
      * the method call will fail.
      */ 
     rpc openControlEndpoint(stream ControlDirective) returns (stream DirectiveReport); 

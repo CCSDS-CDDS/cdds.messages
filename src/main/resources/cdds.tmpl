@@ -41,6 +41,10 @@
         border: 1px solid black;
         border-collapse: collapse;
         table-layout: fixed; /* forces Word to wrap */
+        
+        /* CCSDS Fnt for Tables */
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 10pt;
       }
 
       thead {
@@ -64,6 +68,24 @@
       td p {
         text-indent: 1em;
         margin: 0;
+      }
+
+      td.meta {
+         vertical-align: top;
+      }
+
+      td.meta dl {
+          display: grid;
+          grid-template-columns: max-content 1fr;
+          column-gap: 0.5em;
+          row-gap: 0.2em;
+          margin: 0;
+      }
+
+      td.meta dt,
+      td.meta dd {
+          display: block;
+          margin: 0;
       }
 
       td p:nth-child(1) {
@@ -114,18 +136,25 @@
 
       /* Table for services. */
       .service-table td:nth-child(1) { /* Method Name */
-        width: 6em;
+        width: 40%;
+        overflow-wrap: break-word;
+        word-break: break-word;
       }
       .service-table td:nth-child(2) { /* Request Type */
-        width: 2em;
+        width: 60%;
+        overflow-wrap: break-word;
+        word-break: break-word;
       }
+/*           
       .service-table td:nth-child(3) { /* Response Type */
         width: 2em;
+        overflow-wrap: break-word;
+        word-break: break-word;
       }
       .service-table td:nth-child(4) { /* Description */
-        width: 12em;
+        width: 14em;
       }
-
+*/
 
       /* Table of scalar value types. */
       .scalar-value-types-table tr {
@@ -403,21 +432,46 @@
       {{range .Services}}
         <h4 id="{{.FullName}}">{{.Name}}</h4>
         {{p .Description}}
+<!--        
         <table class="service-table">
           <thead>
-            <tr><td>Method Name</td><td>Request Type</td><td>Response Type</td><td>Description</td></tr>
+            <tr><td>gRPC Method Name</td><td>Request Type</td><td>Response Type</td><td>Description</td></tr>
           </thead>
           <tbody>
             {{range .Methods}}
               <tr>
                 <td>{{.Name}}</td>
-                <td><a href="#{{.RequestFullType}}">{{.RequestType}}</a>{{if .RequestStreaming}} stream{{end}}</td>
-                <td><a href="#{{.ResponseFullType}}">{{.ResponseType}}</a>{{if .ResponseStreaming}} stream{{end}}</td>
+                <td><a href="#{{.RequestFullType}}">{{.RequestType}}</a>{{if .RequestStreaming}}&nbsp;stream{{end}}</td>
+                <td><a href="#{{.ResponseFullType}}">{{.ResponseType}}</a> {{if .ResponseStreaming}}&nbsp;stream{{end}}</td>
                 <td><p>{{.Description}}</p></td>
               </tr>
             {{end}}
           </tbody>
         </table>
+-->
+        <table class="service-table">
+          <thead>
+            <tr><td>gRPC Method</td><td>Description</td></tr>
+          </thead>
+          <tbody>
+            {{range .Methods}}
+              <tr>
+                <td class="meta">
+                  <dl>
+                    <dt><b>Name: </b></dt><dd>{{.Name}}</dd>
+                    <dt><b>Argument: </b></dt><dd><a href="#{{.RequestFullType}}">{{.RequestType}}</a>{{if .RequestStreaming}}&nbsp;stream{{end}}</dd>
+                    <dt><b>Response: </b></dt><dd><a href="#{{.ResponseFullType}}">{{.ResponseType}}</a> {{if .ResponseStreaming}}&nbsp;stream{{end}}</dd>
+                  </dl>
+                </td>
+                <td>
+                  <p>{{.Description}}</p>
+                </td>
+              </tr>
+            {{end}}
+          </tbody>
+        </table>
+
+        <p class="MsoCaption">CDDS gRPC {{.Name}} Definition</p>
 
         {{$service := .}}
         {{- range .MethodOptions}}

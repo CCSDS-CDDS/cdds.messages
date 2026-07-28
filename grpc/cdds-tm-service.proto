@@ -1,5 +1,5 @@
 syntax = "proto3";
-package ccsds.cdds.tm; 
+package ccsds.cdds.v1.tm; 
 import "telemetry.proto";
 import "types.proto";
 

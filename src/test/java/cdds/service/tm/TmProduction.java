@@ -1,6 +1,7 @@
 package cdds.service.tm;
 
-import ccsds.cdds.tm.CddsTmService.TmServiceEndpoint;
+import ccsds.cdds.v1.Telemetry;
+import ccsds.cdds.v1.tm.CddsTmService.TmServiceEndpoint;
 
 public interface TmProduction {
 
@@ -9,7 +10,7 @@ public interface TmProduction {
      * @param tmEndpoint    The endpoint governing the provided TM
      * @param tmUserStream  The user stream to send the TM
      */
-    public void startTmEndpointService(TmServiceEndpoint tmEndpoint, io.grpc.stub.StreamObserver<ccsds.cdds.Telemetry.TelemetryMessage> tmUserStream);
+    public void startTmEndpointService(TmServiceEndpoint tmEndpoint, io.grpc.stub.StreamObserver<Telemetry.TelemetryMessage> tmUserStream);
 
     /**
      * Stop providing the TM

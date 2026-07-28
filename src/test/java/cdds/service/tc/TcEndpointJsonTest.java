@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
-import ccsds.cdds.Types.FrameVersion;
-import ccsds.cdds.Types.GvcId;
-import ccsds.cdds.Types.GvcIdList;
-import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
+import ccsds.cdds.v1.Types.FrameVersion;
+import ccsds.cdds.v1.Types.GvcId;
+import ccsds.cdds.v1.Types.GvcIdList;
+import ccsds.cdds.v1.tc.CddsTcService.TcServiceEndpoint;
 import cdds.service.common.ProtoJsonUtil;
 
 public class TcEndpointJsonTest {

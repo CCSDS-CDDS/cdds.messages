@@ -17,17 +17,17 @@ import javax.net.ssl.SSLException;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
-import ccsds.cdds.CddsServiceProvider.ServiceProviderAddress;
-import ccsds.cdds.Telecommand.TelecommandMessage;
-import ccsds.cdds.Telecommand.TelecommandReport;
-import ccsds.cdds.Types.FrameVersion;
-import ccsds.cdds.Types.GvcId;
-import ccsds.cdds.Types.GvcIdList;
-import ccsds.cdds.Types.NoArg;
-import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
-import ccsds.cdds.tc.CddsTcService.TcServiceEndpointList;
-import ccsds.cdds.tc.TcServiceProviderGrpc;
-import ccsds.cdds.tc.TcServiceProviderGrpc.TcServiceProviderStub;
+import ccsds.cdds.v1.CddsServiceProvider.ServiceProviderAddress;
+import ccsds.cdds.v1.Telecommand.TelecommandMessage;
+import ccsds.cdds.v1.Telecommand.TelecommandReport;
+import ccsds.cdds.v1.Types.FrameVersion;
+import ccsds.cdds.v1.Types.GvcId;
+import ccsds.cdds.v1.Types.GvcIdList;
+import ccsds.cdds.v1.Types.NoArg;
+import ccsds.cdds.v1.tc.CddsTcService.TcServiceEndpoint;
+import ccsds.cdds.v1.tc.CddsTcService.TcServiceEndpointList;
+import ccsds.cdds.v1.tc.TcServiceProviderGrpc;
+import ccsds.cdds.v1.tc.TcServiceProviderGrpc.TcServiceProviderStub;
 import cdds.service.common.ClientMetaDataInterceptor;
 import cdds.service.common.ProtoJsonUtil;
 import cdds.service.common.ProviderServer;

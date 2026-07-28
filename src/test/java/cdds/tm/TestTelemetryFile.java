@@ -16,12 +16,12 @@ import org.junit.jupiter.api.Test;
 
 import com.google.protobuf.ByteString;
 
-import ccsds.cdds.Telemetry.TelemetryData;
-import ccsds.cdds.Telemetry.TelemetryMessage;
-import ccsds.cdds.Types.Annotation;
-import ccsds.cdds.Types.ApertureId;
-import ccsds.cdds.Types.ReceptionMetaData;
-import ccsds.cdds.Types.Value;
+import ccsds.cdds.v1.Telemetry.TelemetryData;
+import ccsds.cdds.v1.Telemetry.TelemetryMessage;
+import ccsds.cdds.v1.Types.Annotation;
+import ccsds.cdds.v1.Types.ApertureId;
+import ccsds.cdds.v1.Types.ReceptionMetaData;
+import ccsds.cdds.v1.Types.Value;
 import cdds.util.TimeUtil;
 
 /**

@@ -5,15 +5,15 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
-import ccsds.cdds.Telecommand.TelecommandMessage;
-import ccsds.cdds.Telecommand.TelecommandProviderStatus;
-import ccsds.cdds.Telecommand.TelecommandRadiation;
-import ccsds.cdds.Telecommand.TelecommandRadiationRequestAck;
-import ccsds.cdds.Telecommand.TelecommandReport;
-import ccsds.cdds.Telecommand.UplinkStatus;
-import ccsds.cdds.Types.ApertureId;
-import ccsds.cdds.Types.ProductionState;
-import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
+import ccsds.cdds.v1.Telecommand.TelecommandMessage;
+import ccsds.cdds.v1.Telecommand.TelecommandProviderStatus;
+import ccsds.cdds.v1.Telecommand.TelecommandRadiation;
+import ccsds.cdds.v1.Telecommand.TelecommandRadiationRequestAck;
+import ccsds.cdds.v1.Telecommand.TelecommandReport;
+import ccsds.cdds.v1.Telecommand.UplinkStatus;
+import ccsds.cdds.v1.Types.ApertureId;
+import ccsds.cdds.v1.Types.ProductionState;
+import ccsds.cdds.v1.tc.CddsTcService.TcServiceEndpoint;
 import cdds.service.common.ProtoJsonUtil;
 import cdds.util.TimeUtil;
 import io.grpc.stub.StreamObserver;

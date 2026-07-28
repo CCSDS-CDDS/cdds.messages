@@ -12,10 +12,13 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
-import ccsds.cdds.Types.NoArg;
-import ccsds.cdds.tm.CddsTmService.TmServiceEndpoint;
-import ccsds.cdds.tm.CddsTmService.TmServiceEndpointList;
-import ccsds.cdds.tm.TmServiceProviderGrpc.TmServiceProviderImplBase;
+import ccsds.cdds.v1.Telemetry;
+import ccsds.cdds.v1.Types;
+import ccsds.cdds.v1.Types.NoArg;
+import ccsds.cdds.v1.tm.CddsTmService;
+import ccsds.cdds.v1.tm.CddsTmService.TmServiceEndpoint;
+import ccsds.cdds.v1.tm.CddsTmService.TmServiceEndpointList;
+import ccsds.cdds.v1.tm.TmServiceProviderGrpc.TmServiceProviderImplBase;
 import cdds.service.common.GrpcUtil;
 import cdds.service.common.InterceptedService;
 import cdds.service.common.ProtoJsonUtil;
@@ -40,7 +43,7 @@ public class TmServiceProvider extends TmServiceProviderImplBase implements Inte
     public void getEndpoints(NoArg request, StreamObserver<TmServiceEndpointList> responseObserver)  {
         LOG.info("get endpoints called. Total endpoints: " + tmEndpoints.size());
 
-        ccsds.cdds.tm.CddsTmService.TmServiceEndpointList.Builder endpoints = TmServiceEndpointList.newBuilder();
+        CddsTmService.TmServiceEndpointList.Builder endpoints = TmServiceEndpointList.newBuilder();
 
         try {
             X509Certificate cert = TmServiceAuthorization.CLIENT_CERT.get();
@@ -62,8 +65,8 @@ public class TmServiceProvider extends TmServiceProviderImplBase implements Inte
     }
 
     @Override
-    public void openTelemetryEndpoint(ccsds.cdds.Types.NoArg noArg,
-            io.grpc.stub.StreamObserver<ccsds.cdds.Telemetry.TelemetryMessage> tmUserStream) {
+    public void openTelemetryEndpoint(Types.NoArg noArg,
+            io.grpc.stub.StreamObserver<Telemetry.TelemetryMessage> tmUserStream) {
         try {
             // get the tm-endpoint-bin meta data (JSON)
             byte[] endpointBytes = TmServiceAuthorization.TM_ENDPOINT_CTX_KEY.get(); 

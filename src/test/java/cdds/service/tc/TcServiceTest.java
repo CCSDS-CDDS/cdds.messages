@@ -16,11 +16,11 @@ import org.junit.jupiter.api.TestInfo;
 
 import com.google.protobuf.ByteString;
 
-import ccsds.cdds.CddsServiceProvider.ServiceProviderAddress;
-import ccsds.cdds.Telecommand.ReportRequest;
-import ccsds.cdds.Telecommand.TelecommandMessage;
-import ccsds.cdds.Telecommand.TelecommandRadiationRequest;
-import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
+import ccsds.cdds.v1.CddsServiceProvider.ServiceProviderAddress;
+import ccsds.cdds.v1.Telecommand.ReportRequest;
+import ccsds.cdds.v1.Telecommand.TelecommandMessage;
+import ccsds.cdds.v1.Telecommand.TelecommandRadiationRequest;
+import ccsds.cdds.v1.tc.CddsTcService.TcServiceEndpoint;
 import cdds.service.common.InterceptedService;
 import cdds.service.common.ProtoJsonUtil;
 import cdds.service.common.ProviderServer;

@@ -1,5 +1,5 @@
 syntax = "proto3";
-package ccsds.cdds.td; 
+package ccsds.cdds.v1.td; 
 import "ccsds_schema_ndmxml.proto";
 import "types.proto";
 import "tracking.proto";

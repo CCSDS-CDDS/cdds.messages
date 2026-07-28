@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package ccsds.cdds;
+package ccsds.cdds.v1;
 
 import "descriptor.proto";
 

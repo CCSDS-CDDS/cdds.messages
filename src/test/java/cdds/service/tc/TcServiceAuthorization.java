@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
-import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
+import ccsds.cdds.v1.tc.CddsTcService.TcServiceEndpoint;
 import cdds.service.common.GrpcUtil;
 import cdds.service.common.ProtoJsonUtil;
 import io.grpc.Context;

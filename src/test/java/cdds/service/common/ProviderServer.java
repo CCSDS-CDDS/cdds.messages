@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.net.ssl.SSLException;
 
-import ccsds.cdds.CddsServiceProvider.ServiceProviderAddress;
+import ccsds.cdds.v1.CddsServiceProvider.ServiceProviderAddress;
 import io.grpc.Grpc;
 import io.grpc.InsecureServerCredentials;
 import io.grpc.Server;

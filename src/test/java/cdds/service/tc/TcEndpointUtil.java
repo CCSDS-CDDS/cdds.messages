@@ -1,8 +1,8 @@
 package cdds.service.tc;
 
-import ccsds.cdds.Types.GvcId;
-import ccsds.cdds.Types.GvcIdList;
-import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
+import ccsds.cdds.v1.Types.GvcId;
+import ccsds.cdds.v1.Types.GvcIdList;
+import ccsds.cdds.v1.tc.CddsTcService.TcServiceEndpoint;
 
 /**
  * Utility for TC endpoints

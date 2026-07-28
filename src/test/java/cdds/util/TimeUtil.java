@@ -6,7 +6,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
-import ccsds.cdds.Types.DateTime;
+import ccsds.cdds.v1.Types.DateTime;
 
 /**
  * Provides some DateTime related functions

@@ -10,12 +10,13 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
-import ccsds.cdds.Telecommand.TelecommandMessage;
-import ccsds.cdds.Telecommand.TelecommandReport;
-import ccsds.cdds.Types.NoArg;
-import ccsds.cdds.tc.CddsTcService.TcServiceEndpoint;
-import ccsds.cdds.tc.CddsTcService.TcServiceEndpointList;
-import ccsds.cdds.tc.TcServiceProviderGrpc.TcServiceProviderImplBase;
+import ccsds.cdds.v1.Telecommand.TelecommandMessage;
+import ccsds.cdds.v1.Telecommand.TelecommandReport;
+import ccsds.cdds.v1.Types.NoArg;
+import ccsds.cdds.v1.tc.CddsTcService;
+import ccsds.cdds.v1.tc.CddsTcService.TcServiceEndpoint;
+import ccsds.cdds.v1.tc.CddsTcService.TcServiceEndpointList;
+import ccsds.cdds.v1.tc.TcServiceProviderGrpc.TcServiceProviderImplBase;
 import cdds.service.common.GrpcUtil;
 import cdds.service.common.InterceptedService;
 import cdds.service.common.ProtoJsonUtil;
@@ -39,7 +40,7 @@ public class TcServiceProvider extends TcServiceProviderImplBase implements Inte
     public void getEndpoints(NoArg request, StreamObserver<TcServiceEndpointList> responseObserver) {
         LOG.info("get endpoints called. Total endpoints: " + tcEndpoints.size());
 
-        ccsds.cdds.tc.CddsTcService.TcServiceEndpointList.Builder endpoints = TcServiceEndpointList.newBuilder();
+        CddsTcService.TcServiceEndpointList.Builder endpoints = TcServiceEndpointList.newBuilder();
 
         try {
             X509Certificate cert = TcServiceAuthorization.CLIENT_CERT.get();

@@ -15,8 +15,8 @@ import javax.naming.TimeLimitExceededException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import ccsds.cdds.Types.FrameVersion;
-import ccsds.cdds.tm.CddsTmService.TmServiceEndpoint;
+import ccsds.cdds.v1.Types.FrameVersion;
+import ccsds.cdds.v1.tm.CddsTmService.TmServiceEndpoint;
 import cdds.service.common.InterceptedService;
 import cdds.service.common.ProviderServer;
 

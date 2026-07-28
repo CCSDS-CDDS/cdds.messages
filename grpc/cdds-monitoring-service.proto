@@ -1,5 +1,5 @@
 syntax = "proto3";
-package ccsds.cdds.monitoring; 
+package ccsds.cdds.v1.monitoring; 
 import "monitoring.proto";
 import "types.proto";
 

@@ -1,6 +1,5 @@
 syntax = "proto3";
 package ccsds.cdds.v1.td; 
-import "ccsds_schema_ndmxml.proto";
 import "types.proto";
 import "tracking.proto";
 
@@ -25,7 +24,7 @@ service TrackingDataServiceProvider {
      * The TD service endpoint is authorized for the authenticated user. If not authorized,
      * the method call will fail.
      */ 
-    rpc openTrackingDataServiceEndpoint(NoArg) returns (stream TrackingDataMessage); ;
+    rpc openTrackingDataServiceEndpoint(NoArg) returns (stream TrackingDataMessage);
 }
 
 message TrackingDataServiceEndpoint {
@@ -56,7 +55,7 @@ message TrackingDataServiceEndpoint {
      * tracking data types available from the provider. If the user provides an empty list of tracking data types,
      * the provider shall deliver all tracking data types configured for this endpoint.
      */ 
-    repeated ccsds.schema.ndmxml.TrackingDataObservationType trackingDataType = 40; 
+    repeated TrackingDataType trackingDataType = 40; 
 
     /**
      * The QoS used for the provisioning of tracking data messages
@@ -80,3 +79,21 @@ message TrackingDataServiceEndpointList {
      */ 
     repeated TrackingDataServiceEndpoint endpoints = 1;
 } 
+
+/**
+ * This enum identifies the observation types as an enum
+ */
+enum TrackingDataType {
+  TRACKING_DATA_TYPE_UNSPECIFIED = 0;
+
+  DOPPLER_INSTANTANEOUS = 1;
+  DOPPLER_INTEGRATED = 2;
+  RANGE = 3;
+  CARRIER_POWER = 4;
+  CARRIER_POWER_TO_NOISE_SPECTRAL_DENSITY = 5;
+  RANGING_POWER_TO_NOISE_SPECTRAL_DENSITY = 6;
+  RECEIVE_FREQUENCY = 7;
+  TRANSMIT_FREQUENCY = 8;
+  TRANSMIT_FREQUENCY_RATE = 9;
+  ANTENNA_ANGLES = 10;
+}

@@ -107,7 +107,7 @@ message ParameterIdentification {
          * the parameter is delivered for all Functional Resource instances available for monitoring. The underlying rationale is
          * that a monitoring service user does not need to know Functional Resource Instance numbers.
          */
-        ObjectIdentifier functionalResourceParameterObjectIdentifier = 10;
+        ObjectIdentifier functionalResourceParameterId = 10;
 
         /**
          * The Functional Resource Parameter Name specifies a Functional Resource Parameter by OID and 

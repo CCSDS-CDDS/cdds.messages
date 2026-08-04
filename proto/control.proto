@@ -86,22 +86,32 @@ message FunctionalResourceDirective {
     optional string directiveDescription = 20;
 
     /**
-     * The instance number of the Functional Resource
-     * for which the directive is invoked.
+     * The qualifier of the invoked directive
      */
-    uint64 functionalResourceInstance = 30;
-  
-
-    /**
-     * The qualifiers of the invoked directive
-     */
-    repeated DirectiveQualifier directiveQualifiers = 40;
+    DirectiveQualifier directiveQualifier = 30;
 }
 
 /**
- * A directive qualifier further qualifies directives.
+ * A directive qualifier holds for on Functional Resource Instance the qualifier values 
  */
 message DirectiveQualifier {
+ 
+   /**
+     * The instance number of the Functional Resource
+     * for which the directive is invoked.
+     */
+    uint64 functionalResourceInstance = 1;
+ 
+    /**
+     * The Qualifier values for the directive
+     */
+    repeated QualifierValue qualifierValues = 10;
+}
+
+/**
+ * A qualifier value.
+ */
+message QualifierValue {
     
     /**
      * The OID of the directive qualifier as specified by the functional resource
@@ -114,9 +124,14 @@ message DirectiveQualifier {
     optional string description = 10;
 
     /**
-     * The value of the directive qualifier
+     * The Type OID identifying the type of the value
+     */ 
+    ObjectIdentifier parameterTypeId = 20;
+
+    /**
+     * The encoded value of the directive qualifier value. The value is encoded e.g. as Protobuf
      */
-    Value qualifierValue = 20;
+    bytes encodedQualifierValue = 30;
 }
 
 message DirectiveReport {

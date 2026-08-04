@@ -54,20 +54,20 @@ message ControlServiceEndpoint {
     string serviceUser = 30;
 
     /**
-     * The control directives available for this endpoint.
-     * For the purpose of endpoint definition, the following fields of a control directive shall be omitted:<br/>
-     * - invocationId <br/>
-     * - values of directive qualifiers <br/>
-     * When using this endpoint as meta data to the openControlEndpoint request, this field shall be empty.
-     * As a consequence, all directives of this endpoint shall be available to the service user.
+     * The Object identifier list of the Functional Resource Directives available for this endpoint
      */
-    repeated ControlDirective directives = 40;
+    repeated FunctionalResourceDirectiveName functionalResourceDirectives = 40;
+
+    /**
+     * The list of generic control directives available for this endpoint
+     */
+    optional repeated string genericDirectiveIds = 50;
 
     /**
      * An optional endpoint name to distinguish endpoints;
      * for instance for spacecrafts supporting multiple bands.
      */
-    optional string endpointName = 50;
+    optional string endpointName = 60;
 }
 
 /**
@@ -79,5 +79,21 @@ message ControlServiceEndpointList {
      * The list of endpoints
      */ 
     repeated ControlServiceEndpoint endpoints = 1;
-} 
+}
+
+/**
+ * identifies a Functional Resource Directive by OID and optionally by the instance number
+ */
+message FunctionalResourceDirectiveName {
+    
+    /**
+     * The Directive Object Identifier
+     */
+    ObjectIdentifier functionalResourceDirective = 1;
+
+    /**
+     * The optional Functional Resource Instance number
+     */
+    optional uint64 functionalResourceInstance = 10;
+}
 

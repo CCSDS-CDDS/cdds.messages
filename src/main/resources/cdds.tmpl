@@ -25,8 +25,8 @@
       }
 
       h4 {
-        font-weight: normal;
-        border-bottom: 1px solid #aaa;
+        font-weight: bold;
+        /* border-bottom: 1px solid #aaa; */
         padding-bottom: 0.5ex;
       }
 
@@ -263,7 +263,7 @@
       {{range .Messages}}
         {{ $parentFields := .Fields }}
         <h4 id="{{.FullName}}">{{.LongName}}</h4>
-        {{p .Description}}
+        {{.Description}}
 
         {{if .HasFields}}
           <table class="field-table">

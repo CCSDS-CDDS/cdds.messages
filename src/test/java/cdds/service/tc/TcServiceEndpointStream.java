@@ -14,6 +14,7 @@ import ccsds.cdds.v1.Telecommand.UplinkStatus;
 import ccsds.cdds.v1.Types.ApertureId;
 import ccsds.cdds.v1.Types.ProductionState;
 import ccsds.cdds.v1.tc.CddsTcService.TcServiceEndpoint;
+import cdds.service.common.EndpointUtil;
 import cdds.service.common.ProtoJsonUtil;
 import cdds.util.TimeUtil;
 import io.grpc.stub.StreamObserver;
@@ -33,7 +34,7 @@ public class TcServiceEndpointStream implements StreamObserver<TelecommandMessag
     public TcServiceEndpointStream(StreamObserver<TelecommandReport> tcUserStream, TcServiceEndpoint tcEndPoint) {
         this.tcUserStream = tcUserStream;
         this.tcEndPoint = tcEndPoint;
-        LOG = LogManager.getLogger("cdds.tc.provider.endpoint." + TcEndpointUtil.getEndpointType(tcEndPoint) + "");
+        LOG = LogManager.getLogger(EndpointUtil.toString("cdds.tc.provider", tcEndPoint));
     }
 
     @Override
@@ -47,13 +48,14 @@ public class TcServiceEndpointStream implements StreamObserver<TelecommandMessag
         LOG.warn("Error: " + t);
     }
 
+    @SuppressWarnings("unused")
     @Override
     public void onNext(TelecommandMessage tc) {
         
         try {
             byte[] endpointBytes = TcServiceAuthorization.TC_ENDPOINT_CTX_KEY.get();    // get the tc-endpoint-bin meta data
              TcServiceEndpoint tcEndPointRuntime = ProtoJsonUtil.fromJson(endpointBytes, TcServiceEndpoint.newBuilder());              // decode the endpoint from JSON
-             LOG.info("Received TC message for '" + TcEndpointUtil.getEndpointType(tcEndPointRuntime) + "'\n" + tc);
+             LOG.info("Received TC message\n" + tc);
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
         }

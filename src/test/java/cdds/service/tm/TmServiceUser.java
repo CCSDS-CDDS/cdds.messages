@@ -27,8 +27,8 @@ import ccsds.cdds.v1.tm.CddsTmService.TmServiceEndpointList;
 import ccsds.cdds.v1.tm.TmServiceProviderGrpc;
 import ccsds.cdds.v1.tm.TmServiceProviderGrpc.TmServiceProviderStub;
 import cdds.service.common.ClientMetaDataInterceptor;
+import cdds.service.common.EndpointUtil;
 import cdds.service.common.ProtoJsonUtil;
-import cdds.service.tc.TcEndpointUtil;
 import io.grpc.Channel;
 import io.grpc.ClientInterceptors;
 import io.grpc.ManagedChannel;
@@ -246,7 +246,7 @@ public class TmServiceUser {
      * @throws InvalidProtocolBufferException 
      */
     public void openTelemetryEndpoint(TmServiceEndpoint tmEndpoint, long numExpectedFrames, long numExpectedSyncNotify) throws InvalidProtocolBufferException {
-        LOG = LogManager.getLogger("cdds.tm.user." + TcEndpointUtil.getGvcId(tmEndpoint.getGvcIds()) + "");
+        LOG = LogManager.getLogger("cdds.tm.user." + EndpointUtil.toString(tmEndpoint.getGvcIds()) + "");
 
         // set the endpoint meta data into the interceptor
         interceptor.setMetaData(ProtoJsonUtil.toJsonUtf8(tmEndpoint));

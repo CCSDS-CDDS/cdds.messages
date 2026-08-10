@@ -29,6 +29,7 @@ import ccsds.cdds.v1.tc.CddsTcService.TcServiceEndpointList;
 import ccsds.cdds.v1.tc.TcServiceProviderGrpc;
 import ccsds.cdds.v1.tc.TcServiceProviderGrpc.TcServiceProviderStub;
 import cdds.service.common.ClientMetaDataInterceptor;
+import cdds.service.common.EndpointUtil;
 import cdds.service.common.ProtoJsonUtil;
 import cdds.service.common.ProviderServer;
 import io.grpc.Channel;
@@ -204,7 +205,7 @@ public class TcServiceUser {
      * @throws InvalidProtocolBufferException 
      */
     public void openTelecommandEndpoint(TcServiceEndpoint tcEndpoint) throws InvalidProtocolBufferException {
-        LOG = LogManager.getLogger("cdds.tc.user." + TcEndpointUtil.getEndpointType(tcEndpoint) + "");
+        LOG = LogManager.getLogger(EndpointUtil.toString("cdds.tc.user", tcEndpoint));
 
         // set the endpoint meta data into the interceptor
         interceptor.setMetaData(ProtoJsonUtil.toJsonUtf8(tcEndpoint));

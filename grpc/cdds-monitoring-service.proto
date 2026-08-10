@@ -81,16 +81,21 @@ message MonitoringServiceEndpoint {
     MonitoringMode mode = 60;
 
     /**
+     * Events reported by this endpoint.
+     */
+    repeated EventIdentification reportedEvents = 70;
+
+    /**
      * The QoS used for the provisioning of telemetry monitoring.
      * If the qos is omitted, QoS 'exactly once' shall be used for monitoring message delivery
      */
-    optional EnumQoS qos = 70;
+    optional EnumQoS qos = 80;
 
     /**
      * An optional endpoint name to distinguish endpoints;
      * for instance for spacecrafts supporting multiple bands.
      */
-    optional string endpointName = 80;
+    optional string endpointName = 90;
 }
 
 message ParameterIdentification {
@@ -114,7 +119,35 @@ message ParameterIdentification {
          * Functional Resource Instance Number.
          */
         FunctionalResourceParameterName functionalResourceParameterName = 20;
+
+        /**
+         * A generic name grouping a set of parameters
+         */
+         string parameterGroup = 30;
     }
+}
+
+message EventIdentification {
+    
+    oneof kind {
+        /**
+         * The OID of the Functional Resource Event. If only the OID is specified but not the Functional Resource Instance
+         * the event is reorted for all Functional Resource instances available for monitoring. The underlying rationale is
+         * that a monitoring service user does not need to know Functional Resource Instance numbers.
+         */
+        ObjectIdentifier functionalResourceEventId = 1;
+
+        /**
+         * The Functional Resource Parameter Name specifies a Functional Resource by OID and 
+         * Functional Resource Instance Number.
+         */
+        FunctionalResourceEventName functionalResourceEventName = 10;
+
+        /**
+         * A generic name grouping a set of events
+         */
+         string eventGroup = 20;
+    }    
 }
 
 /**
@@ -123,6 +156,7 @@ message ParameterIdentification {
  * Functional Resource Instance Number.
  */
 message FunctionalResourceParameterName {
+
   /**
    * The Object Identifier of the Functional Resource Parameter.
    */
@@ -133,6 +167,20 @@ message FunctionalResourceParameterName {
    * for which the parameter is reported for.
    */
   uint64 functionalResourceInstance = 10;    
+}
+
+message FunctionalResourceEventName {
+    
+  /**
+   * The Object Identifier of the Functional Resource Event.
+   */
+    ObjectIdentifier functionalResourceEventId = 1;
+
+  /**
+   * The instance number of the Functional Resource
+   * for which the event is reported for.
+   */
+    uint64 functionalResourceInstance = 10; 
 }
 
 /**

@@ -6,7 +6,14 @@ import "types.proto";
 
 /**
  * A monitoring message can deliver lists of GenericMonitoringParameter and
- * FunctionalResourceParameter.
+ * FunctionalResourceParameter. At the end of the monitoring cycle of the endpoint the
+ * monitoring message shall deliver for the parameters if this endpoint</br>
+ * - all parameters </br>
+ * - all parameter changed compared to the last delivery cycle </br>
+ * If the number of parameters exceeds a limit set forth by the provider, the parameters
+ * may be distributed among several monitoring messages.
+ * Events occurring for Functional Resources are reported immediately as they occur.
+ * Implementations may decide to limit the frequency of reported events.
  */
 message MonitoringMessage {
  
@@ -24,6 +31,11 @@ message MonitoringMessage {
    * A Monitoring Message can carry Functional Resource Parameters. 
    */
   repeated FunctionalResourceParameter functionalResourceParameters = 20;
+
+  /**
+   * A monitoring message can carry Functional Resource Events.
+   */
+  repeated FunctionalResourceEvent functionalResourceEvents = 30;
 }
 
 /**
@@ -82,5 +94,37 @@ message FunctionalResourceParameter {
    * specification.
    */
   EncodedQualifiedValue parameterValue = 30;
+
+}
+
+/**
+ * Functional Resource Events report events specified for Functional Resources.
+ * Functional Resources follow either SANA registered Functional Resource definitions
+ * or private Functional Resource definitions.
+ */
+message FunctionalResourceEvent {
+
+  /**
+   * The Object Identifier of the Functional Resource Parameter.
+   */
+  ObjectIdentifier functionalResourceEventIdentifier = 1;
+
+  /**
+   * The instance number of the Functional Resource
+   * for which the event is reported for.
+   */
+  uint64 functionalResourceInstance = 10;
+
+  /**
+   * The times stamp when the monitoring event was generated.
+   */  
+  DateTime timeStamp = 20;
+
+  /**
+   * The event values of the of the functional resource parameter is encoded again
+   * as a protobuf type. Such a protobuf specification is external to this
+   * specification.
+   */
+  repeated EncodedQualifiedValue eventValue = 30;
 
 }

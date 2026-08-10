@@ -204,7 +204,8 @@ message AlarmQualifier {
   enum FrameVersion {
     TM_TC_SDLP = 0;             // 0: CCSDS 132.0 TM Space Data Link Protocol or CCSDS 232.0 TC Space Data Link Protocol
     AOS = 1;                    // 1: CCSDS 732.0 AOS Space Data Link Protocol
-    USLP = 2;                   // 2: CCSDS 732.1 USLP Space Data Link Protocol
+    PROX1 = 2;                  // 2: 211.0 Proximity-1 Space Data Link Protocol
+    USLP = 12;                  // 12: CCSDS 732.1 USLP Space Data Link Protocol
     UNKNOWN = 3;                // Unknown frame version (non CCSDS)     
   }
 

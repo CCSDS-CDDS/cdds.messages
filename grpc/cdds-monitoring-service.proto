@@ -132,7 +132,7 @@ message EventIdentification {
     oneof kind {
         /**
          * The OID of the Functional Resource Event. If only the OID is specified but not the Functional Resource Instance
-         * the event is reorted for all Functional Resource instances available for monitoring. The underlying rationale is
+         * the event is reported for all Functional Resource instances available for monitoring. The underlying rationale is
          * that a monitoring service user does not need to know Functional Resource Instance numbers.
          */
         ObjectIdentifier functionalResourceEventId = 1;

@@ -8,8 +8,9 @@ import "types.proto";
  * A monitoring message can deliver lists of GenericMonitoringParameter and
  * FunctionalResourceParameter. At the end of the monitoring cycle of the endpoint the
  * monitoring message shall deliver for the parameters if this endpoint</br>
- * - all parameters </br>
- * - all parameter changed compared to the last delivery cycle </br>
+ *  - all parameters (cyclic monitoring)</br>
+ *  - all parameter changed compared to the last delivery cycle (on-change monitoring)</br></br>
+ * 
  * If the number of parameters exceeds a limit set forth by the provider, the parameters
  * may be distributed among several monitoring messages.
  * Events occurring for Functional Resources are reported immediately as they occur.

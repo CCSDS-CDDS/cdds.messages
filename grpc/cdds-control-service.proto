@@ -61,7 +61,7 @@ message ControlServiceEndpoint {
     /**
      * The list of generic control directives available for this endpoint
      */
-    optional repeated string genericDirectiveIds = 50;
+    repeated string genericDirectiveIds = 50;
 
     /**
      * An optional endpoint name to distinguish endpoints;

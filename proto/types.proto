@@ -17,7 +17,15 @@ message ApertureId {
   option (oid) = "1.2.840.10003.";
 
   oneof apertureIdForm {
+
+    /**
+     * The OID as per SANA Sites and Aperture registry: https://sanaregistry.org/r/service_sites_apertures/
+     */
     ObjectIdentifier globalForm = 1;
+
+    /**
+     * The local form is a string identifier of the aperture agreed among service user and service provider
+     */
     string localForm = 10;
   } 
 }
@@ -77,8 +85,21 @@ enum FrameQuality {
  * Date / Time definition for epoch 1958 with pico second precision
  */
 message DateTime {
+  
+  /**
+   * The days since CCSDS epoch 01/01/1958
+   */
   uint32 days = 1;
+
+
+  /**
+   * The milli seconds of the day
+   */
   uint32 msOfDay = 10;
+
+  /**
+   * The pico seconds of the milli second
+   */
   uint32 picoSecsOfMs = 20;
 }
 
@@ -86,7 +107,15 @@ message DateTime {
  * An annotation composed out of a name and a value.
  */
 message Annotation {
+
+  /**
+   * The name of the annotation
+   */
   string name = 1;
+
+  /**
+   * The value of the annotation
+   */
   Value value = 10;
 }
 
@@ -95,15 +124,15 @@ message Annotation {
  */ 
 message Value {
   oneof value {
-    double doubleValue = 1;
-    float floatValue = 10;
-    int32 int32Value = 20;
-    uint32 uint32Value = 30;
-    int64 int64Value = 40;
-    uint64 uint64Value = 50;
-    bool boolValue = 60;
-    string stringValue = 70;
-    bytes octetStringValue = 80;
+    double doubleValue = 1;       //  IEEE 754 double-precision format
+    float floatValue = 10;        //  IEEE 754 single-precision format.
+    int32 int32Value = 20;        // 32 bit signed integer
+    uint32 uint32Value = 30;      // 32 bit unsignd integer
+    int64 int64Value = 40;        // 64 bit signed integer
+    uint64 uint64Value = 50;      // 64 bit unsigned integer
+    bool boolValue = 60;          // boolean: true / false
+    string stringValue = 70;      // UTF-8 encoded or 7-bit ASCII text,
+    bytes octetStringValue = 80;  // sequence of bytes no longer than 2^32
   }  
 }
 
@@ -111,8 +140,20 @@ message Value {
  * A qualified value has a value and is qualified to indicate validity and alarm states.
  */ 
 message QualifiedValue {
+
+  /**
+   *  The value itself
+   */
   Value value = 1;
+
+  /**
+   * The value qualifier providing the validity of the value
+   */
   ValueQualifier valueQualifier = 10;
+
+  /**
+   * The alarm qualifier providing the alarm state of the value
+   */
   AlarmQualifier alarmQualifier = 20;
 }
 
@@ -120,9 +161,26 @@ message QualifiedValue {
  * A qualified value for encoded values. An encoded value (e.g. in Protobuf) must be encoded and decoded.
  */
 message EncodedQualifiedValue {
-  bytes encodedValue = 1;
-  ValueQualifier valueQualifier = 10;
-  AlarmQualifier alarmQualifier = 20;
+
+  /**
+   * The Object Identifier identifying the type of the encoded value
+   */
+  ObjectIdentifier encodedTypeIdentifier = 1;  
+
+  /**
+   * The encoded value, e.g. Protobuf encoded
+   */
+  bytes encodedValue = 10;
+
+  /**
+   * The value qualifier providing the validity of the value
+   */
+  ValueQualifier valueQualifier = 20;
+
+  /**
+   * The alarm qualifier providing the alarm state of the value
+   */  
+  AlarmQualifier alarmQualifier = 30;
 }
 
 /**
@@ -186,8 +244,20 @@ message AlarmQualifier {
    * The Global Virtual Channel identifier
    */
   message GvcId {
+
+    /**
+     * The spacecraft identifier
+     */    
     uint32 spacecraftId = 1;
+
+    /**
+     * The frame transfer version
+     */    
     FrameVersion version = 10;
+
+    /**
+     * The virtual channel identifier of the frame
+     */    
     optional uint32 virtualChannelId = 20;
   }
   
@@ -195,6 +265,10 @@ message AlarmQualifier {
    * A list of Global Virtual Channel Identifiers.
    */
   message GvcIdList {
+
+      /**
+       * The list of Global Virtual Channel Identifier
+       */
       repeated GvcId gvcId = 1;
   }
 
@@ -206,7 +280,7 @@ message AlarmQualifier {
     AOS = 1;                    // 1: CCSDS 732.0 AOS Space Data Link Protocol
     PROX1 = 2;                  // 2: 211.0 Proximity-1 Space Data Link Protocol
     USLP = 12;                  // 12: CCSDS 732.1 USLP Space Data Link Protocol
-    UNKNOWN = 3;                // Unknown frame version (non CCSDS)     
+    UNKNOWN = 100;              // Unknown frame version (non CCSDS)     
   }
 
   /**

@@ -80,53 +80,41 @@ message FunctionalResourceDirective {
      */
     ObjectIdentifier functionalResourceDirectiveIdentifier = 10;
 
-    /**
-     * An optional human readable description of the directive
-     */
-    optional string directiveDescription = 20;
-
-    /**
-     * The qualifier of the invoked directive
-     */
-    DirectiveQualifier directiveQualifier = 30;
-}
-
-/**
- * A directive qualifier holds for on Functional Resource Instance the qualifier values 
- */
-message DirectiveQualifier {
- 
    /**
      * The instance number of the Functional Resource
      * for which the directive is invoked.
      */
-    uint64 functionalResourceInstance = 1;
- 
-    /**
-     * The Qualifier values for the directive
-     */
-    repeated QualifierValue qualifierValues = 10;
-}
+    uint64 functionalResourceInstance = 20;    
 
+    /**
+     * An optional human readable description of the directive
+     */
+    optional string directiveDescription = 30;
+
+    /**
+     * The qualifier of the invoked directive
+     */
+     repeated QualifierValue qualifierValues  = 40;
+}
 /**
  * A qualifier value.
  */
 message QualifierValue {
     
     /**
-     * The OID of the directive qualifier as specified by the functional resource
+     * This OID identifies the qualifier
      */ 
     ObjectIdentifier qualifierId = 1;
 
     /**
-     * An optional human readable description of the directive qualifier.
+     * An optional human readable description of the qualifier.
      */
     optional string description = 10;
 
     /**
-     * The Type OID identifying the type of the value
+     * The Type OID identifying the type of the value. It is optional if the type is identified by other means
      */ 
-    ObjectIdentifier parameterTypeId = 20;
+    optional ObjectIdentifier parameterTypeId = 20;
 
     /**
      * The encoded value of the directive qualifier value. The value is encoded e.g. as Protobuf

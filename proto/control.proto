@@ -112,7 +112,7 @@ message QualifierValue {
     optional string description = 10;
 
     /**
-     * The Type OID identifying the type of the value. It is optional if the type is identified by other means
+     * The Type OID identifying the type of the value. It is optional if the type is identified by other means.
      */ 
     optional ObjectIdentifier parameterTypeId = 20;
 

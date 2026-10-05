@@ -82,7 +82,10 @@ enum FrameQuality {
 }
 
 /**
- * Date / Time definition for epoch 1958 with pico second precision
+ * Date / Time definition for epoch 1958 with pico second precision.<br/><br/>
+ *
+ * When a lower resolution is used, the unused least significant time
+ * components shall be represented by zero-valued fields.
  */
 message DateTime {
   

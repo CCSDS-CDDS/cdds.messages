@@ -5,7 +5,7 @@ package ccsds.cdds.v1;
 import "types.proto";
 
 /**
- * Telecommand Messages are sent from the CDDS User to the CDDS Provider.
+ * Telecommand Messages are the only messages sent from the CDDS TC User to the CDDS TC Provider.
  */
 message TelecommandMessage {
     oneof request {
@@ -23,9 +23,8 @@ message TelecommandMessage {
 }
 
 /**
- * A Telecommand radiation Request Is sent from CDDS User to a CDDS Provider.
- * It transports either a CLTU or an uncoded Telecommand Frame for radiation
- * by the CDDS Provider. 
+ * A Telecommand Radiation Request Is sent from CDDS User to a CDDS Provider as part of the Telecommand Message.
+ * It transports either a CLTU or an un-coded Telecommand Frame for radiation by the CDDS Provider. 
  */
 message TelecommandRadiationRequest {
 
@@ -68,9 +67,15 @@ message TelecommandRadiationRequest {
     }
 }
 
+/**
+ * The telecommand Status Request is sent from the CDDS User to the CDDS provider as part of
+ * the Telecommand Message to request from the CDDS provider a Telecommand Status Report for 
+ * a previously sent Telecommand Radiation Request or a general status report on production state
+ * and the available telecommand buffer.
+ */
 message TelecommandStatusReportRequest {
     /**
-     * The Command ID uniquely identifying the telecommand within the one dedicated pass.
+     * The Command ID uniquely identifies the telecommand within the one dedicated pass.
      * If command ID is not provided in a Telecommand Report Request, the CDDS Provider
      * shall respond with a Telecommand Report reporting on the available parameters as
      * specified by the Telecommand Report. If a report for a valid commandId requested,
@@ -83,15 +88,16 @@ message TelecommandStatusReportRequest {
 }
 
 /**
- * The Telecommand Report is used by the CDDS Provider to report the status of received 
- * and processed Telecommand Messages.
+ * The Telecommand Report is sent by the CDDS Provider to the CDDS User to report the status of received 
+ * and processed Telecommand Messages as well as changes of the production state.
  */
 message TelecommandReport {
 
     /**
-     * The Command ID uniquely identifying the telecommand within the one dedicated pass.
+     * The Command ID uniquely identifying the Telecommand Radiation Request sent within one dedicated pass.
+     * Reports generated for a changed Production State do not provide a command ID.
      */
-    int64 commandId = 1;
+    optional int64 commandId = 1;
     
     /**
      * The Production State of the CDDS Provider at the time the report was generated.
@@ -149,13 +155,15 @@ message TelecommandReport {
 }
 
 /**
- * Acknowledges the reception of a valid Telecommand Radiation Request.
+ * The Telecommand Radiation Request Acknowledge is sent from the CDDS Provider to the CDDS User as part of a Telecommand report.
+ * It acknowledges the reception of a valid Telecommand Radiation Request.
  */
 message TelecommandRadiationRequestAck {
 }
 
 /**
- * Reports a failure in processing a Telecommand Radiation request.
+ * The Telecommand Failure is sent from the CDDS Provider to the CDDS User as part of a Telecommand report.
+ * It reports a failure in processing a Telecommand Radiation request.
  */
 message TelecommandFailure {
 
@@ -166,7 +174,8 @@ message TelecommandFailure {
 }
 
 /**
- * Reports Telecommand Radiation
+ * The Telecommand Radiation is sent from the CDDS Provider to the CDDS User as part of a Telecommand report.
+ * It is sent when a telecommand has been radiated.
  */
 message TelecommandRadiation {
     
@@ -182,21 +191,23 @@ message TelecommandRadiation {
 }
 
 /**
- * Reports on a Production Status change at the CDDS Provider.
+ * The Telecommand Production Status Change is sent from the CDDS Provider to the CDDS User as part of a Telecommand report
+ * when a Production Status changed at the CDDS Provider.
  */
 message TelecommandProductionStatusChange {
 
 }
 
 /**
- * Reports the the buffer of the CDDS Provider is empty and
- * no further telecommands are available for radiation.
+ * The Telecommand Buffer Empty is sent from the CDDS Provider to the CDDS User as part of a Telecommand report.
+ * It is sent when the telecommand buffer is empty and no further telecommands are available for radiation.
  */
 message TelecommandBufferEmpty {
 }
 
 /**
- * Reports the CDDS Provider Status.
+ * The Telecommand Provider Status is sent from the CDDS Provider to the CDDS User as part of a Telecommand report.
+ * It Reports the CDDS Provider Status and is sent.
  */
 message TelecommandProviderStatus {
 
@@ -229,7 +240,7 @@ message TelecommandProviderStatus {
 }
 
 /**
- * The uplinkStatus parameter shall report to the user the state of the forward link.
+ * The Uplink Status is used to report the state of the forward link.
  * The state is obtained from the CLCW present in the return telemetry stream from the spacecraft.
  */
 enum UplinkStatus {

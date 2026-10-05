@@ -5,7 +5,8 @@ package ccsds.cdds.v1;
 import "types.proto";
 
 /**
- * The control directive is either of generic type or compliant to a functional resource.
+ * A Control Directive is sent from a CDDS user to a CDDS provider to request the execution of a directive.
+ * The control directive is either of a generic directive or a functional resource directive.
  */
 message ControlDirective {
 
@@ -24,9 +25,10 @@ message ControlDirective {
 }
 
 /**
- * The generic control directive allows invocation of 
+ * The Generic Control Directive allows invocation of 
  * control directive identified by an identifier,
  * known to both, the CDDS User and CDDS Provider.
+ * It shall be sent as part of the Control Directive Message.
  */
 message GenericControlDirective {
 
@@ -66,6 +68,11 @@ message GenericQualifier {
     Value qualifierValue = 10;
 }
 
+/**
+ * The Functional Resource Directive allows the invocation of a
+ * directive belonging to a Functional Resource Instance.
+ * It shall be sent as part of the Control Directive message.
+ */
 message FunctionalResourceDirective {
 
     /**

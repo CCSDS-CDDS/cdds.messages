@@ -6,8 +6,9 @@ import "types.proto";
 
 /**
  * A monitoring message can deliver lists of GenericMonitoringParameter and
- * FunctionalResourceParameter. At the end of the monitoring cycle of the endpoint the
- * monitoring message shall deliver for the parameters if this endpoint</br>
+ * FunctionalResourceParameter and is sent from a CDDS Provider to a CDDS User.
+ * At the end of the monitoring cycle of the endpoint the monitoring message shall
+ * deliver for the parameters if this endpoint</br>
  *  - all parameters (cyclic monitoring)</br>
  *  - all parameter changed compared to the last delivery cycle (on-change monitoring)</br></br>
  * 
@@ -43,6 +44,7 @@ message MonitoringMessage {
  * Generic Monitoring Parameters reports any sort of generic
  * monitoring parameter. Generic monitoring parameters have to be 
  * defined and agreed between the CDDS Provider and the CDDS User.
+ * Generic Monitoring Parameters are used as a part of the Monitoring Message.
  */
 message GenericMonitoringParameter {
 
@@ -70,6 +72,7 @@ message GenericMonitoringParameter {
  * Functional Resource Parameters reports parameters of Functional Resources.
  * Functional Resources follow either SANA registered Functional Resource definitions
  * or private Functional Resource definitions.
+ * Functional Resource Parameters are used as a part of the Monitoring Message.
  */
 message FunctionalResourceParameter {
 
@@ -102,6 +105,7 @@ message FunctionalResourceParameter {
  * Functional Resource Events report events specified for Functional Resources.
  * Functional Resources follow either SANA registered Functional Resource definitions
  * or private Functional Resource definitions.
+ * Functional Resource Events are used as a part of the Monitoring Message.
  */
 message FunctionalResourceEvent {
 

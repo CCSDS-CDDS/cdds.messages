@@ -5,8 +5,10 @@ package ccsds.cdds.v1;
 import "types.proto";
 
 /**
- * The Telemetry Message transports either a telemetry Data message or a Sync Notify message
- * The message shall deliver a telemetry frame from a CDDS Provider to a CDDS User.
+ * The Telemetry Message transports either a telemetry Data message or a Sync Notify message.
+ * It is sent by the CDDS Telemetry provider once telemetry frames are available from the production
+ * and the underlying transport is clear to send.
+ * The message delivers a telemetry frame or a sync notify.
  */
 message TelemetryMessage {
   /** 
@@ -25,7 +27,8 @@ message TelemetryMessage {
 }
 
 /**
- * TelemetryData holds the received telemetry frame and associated meta data.
+ * TelemetryData holds the received telemetry frame and associated meta data </br>
+ * and shall only be used as part of the Telemetry Message.
  */
 message TelemetryData {
 
@@ -77,8 +80,8 @@ message TelemetryData {
 }
 
 /**
- * The CDDS provider shall invoke the SyncNotify to
- * notify the CDDS user of the occurrence of an event affecting the production of the provided service.
+ * The CDDS provider shall invoke the SyncNotify as part of a Telemetry Message to
+ * notify the CDDS user of changes for one of the items subject to notification.
  */
 message SyncNotify {
   

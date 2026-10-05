@@ -55,18 +55,25 @@ message TrackingDataServiceEndpoint {
      * tracking data types available from the provider. If the user provides an empty list of tracking data types,
      * the provider shall deliver all tracking data types configured for this endpoint.
      */ 
-    repeated TrackingDataType trackingDataType = 40; 
+    repeated TrackingDataType trackingDataType = 40;
+    
+    /**
+     * The tracking data measurements are guaranteed to be delivered within the latency limit that is defined for the 
+     * service endpoint, respecting the minimum latency supported by the given service provider.
+     * The unit of the latency limit is seconds.
+     */
+    uint32 latencyLimit = 50;
 
     /**
      * The QoS used for the provisioning of tracking data messages
      */
-    EnumQoS qos = 50;
+    EnumQoS qos = 60;
 
     /**
      * An optional endpoint name to distinguish endpoints;
      * for instance for spacecrafts supporting multiple bands.
      */
-    optional string endpointName = 60;
+    optional string endpointName = 70;
 }
 
 /**

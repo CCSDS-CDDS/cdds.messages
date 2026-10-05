@@ -6,8 +6,8 @@ import "types.proto";
 import "ccsds_schema_ndmxml.proto";
 
 /**
- * The Tracking data message provides either a text TDM (KVN or XML)
- * or a protobuf encoded TDM.
+ * The Tracking data message is sent from the CDDS provider to the CDDS user.
+ * It carries either a text TDM (KVN or XML) or a protobuf encoded TDM.
  */ 
 message TrackingDataMessage {
 
@@ -34,8 +34,8 @@ message TrackingDataMessage {
 }
 
 /**
- * Tracking data message following the KVN encoding of
- * CCSDS 503.0 Blue Book
+ * The TDM Type Text follows the KVN encoding of
+ * CCSDS 503.0 Blue Book. It is used as part of the Tracking Data Message.
  */
 message TdmTypeText {
 
@@ -59,6 +59,7 @@ message TdmTypeText {
  * Atomic segments following CCSDS 503.0 Blue Book 
  * Note: The AtomicSegment elements shall be encoded in the same way.
  * Either in KVN/ASCII or XML/UTF-8
+ * Atomic Segments are used as part of the TDM Type Text.
  */
 message AtomicSegment {
 

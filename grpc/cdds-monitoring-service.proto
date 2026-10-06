@@ -20,13 +20,13 @@ service MonitoringServiceProvider {
      * monitoring parameters available for this monitoring endpoint.
      * The monitoring can be performed cyclic or on change; both modes operate according to a monitoring interval.
      * For every interval, either the complete set of parameters are provided (cyclic),
-     * or this parameters changed compared to the last interval (on change).
+     * or the parameters changed compared to the last interval (on change).
      *
      * The service requires the following metadata when calling the service method:<br/><br/>
      *      1) monitoring-endpoint-bin = JSON encoded MonitoringServiceEndpoint using the binary marshaller<br/><br/>
      *
-     * The monitoring service endpoint is authorized for the authenticated user. If not authorized,
-     * the method call will fail.
+     * The monitoring service endpoint subject to authorization for the authenticated user. If not authorized,
+     * the method call shall fail.
      */ 
     rpc openMonitoringEndpoint(NoArg) returns (stream MonitoringMessage); 
 }
@@ -121,7 +121,9 @@ message ParameterIdentification {
         FunctionalResourceParameterName functionalResourceParameterName = 20;
 
         /**
-         * A generic name grouping a set of parameters
+         * A generic name grouping a set of parameters. The name of the parameter group and
+         * the grouped parameters need to be agreed among the CDDS Monitoring Service Provider
+         * and CDDS Monitoring User before use.
          */
          string parameterGroup = 30;
     }
@@ -198,8 +200,8 @@ message MonitoringServiceEndpointList {
  * The enum defining the monitoring modes.
  */
 enum MonitoringMode {
-    INVALID_MONITORING_MODE = 0;
-    CYCLIC_MONITORING_MODE = 1;
-    ON_CHANGE_MONITORING_MODE = 2;
+    INVALID_MONITORING_MODE = 0;    // Invalid monitoring mode.
+    CYCLIC_MONITORING_MODE = 1;     // Cyclic monitoring. At the end of the cycle all parameters are reported.
+    ON_CHANGE_MONITORING_MODE = 2;  // On change monitoring. At the end of a cycle, the changed parameters are reported.
 }
 

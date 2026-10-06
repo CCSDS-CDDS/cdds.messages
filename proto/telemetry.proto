@@ -21,7 +21,14 @@ message TelemetryMessage {
   optional int64 sequenceNumber = 1;
   
   oneof data {
+    /**
+     * The data provided by this message is telemetry data.
+     */
     TelemetryData telemetry = 10;
+    
+    /**
+     * This message provides a synchronous notification.
+     */
     SyncNotify syncNotify = 20;
   }
 }

@@ -61,7 +61,12 @@ message TelecommandRadiationRequest {
         bytes cltu = 40;
 
         /**
-         * A valid telecommand frame as specified in CCSDS 232.0 (TC Frame), CCSDS 732.0 (AOS), CCSDS 732.1 (USLP) or a private specification
+         * A valid telecommand frame as specified in CCSDS 232.0 (TC Frame), CCSDS 732.0 (AOS), CCSDS 732.1 (USLP),
+         * 211.0 (Proximity-1) or a private specification.<br/>
+         *
+         * Proximity-1 frames are most likely relayed in some way before being radiated to the final target.
+         * In general, teh description of frame relay is outside of the CDDS scope and has to be agreed among the 
+         * CDDS TC service user and the CDDS TC service provider.
          */
         bytes telecommandFrame = 50;
     }

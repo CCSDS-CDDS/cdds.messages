@@ -251,7 +251,7 @@ public class TcServiceTest {
         return TelecommandMessage.newBuilder().setRadiationRequest(
                 TelecommandRadiationRequest.newBuilder()
                         .setCommandId(commandId)
-                        .setReportRequest(ReportRequest.PRODUCE_REPORT)
+                        .setReportRequest(ReportRequest.PRODUCE_REPORT_ALL)
                         .setTelecommandFrame(getTcDummy())
                         .build())
                 .build();

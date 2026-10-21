@@ -58,22 +58,27 @@ message TrackingDataServiceEndpoint {
     repeated TrackingDataType trackingDataType = 40;
     
     /**
+     * For this endpoint, tracking data is formatted according as KVN, XML or Protobuf
+     */
+    TrackingDataFormat trackingDataFormat = 50;
+
+    /**
      * The tracking data measurements are guaranteed to be delivered within the latency limit that is defined for the 
      * service endpoint, respecting the minimum latency supported by the given service provider.
      * The unit of the latency limit is seconds.
      */
-    uint32 latencyLimit = 50;
+    uint32 latencyLimit = 60;
 
     /**
      * The QoS used for the provisioning of tracking data messages
      */
-    EnumQoS qos = 60;
+    EnumQoS qos = 70;
 
     /**
      * An optional endpoint name to distinguish endpoints;
      * for instance for spacecrafts supporting multiple bands.
      */
-    optional string endpointName = 70;
+    optional string endpointName = 80;
 }
 
 /**
@@ -103,4 +108,11 @@ enum TrackingDataType {
   TRANSMIT_FREQUENCY = 8;
   TRANSMIT_FREQUENCY_RATE = 9;
   ANTENNA_ANGLES = 10;
+}
+
+enum TrackingDataFormat {
+    UNSPECIFIED = 0;    // The format of the tracking data is not specified
+    KVN = 10;           // Tracking data is formatted in Key Value Notation
+    XML = 20;           // Tracking Data is formatted as XML
+    PROTOBUF = 30;      // Tracking Data is in encoded in Protobuf binary format
 }

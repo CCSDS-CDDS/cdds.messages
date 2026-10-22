@@ -107,6 +107,34 @@ message DateTime {
 }
 
 /**
+ * A type to represent durations in seconds,
+ * optionally with a milli second or pico seconds precision
+ */
+message Duration {
+  
+  /**
+   * The duration in seconds
+   */
+  uint32 seconds = 1;
+
+  /**
+   * The optional fractions of the seconds
+   */
+  oneof fractions {
+    
+    /**
+     * Optional milli seconds of the seconds
+     */ 
+    uint64 milliseconds = 10;
+    
+    /**
+     * Optional pico seconds of the seconds
+     */ 
+    uint64 picoseconds = 20;
+  }
+}
+
+/**
  * An annotation composed out of a name and a value.
  */
 message Annotation {

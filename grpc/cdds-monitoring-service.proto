@@ -66,12 +66,14 @@ message MonitoringServiceEndpoint {
     repeated ParameterIdentification monitoringParameters = 40;
 
     /**
-     * The monitoring cycle in milli seconds. At the end of the monitoring cycle the monitoring parameters
+     * The monitoring cycle in seconds. At the end of the monitoring cycle the monitoring parameters
      * of the endpoint will be delivered. For mode cyclic, all parameters are delivered, for on-change
      * those parameters changed compared tot he last cycle are delivered. For on-change all parameters are delivered
-     * at the end of the first cycle.
+     * at the end of the first cycle.<br/>
+     * <b>Note: <b> The nominal precision for monitoring cycle is seconds as required for this service is seconds.
+     * It is expected that precisions better than seconds have to be agreed among the service user and service provider.
      */
-    uint32 monitoringCycle = 50;
+    Duration monitoringCycle = 50;
 
     /**
      * Monitoring mode of this endpoint. The monitoring provider shall support

@@ -65,9 +65,8 @@ message TrackingDataServiceEndpoint {
     /**
      * The tracking data measurements are guaranteed to be delivered within the latency limit that is defined for the 
      * service endpoint, respecting the minimum latency supported by the given service provider.
-     * The unit of the latency limit is seconds.
      */
-    uint32 latencyLimit = 60;
+    Duration latencyLimit = 60;
 
     /**
      * The QoS used for the provisioning of tracking data messages

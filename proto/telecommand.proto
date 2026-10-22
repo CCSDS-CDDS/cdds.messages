@@ -275,14 +275,15 @@ enum Diagnostic {
 }
 
 /**
- * An enum to request reports for TelecommandRadiationRequest
+ * An enum to request reports for TelecommandRadiationRequest.<br/>
+ * <b>Note:</b> Not all reporting capabilities are required. The required and optional reporting capabilities are marked below.
  */
 enum ReportRequest {
     INVALID_REPORT_REQUEST = 0;     // not initialized
-    PRODUCE_REPORT_ALL = 1;         // Produce a report for a TelecommandRadiationRequest for all potential hops (ground station, communication relays)
-    PRODUCE_REPORT_FIRST_HOP = 2;   // Produce a report for the first hop in the communication chain (typically a ground station)
-    PRODUCE_REPORT_LAST_HOP = 3;    // Produce a report for the last hop in the communication chain (for relayed communication the relay transmitting to target)
-    NO_REPORT = 4;                  // Do not produce a report for a TelecommandRadiationRequest
+    NO_REPORT = 1;                  // <b>Mandatory</b>: Do not produce a report for a TelecommandRadiationRequest
+    PRODUCE_REPORT_FIRST_HOP = 2;   // <b>Mandatory</b>: Produce a report for the first hop in the communication chain (typically a ground station)
+    PRODUCE_REPORT_LAST_HOP = 3;    // <b>Optional</b>: Produce a report for the last hop in the communication chain (for relayed communication the relay transmitting to target)
+    PRODUCE_REPORT_ALL = 4;         // <b>Optional</b>: Produce a report for a TelecommandRadiationRequest for all potential hops (ground station, communication relays)
 }
 
 

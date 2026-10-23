@@ -41,10 +41,9 @@ message ReceptionMetaData {
    * For a telemetry frame received on the data link layer, the receiveTime shall 
    * contain the UTC time at which the signal event corresponding to the leading
    * edge of the first bit of the Attached Sync Marker that immediately preceded
-   * this encoded or un-coded frame was presented at the phase center of the
-   * antenna used to acquire the frame.
+   * this encoded or un-coded frame was presented at the receiver used to receiver the frame.
    * For frames received somehow encapsulated, the receive time shall 
-   * indicate the time of extraction.
+   * indicate the receive time of the underlying unit encapsulating this unit.
    */
   DateTime receiveTime = 1;
 

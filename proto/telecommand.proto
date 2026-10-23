@@ -41,12 +41,13 @@ message TelecommandTransmissionRequest {
 
     /**
      * An optional time specifying the earliest allowed transmission time of this Telecommand.
-     * 
+     * If specified, this time shall only be applied and checked for transmission to the final target.
      */
     optional DateTime earliestTransmissionTime = 20;
 
     /**
      * An optional time, specifying the latest allowed transmission time of this Telecommand.
+     * If specified, this time shall only be applied and checked for transmission to the final target.
      */
     optional DateTime latestTransmissionTime = 30;
 

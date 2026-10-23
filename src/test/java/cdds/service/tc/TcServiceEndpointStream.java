@@ -7,8 +7,8 @@ import com.google.protobuf.InvalidProtocolBufferException;
 
 import ccsds.cdds.v1.Telecommand.TelecommandMessage;
 import ccsds.cdds.v1.Telecommand.TelecommandProviderStatus;
-import ccsds.cdds.v1.Telecommand.TelecommandRadiation;
-import ccsds.cdds.v1.Telecommand.TelecommandRadiationRequestAck;
+import ccsds.cdds.v1.Telecommand.TelecommandTransmission;
+import ccsds.cdds.v1.Telecommand.TelecommandTransmissionRequestAck;
 import ccsds.cdds.v1.Telecommand.TelecommandReport;
 import ccsds.cdds.v1.Telecommand.UplinkStatus;
 import ccsds.cdds.v1.Types.ApertureId;
@@ -61,38 +61,38 @@ public class TcServiceEndpointStream implements StreamObserver<TelecommandMessag
         }
 
         
-        if(tc.hasRadiationRequest()) {
+        if(tc.hasTransmissionRequest()) {
 
             // send an ACK
-            TelecommandReport tcReport = TelecommandReport.newBuilder().setCommandId(tc.getRadiationRequest().getCommandId())
+            TelecommandReport tcReport = TelecommandReport.newBuilder().setCommandId(tc.getTransmissionRequest().getCommandId())
             .setProductionState(ProductionState.OPERATIONAL)
             .setBufferAvailable(4711)
             .setReportGenerationTime(TimeUtil.now())
             .setApertureId(ApertureId.newBuilder()
                 .setLocalForm("NNO1")
                 .build())
-            .setAck(TelecommandRadiationRequestAck.newBuilder().build())
+            .setAck(TelecommandTransmissionRequestAck.newBuilder().build())
             .build();
             tcUserStream.onNext(tcReport);
 
-            // send a radiation report
-            tcReport = TelecommandReport.newBuilder().setCommandId(tc.getRadiationRequest().getCommandId())
+            // send a transmission report
+            tcReport = TelecommandReport.newBuilder().setCommandId(tc.getTransmissionRequest().getCommandId())
             .setProductionState(ProductionState.OPERATIONAL)
             .setBufferAvailable(4711)
             .setReportGenerationTime(TimeUtil.now())
             .setApertureId(ApertureId.newBuilder()
                 .setLocalForm("NNO1")
                 .build())
-            .setRadiation(TelecommandRadiation.newBuilder()
-                .setRadiationStartTime(TimeUtil.now())
-                .setRadiationStopTime(TimeUtil.now())
+            .setTransmission(TelecommandTransmission.newBuilder()
+                .setTransmissionStartTime(TimeUtil.now())
+                .setTransmissionStopTime(TimeUtil.now())
                 .build())
             .build();
             tcUserStream.onNext(tcReport);
 
 
         } else if(tc.hasReportRequest()) {
-            TelecommandReport tcReport = TelecommandReport.newBuilder().setCommandId(tc.getRadiationRequest().getCommandId())
+            TelecommandReport tcReport = TelecommandReport.newBuilder().setCommandId(tc.getTransmissionRequest().getCommandId())
             .setProductionState(ProductionState.OPERATIONAL)
             .setBufferAvailable(4711)
             .setReportGenerationTime(TimeUtil.now())

@@ -19,7 +19,7 @@ import com.google.protobuf.ByteString;
 import ccsds.cdds.v1.CddsServiceProvider.ServiceProviderAddress;
 import ccsds.cdds.v1.Telecommand.ReportRequest;
 import ccsds.cdds.v1.Telecommand.TelecommandMessage;
-import ccsds.cdds.v1.Telecommand.TelecommandRadiationRequest;
+import ccsds.cdds.v1.Telecommand.TelecommandTransmissionRequest;
 import ccsds.cdds.v1.tc.CddsTcService.TcServiceEndpoint;
 import cdds.service.common.InterceptedService;
 import cdds.service.common.ProtoJsonUtil;
@@ -87,9 +87,9 @@ public class TcServiceTest {
 
     /**
      * Test one TC user and TC provider:
-     *          -> one TC radiation request
+     *          -> one TC transmission request
      *          <- one TC ACK
-     *          <- one Radiation report
+     *          <- one Transmission report
      * @throws IOException
      * @throws InterruptedException
      * @throws TimeLimitExceededException
@@ -105,7 +105,7 @@ public class TcServiceTest {
         final TcServiceUser tcServiceUser = TcServiceUser.buildUnsecureTcServiceUser("localhost", PROVIDER_PORT);
         tcServiceUser.openTelecommandEndpoint(authorizedTcEndpoint1);
 
-        TelecommandMessage tc = getTcRadiationRequestMessage(1);
+        TelecommandMessage tc = getTcTransmissionRequestMessage(1);
         tcServiceUser.sendTelecommand(tc);
 
         tcServiceUser.waitForTcReports(2);
@@ -117,9 +117,9 @@ public class TcServiceTest {
     /**
      * Test two TC user and TC provider with certificates for authentication and encryption:
      * Two runs of each TC user sending and expecting
-     *          -> one TC radiation request
+     *          -> one TC transmission request
      *          <- one TC ACK
-     *          <- one Radiation report
+     *          <- one Transmission report
      * @throws IOException
      * @throws InterruptedException     
      * @throws TimeLimitExceededException
@@ -154,10 +154,10 @@ public class TcServiceTest {
             tcServiceUser1.openTelecommandEndpoint(endpoints1.get(0));
             tcServiceUser2.openTelecommandEndpoint(endpoints2.get(1));
 
-            TelecommandMessage tc1 = getTcRadiationRequestMessage(idx);
+            TelecommandMessage tc1 = getTcTransmissionRequestMessage(idx);
             tcServiceUser1.sendTelecommand(tc1);
 
-            TelecommandMessage tc2 = getTcRadiationRequestMessage(idx+10);
+            TelecommandMessage tc2 = getTcTransmissionRequestMessage(idx+10);
             tcServiceUser2.sendTelecommand(tc2);
             
             tcServiceUser1.waitForTcReports(2);
@@ -242,14 +242,14 @@ public class TcServiceTest {
     }
 
     /**
-     * Creates a dummy TC radiation request with the given command ID
+     * Creates a dummy TC transmission request with the given command ID
      * 
      * @param commandId
-     * @return The Telecommand Message holding a radiation request
+     * @return The Telecommand Message holding a transmission request
      */
-    private TelecommandMessage getTcRadiationRequestMessage(int commandId) {
-        return TelecommandMessage.newBuilder().setRadiationRequest(
-                TelecommandRadiationRequest.newBuilder()
+    private TelecommandMessage getTcTransmissionRequestMessage(int commandId) {
+        return TelecommandMessage.newBuilder().setTransmissionRequest(
+                TelecommandTransmissionRequest.newBuilder()
                         .setCommandId(commandId)
                         .setReportRequest(ReportRequest.PRODUCE_REPORT_ALL)
                         .setTelecommandFrame(getTcDummy())

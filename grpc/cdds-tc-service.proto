@@ -14,9 +14,9 @@ service TcServiceProvider {
     rpc getEndpoints(NoArg) returns (TcServiceEndpointList);
    
     /**
-     * Opens a TC endpoint: a bi-directional telecommand stream to send TC radiation request
+     * Opens a TC endpoint: a bi-directional telecommand stream to send TC transmission request
      * carrying a CLTU or a TC frame.
-     * The returned stream will receive the TC reports reporting on radiation, 
+     * The returned stream will receive the TC reports reporting on transmission, 
      * provider states uplink failures.
      * 
      * The service requires the following metadata when calling the service method:<br/><br/>
@@ -56,7 +56,7 @@ message TcServiceEndpoint {
 
     /**
      * Indicates the use of the endpoint for uplink of CLTU,
-     * or a TC VC when the TC User provides TC frames for radiation.
+     * or a TC VC when the TC User provides TC frames for transmission.
      */
     oneof type {
 

@@ -10,23 +10,23 @@ import "types.proto";
 message TelecommandMessage {
     oneof request {
         /**
-         * Request the radiation of a Telecommand.
+         * Request the transmission of a Telecommand.
          */
-        TelecommandRadiationRequest radiationRequest = 1;
+        TelecommandTransmissionRequest transmissionRequest = 1;
 
         /**
          * Request reporting of the general status of the CDDS Provider
-         * or a specific Telecommand Radiation Request.
+         * or a specific Telecommand Transmission Request.
          */
         TelecommandStatusReportRequest reportRequest = 10;
     }
 }
 
 /**
- * A Telecommand Radiation Request Is sent from CDDS User to a CDDS Provider as part of the Telecommand Message.
- * It transports either a CLTU or an un-coded Telecommand Frame for radiation by the CDDS Provider. 
+ * A Telecommand Transmission Request Is sent from CDDS User to a CDDS Provider as part of the Telecommand Message.
+ * It transports either a CLTU or an un-coded Telecommand Frame for transmission by the CDDS Provider. 
  */
-message TelecommandRadiationRequest {
+message TelecommandTransmissionRequest {
 
     /**
      * The Command ID uniquely identifying the CLTU or telecommand within the one dedicated pass.
@@ -40,18 +40,18 @@ message TelecommandRadiationRequest {
     optional ReportRequest reportRequest = 10;
 
     /**
-     * An optional time specifying the earliest allowed radiation time of this Telecommand.
-     * One of the checks on the Telecommand Radiation Request failed
+     * An optional time specifying the earliest allowed transmission time of this Telecommand.
+     * One of the checks on the Telecommand Transmission Request failed
      */
-    optional DateTime earliestRadiationTime = 20;
+    optional DateTime earliestTransmissionTime = 20;
 
     /**
-     * An optional time, specifying the latest allowed radiation time of this Telecommand.
+     * An optional time, specifying the latest allowed transmission time of this Telecommand.
      */
-    optional DateTime latestRadiationTime = 30;
+    optional DateTime latestTransmissionTime = 30;
 
     /**
-     * The CLTU or Telecommand Frame for radiation. In case of a Telecommand Frame, the encoding 
+     * The CLTU or Telecommand Frame for transmission. In case of a Telecommand Frame, the encoding 
      * has to be agreed among the CDDS User and the CDDS Provider. 
      */ 
     oneof  data {
@@ -75,7 +75,7 @@ message TelecommandRadiationRequest {
 /**
  * The telecommand Status Request is sent from the CDDS User to the CDDS provider as part of
  * the Telecommand Message to request from the CDDS provider a Telecommand Status Report for 
- * a previously sent Telecommand Radiation Request or a general status report on production state
+ * a previously sent Telecommand Transmission Request or a general status report on production state
  * and the available telecommand buffer.
  */
 message TelecommandStatusReportRequest {
@@ -85,9 +85,9 @@ message TelecommandStatusReportRequest {
      * shall respond with a Telecommand Report reporting on the available parameters as
      * specified by the Telecommand Report. If a report for a valid commandId requested,
      * the following report is generated:
-     *      a) ack        for buffered, bot not yet radiated radiation requests
-     *      b) failure    for radiation request failing to radiate
-     *      c) radiation  for successfully radiated radiation requests
+     *      a) ack        for buffered, bot not yet radiated transmission requests
+     *      b) failure    for transmission request failing to radiate
+     *      c) transmission  for successfully radiated transmission requests
      */
     int64 commandId = 1;
 }
@@ -99,7 +99,7 @@ message TelecommandStatusReportRequest {
 message TelecommandReport {
 
     /**
-     * The Command ID uniquely identifying the Telecommand Radiation Request sent within one dedicated pass.
+     * The Command ID uniquely identifying the Telecommand Transmission Request sent within one dedicated pass.
      * Reports generated for a changed Production State do not provide a command ID.
      */
     optional int64 commandId = 1;
@@ -110,7 +110,7 @@ message TelecommandReport {
     ProductionState productionState = 10;
 
     /**
-     * The amount of buffer available at the CDDS provider to buffer Telecommands for radiation in bytes.
+     * The amount of buffer available at the CDDS provider to buffer Telecommands for transmission in bytes.
      */
     int64 bufferAvailable = 20;
 
@@ -127,20 +127,20 @@ message TelecommandReport {
 
     oneof report {
         /**
-         * Acknowledge the reception and acceptance of a Telecommand Radiation Request. 
+         * Acknowledge the reception and acceptance of a Telecommand Transmission Request. 
          */
-        TelecommandRadiationRequestAck ack = 50;
+        TelecommandTransmissionRequestAck ack = 50;
 
         /**
-         * Reports on a failure related to the received radiation request,
-         * the processing of it or a failure of the radiation.
+         * Reports on a failure related to the received transmission request,
+         * the processing of it or a failure of the transmission.
          */
         TelecommandFailure failure = 60;
 
         /**
-         * Reports on the radiation of a Telecommand.
+         * Reports on the transmission of a Telecommand.
          */
-        TelecommandRadiation radiation = 70;
+        TelecommandTransmission transmission = 70;
 
         /**
          * Reports on a Production Status change at the CDDS Provider.
@@ -160,15 +160,15 @@ message TelecommandReport {
 }
 
 /**
- * The Telecommand Radiation Request Acknowledge is sent from the CDDS Provider to the CDDS User as part of a Telecommand report.
- * It acknowledges the reception of a valid Telecommand Radiation Request.
+ * The Telecommand Transmission Request Acknowledge is sent from the CDDS Provider to the CDDS User as part of a Telecommand report.
+ * It acknowledges the reception of a valid Telecommand Transmission Request.
  */
-message TelecommandRadiationRequestAck {
+message TelecommandTransmissionRequestAck {
 }
 
 /**
  * The Telecommand Failure is sent from the CDDS Provider to the CDDS User as part of a Telecommand report.
- * It reports a failure in processing a Telecommand Radiation request.
+ * It reports a failure in processing a Telecommand Transmission request.
  */
 message TelecommandFailure {
 
@@ -179,20 +179,20 @@ message TelecommandFailure {
 }
 
 /**
- * The Telecommand Radiation is sent from the CDDS Provider to the CDDS User as part of a Telecommand report.
+ * The Telecommand Transmission is sent from the CDDS Provider to the CDDS User as part of a Telecommand report.
  * It is sent when a telecommand has been radiated.
  */
-message TelecommandRadiation {
+message TelecommandTransmission {
     
     /**
-     * The radiation start time.
+     * The transmission start time.
      */ 
-    DateTime radiationStartTime = 1;
+    DateTime transmissionStartTime = 1;
     
     /**
-     * The radiation stop time
+     * The transmission stop time
      */
-    DateTime radiationStopTime = 10;
+    DateTime transmissionStopTime = 10;
 }
 
 /**
@@ -205,7 +205,7 @@ message TelecommandProductionStatusChange {
 
 /**
  * The Telecommand Buffer Empty is sent from the CDDS Provider to the CDDS User as part of a Telecommand report.
- * It is sent when the telecommand buffer is empty and no further telecommands are available for radiation.
+ * It is sent when the telecommand buffer is empty and no further telecommands are available for transmission.
  */
 message TelecommandBufferEmpty {
 }
@@ -217,10 +217,10 @@ message TelecommandBufferEmpty {
 message TelecommandProviderStatus {
 
     /**
-     * Reports the command ID and times of the last successful radiation.
-     * If not provided, no successful radiation occurred during the pass.
+     * Reports the command ID and times of the last successful transmission.
+     * If not provided, no successful transmission occurred during the pass.
      */
-    TelecommandRadiation lastRadiationOk = 1;
+    TelecommandTransmission lastTransmissionOk = 1;
 
     /**
      * The uplinkStatus parameter shall report to the user the state of the forward
@@ -234,7 +234,7 @@ message TelecommandProviderStatus {
     uint64 numberOfTelecommandsReceived = 20;
 
     /**
-     * The number of telecommand messages accepted for radiation during the pass.
+     * The number of telecommand messages accepted for transmission during the pass.
      */
     uint64 numberOfTelecommandsProcessed = 30;
 
@@ -261,29 +261,29 @@ enum UplinkStatus {
  */ 
 enum Diagnostic {
     INVALID = 0;                        // not initialized
-    DUPLICATE_COMMAND_ID = 1;           // The received Telecommand Radiation Request used a command ID already used during the pass.
+    DUPLICATE_COMMAND_ID = 1;           // The received Telecommand Transmission Request used a command ID already used during the pass.
     UNABLE_TO_PROCESS = 2;              // The CDDS Provider cannot process further Telecommands due to a previous fault. TODO: That requires the concept of a blocked service and the capability to clear the fault 
-    UNABLE_TO_STORE = 3;                // The CDDS Provider is not able to store the received Telecommand Radiation Request
-    OUT_OF_SEQUENCE = 4;                // The received Telecommand Radiation Request used a command ID not matching the expected sequence number
-    INCONSISTENT_RADIATION_TIMES = 5;   // The earliest or latest radiation times are inconsistent
-    INVALID_TIME = 6;                   // The specified radiation time window does not overlap the service period
-    LATE_ARRIVAL = 7;                   // The Telecommand Radiation Request arrived after the latest radiation time
-    GENERIC_ERROR = 8;                  // One of the checks on the Telecommand Radiation Request failed
-    OTHER_REASON = 9;                   // A not further specified error happened when processing the Telecommand Radiation Request
-    RADIATION_FAILURE = 10;             // A failure happened during radiation
-    EXPIRED = 11;                       // The radiation could not be done before the latest radiation time
+    UNABLE_TO_STORE = 3;                // The CDDS Provider is not able to store the received Telecommand Transmission Request
+    OUT_OF_SEQUENCE = 4;                // The received Telecommand Transmission Request used a command ID not matching the expected sequence number
+    INCONSISTENT_RADIATION_TIMES = 5;   // The earliest or latest transmission times are inconsistent
+    INVALID_TIME = 6;                   // The specified transmission time window does not overlap the service period
+    LATE_ARRIVAL = 7;                   // The Telecommand Transmission Request arrived after the latest transmission time
+    GENERIC_ERROR = 8;                  // One of the checks on the Telecommand Transmission Request failed
+    OTHER_REASON = 9;                   // A not further specified error happened when processing the Telecommand Transmission Request
+    RADIATION_FAILURE = 10;             // A failure happened during transmission
+    EXPIRED = 11;                       // The transmission could not be done before the latest transmission time
 }
 
 /**
- * An enum to request reports for TelecommandRadiationRequest.<br/>
+ * An enum to request reports for TelecommandTransmissionRequest.<br/>
  * <b>Note:</b> Not all reporting capabilities are required. The required and optional reporting capabilities are marked below.
  */
 enum ReportRequest {
     INVALID_REPORT_REQUEST = 0;     // not initialized
-    NO_REPORT = 1;                  // <b>Mandatory</b>: Do not produce a report for a TelecommandRadiationRequest
+    NO_REPORT = 1;                  // <b>Mandatory</b>: Do not produce a report for a TelecommandTransmissionRequest
     PRODUCE_REPORT_FIRST_HOP = 2;   // <b>Mandatory</b>: Produce a report for the first hop in the communication chain (typically a ground station)
     PRODUCE_REPORT_LAST_HOP = 3;    // <b>Optional</b>: Produce a report for the last hop in the communication chain (for relayed communication the relay transmitting to target)
-    PRODUCE_REPORT_ALL = 4;         // <b>Optional</b>: Produce a report for a TelecommandRadiationRequest for all potential hops (ground station, communication relays)
+    PRODUCE_REPORT_ALL = 4;         // <b>Optional</b>: Produce a report for a TelecommandTransmissionRequest for all potential hops (ground station, communication relays)
 }
 
 

@@ -25,7 +25,7 @@ import io.grpc.ServerInterceptor;
 import io.grpc.stub.StreamObserver;
 
 /**
- * Simple TC test server. Responds to TC radiation requests with ACK and RADIATED.
+ * Simple TC test server. Responds to TC transmission requests with ACK and RADIATED.
  * Report requests are responded with a report.
  */
 public class TcServiceProvider extends TcServiceProviderImplBase implements InterceptedService {

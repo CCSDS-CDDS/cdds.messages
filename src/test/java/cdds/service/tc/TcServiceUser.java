@@ -249,7 +249,7 @@ public class TcServiceUser {
      * @param tc    The TC message to be sent.
      */
     public void sendTelecommand(TelecommandMessage tc) {
-        LOG.info("Send TC with command ID: " + tc.getRadiationRequest().getCommandId());
+        LOG.info("Send TC with command ID: " + tc.getTransmissionRequest().getCommandId());
         tcProviderStream.onNext(tc);
     }
 

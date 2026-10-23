@@ -41,7 +41,7 @@ message TelecommandTransmissionRequest {
 
     /**
      * An optional time specifying the earliest allowed transmission time of this Telecommand.
-     * One of the checks on the Telecommand Transmission Request failed
+     * 
      */
     optional DateTime earliestTransmissionTime = 20;
 
@@ -120,10 +120,10 @@ message TelecommandReport {
     DateTime reportGenerationTime = 30;
 
     /**
-     * The apertureId shall indicate which aperture or antenna 
+     * The transmitterId shall indicate which transmitter or antenna 
      * was used to generate this report.
      */
-    ApertureId apertureId = 40;
+    TransmitterId transmitterId = 40;
 
     oneof report {
         /**

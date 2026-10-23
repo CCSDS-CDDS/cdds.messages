@@ -40,10 +40,10 @@ message TelemetryMessage {
 message TelemetryData {
 
   /**
-   * The reception meta data provide the meta data of aperture(s) involved
+   * The reception meta data provide the meta data of transmitter(s) involved
    * in data transfer of the provided telemetry data. Typically that is for a ground station the 
-   * earth receive time and aperture ID, but in case relays are involved, the involved
-   * relay apertures and reception times can be provided as part of the meta data.
+   * earth receive time and transmitter ID, but in case relays are involved, the involved
+   * relay transmitters and reception times can be provided as part of the meta data.
    */
   repeated ReceptionMetaData metaData = 1;
 
@@ -98,11 +98,11 @@ message SyncNotify {
   DateTime time = 1;
 
   /**
-   * The apertureId shall indicate for which aperture or antenna
-   * the notification is provided. That is typically the aperture or antenna
-   * of a ground station, but in case relays are involved the apertureId can be of relay.
+   * The transmitterId shall indicate for which transmitter or antenna
+   * the notification is provided. That is typically the transmitter or antenna
+   * of a ground station, but in case relays are involved the transmitterId can be of relay.
    */
-  ApertureId apertureId = 10;
+  TransmitterId transmitterId = 10;
 
   oneof notification { 
     /**

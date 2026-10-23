@@ -11,27 +11,28 @@ extend google.protobuf.MessageOptions {
 
 
 /**
- * Denotes an aperture involved in service production (reception or transmission).
+ * Denotes an transmitter like an antenna of the ground station involved in service production (reception or transmission).
  */ 
-message ApertureId {
+message TransmitterId {
   option (oid) = "1.2.840.10003.";
 
-  oneof apertureIdForm {
+  oneof transmitterIdForm {
 
     /**
-     * The OID as per SANA Sites and Aperture registry: https://sanaregistry.org/r/service_sites_apertures/
+     * The OID for instance as per SANA Sites and Aperture registry: https://sanaregistry.org/r/service_sites_transmitters/.
+     * Other unique OIDs denoting terrestrial service providers or relay satellites may be used.
      */
     ObjectIdentifier globalForm = 1;
 
     /**
-     * The local form is a string identifier of the aperture agreed among service user and service provider
+     * The local form is a string identifier of the transmitter agreed among service user and service provider
      */
     string localForm = 10;
   } 
 }
 
 /**
- * Meta data of received data. Indicates which aperture or antenna
+ * Meta data of received data. Indicates which transmitter or antenna
  * received data at a certain time and a data link continuity
  */
 message ReceptionMetaData {
@@ -48,10 +49,10 @@ message ReceptionMetaData {
   DateTime receiveTime = 1;
 
   /**
-   * The apertureId shall indicate which aperture or antenna
+   * The transmitterId shall indicate which transmitter or antenna
    * was used to acquire the frame.
    */
-  ApertureId apertureId = 10;
+  TransmitterId transmitterId = 10;
 
   /**
    * The dataLinkContinuity shall indicate whether the extracted frame

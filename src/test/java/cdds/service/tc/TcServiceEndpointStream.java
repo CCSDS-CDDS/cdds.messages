@@ -11,7 +11,7 @@ import ccsds.cdds.v1.Telecommand.TelecommandTransmission;
 import ccsds.cdds.v1.Telecommand.TelecommandTransmissionRequestAck;
 import ccsds.cdds.v1.Telecommand.TelecommandReport;
 import ccsds.cdds.v1.Telecommand.UplinkStatus;
-import ccsds.cdds.v1.Types.ApertureId;
+import ccsds.cdds.v1.Types.TransmitterId;
 import ccsds.cdds.v1.Types.ProductionState;
 import ccsds.cdds.v1.tc.CddsTcService.TcServiceEndpoint;
 import cdds.service.common.EndpointUtil;
@@ -68,7 +68,7 @@ public class TcServiceEndpointStream implements StreamObserver<TelecommandMessag
             .setProductionState(ProductionState.OPERATIONAL)
             .setBufferAvailable(4711)
             .setReportGenerationTime(TimeUtil.now())
-            .setApertureId(ApertureId.newBuilder()
+            .setTransmitterId(TransmitterId.newBuilder()
                 .setLocalForm("NNO1")
                 .build())
             .setAck(TelecommandTransmissionRequestAck.newBuilder().build())
@@ -80,7 +80,7 @@ public class TcServiceEndpointStream implements StreamObserver<TelecommandMessag
             .setProductionState(ProductionState.OPERATIONAL)
             .setBufferAvailable(4711)
             .setReportGenerationTime(TimeUtil.now())
-            .setApertureId(ApertureId.newBuilder()
+            .setTransmitterId(TransmitterId.newBuilder()
                 .setLocalForm("NNO1")
                 .build())
             .setTransmission(TelecommandTransmission.newBuilder()
@@ -96,7 +96,7 @@ public class TcServiceEndpointStream implements StreamObserver<TelecommandMessag
             .setProductionState(ProductionState.OPERATIONAL)
             .setBufferAvailable(4711)
             .setReportGenerationTime(TimeUtil.now())
-            .setApertureId(ApertureId.newBuilder()
+            .setTransmitterId(TransmitterId.newBuilder()
                 .setLocalForm("NNO1")
                 .build())
             .setProviderStatus(TelecommandProviderStatus.newBuilder()

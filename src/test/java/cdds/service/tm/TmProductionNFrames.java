@@ -7,7 +7,7 @@ import com.google.protobuf.ByteString;
 import ccsds.cdds.v1.Telemetry.TelemetryData;
 import ccsds.cdds.v1.Telemetry.TelemetryMessage;
 import ccsds.cdds.v1.Types.Annotation;
-import ccsds.cdds.v1.Types.ApertureId;
+import ccsds.cdds.v1.Types.TransmitterId;
 import ccsds.cdds.v1.Types.ReceptionMetaData;
 import ccsds.cdds.v1.Types.Value;
 import ccsds.cdds.v1.tm.CddsTmService.TmServiceEndpoint;
@@ -79,7 +79,7 @@ public class TmProductionNFrames implements TmProduction {
                     .setTelemetry(
                             TelemetryData.newBuilder()
                                     .addMetaData(0, ReceptionMetaData.newBuilder()
-                                            .setApertureId(ApertureId.newBuilder()
+                                            .setTransmitterId(TransmitterId.newBuilder()
                                                     .setLocalForm("NNO1")
                                                     .build())
                                             .setReceiveTime(TimeUtil.now())

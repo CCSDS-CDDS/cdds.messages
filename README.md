@@ -17,7 +17,7 @@ CDDS covers the following domains:
 
 This repository contains CDDS messages defined in Google Protocol Buffers and corresponding unit tests. CDDS 931.1 does not mandate a specific technology to exchange CDDS messages, although a gRPC based approach is documented in 931.10 and used for unit test in this repository.
 
-To facilitate CDDS file formats, CDDS foresees that the CDDS messages are written to files (Protobuf ‘writeDelimited’ and ‘readDelimited`)
+To facilitate CDDS file formats, CDDS foresees that the CDDS messages are written to files (Protobuf ‘writeDelimited’ and ‘readDelimited`).
 
 **Building**
 ---

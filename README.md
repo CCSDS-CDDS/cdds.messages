@@ -4,7 +4,7 @@ This repository is associated with The Consultative Committee for Space Data Sys
 CCSDS is an international organization comprised of 11 Member Agencies and multiple Observer Agencies. This repository is an official technical output of the 
 **Cloud Data Delivery Standards (CDDS) Working Group** under the **Cross Support Services (CSS) Area** of CCSDS. 
 This repository contains Protobuf CDDS message definitions corresponding to CCSDS 931.1 (Recommended Practice) and gRPC CDDS service definitions CCSDS 931.10 (Experimental Specification).
-The contents are developed and maintained by the Consultative Committee for Space Data Systems (CCSDS).
+The content is developed and maintained by the Consultative Committee for Space Data Systems (CCSDS).
 
 The CDDS context is the data transfer between terrestrial ground stations or CDDS service providers and mission data systems potentially deployed in a cloud.
 

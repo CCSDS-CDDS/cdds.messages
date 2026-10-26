@@ -21,17 +21,17 @@ To facilitate CDDS file formats, CDDS foresees that the CDDS messages are writte
 
 **Building**
 ---
-Prerequisites. The following executables must be installed and in the PATH:
- protoc             
- protoc-gen-doc     
- protoc-gen-grpc-java
+**Build Prerequisites**. The following executables must be installed and in the PATH:
+ - protoc             
+ - protoc-gen-doc     
+ - protoc-gen-grpc-java
 
-Build the project:         mvn install
+**Build the project**:         mvn install
 
-Generate documentation:    mvn generate-sources or generate-doc.sh
+**Generate documentation**:    mvn generate-sources or generate-doc.sh
 (target/generated-docs)
 
-Debug mTLS:
+**Debug mTLS**:
 mvn test -Djavax.net.debug=ssl,handshake,trustmanager -Dtest=TcServiceTest#testSecureTcService
 
 **Status**: DRAFT

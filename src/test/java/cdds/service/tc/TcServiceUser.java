@@ -218,6 +218,7 @@ public class TcServiceUser {
 
     /**
      * Creates a meta data header TC endpoint encoded in JSON
+     * @param endpointName      The name of the endpoint
      * @param serviceProvider   The service provider
      * @param terminal          The terminal supporting the endpoint
      * @param serviceUser       The service user using the service endpoint
@@ -226,10 +227,11 @@ public class TcServiceUser {
      * 
      * @return                  The created TcServiceEndpoint
      */
-    public static TcServiceEndpoint getTcEndpoint(String serviceProvider, String terminal, String serviceUser, int scId,
+    public static TcServiceEndpoint getTcEndpoint(String endpointName, String serviceProvider, String terminal, String serviceUser, int scId,
             int tcVcId) {
 
         return TcServiceEndpoint.newBuilder()
+                .setEndpointName(endpointName)
                 .setServiceProvider(serviceProvider)
                 .setTerminal(terminal)
                 .setServiceUser(serviceUser)

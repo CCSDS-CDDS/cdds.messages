@@ -2,6 +2,7 @@ syntax = "proto3";
 package ccsds.cdds.v1.td; 
 import "types.proto";
 import "tracking.proto";
+import "cdds-service-provider.proto";
 
 /**
  * This is the gRPC definition of the CDDS Tracking Data Service returning raw tracking data 
@@ -28,25 +29,32 @@ service TrackingDataServiceProvider {
 }
 
 message TrackingDataServiceEndpoint {
+
+    /**
+     * An optional endpoint name to distinguish endpoints;
+     * for instance for spacecrafts supporting multiple bands.
+     */
+    optional string endpointName = 1;
+
     /**
      * The CDDS service version of this service
      */
-    uint32 serviceVersion = 1;
+    uint32 serviceVersion = 10;
 
     /**
      * The name of the service provider organization providing the tracking data service
      */
-    string serviceProvider = 10;
+    string serviceProvider = 20;
 
     /**
      * The terminal providing the tracking data service
      */
-    optional string terminal = 20;
+    optional string terminal = 30;
 
     /**
      * The serviceUser (spacecraft) for which tracking data shall be delivered
      */
-    string serviceUser = 30;
+    string serviceUser = 40;
 
     /**
      * The endpoint provided by the provider contains all available tracking data types available for the service user.
@@ -55,30 +63,43 @@ message TrackingDataServiceEndpoint {
      * tracking data types available from the provider. If the user provides an empty list of tracking data types,
      * the provider shall deliver all tracking data types configured for this endpoint.
      */ 
-    repeated TrackingDataType trackingDataType = 40;
+    repeated TrackingDataType trackingDataType = 50;
     
     /**
      * For this endpoint, tracking data is formatted according as KVN, XML or Protobuf
      */
-    TrackingDataFormat trackingDataFormat = 50;
+    TrackingDataFormat trackingDataFormat = 60;
 
     /**
      * The tracking data measurements are guaranteed to be delivered within the latency limit that is defined for the 
      * service endpoint, respecting the minimum latency supported by the given service provider.
      */
-    Duration latencyLimit = 60;
+    Duration latencyLimit = 70;
 
     /**
      * The QoS used for the provisioning of tracking data messages
      */
-    EnumQoS qos = 70;
+    EnumQoS qos = 80;
+}
+
+/**
+ * The configuration of a tracking data service shared between user and provider.
+ */
+message TrackingDataServiceConfiguration {
+    
+    /**
+     * Address or DNS name of the gRPC server hosting the CDDS Tracking Data Service Provider.
+     * The IP address configuration is only needed for the CDDS Tracking Data Service User.
+     */
+    ServiceProviderAddress gRpcServer = 1;
 
     /**
-     * An optional endpoint name to distinguish endpoints;
-     * for instance for spacecrafts supporting multiple bands.
+     * Configuration of tracking data service endpoints denoting tracking data types available for this endpoint.
+     * Note: The service user can also use the getEndpoints method to discover services at runtime.
      */
-    optional string endpointName = 80;
+    TrackingDataServiceEndpointList endpoints = 10;
 }
+
 
 /**
  * List of endpoints

@@ -2,6 +2,7 @@ syntax = "proto3";
 package ccsds.cdds.v1.tc;
 import "types.proto"; 
 import "telecommand.proto";
+import "cdds-service-provider.proto";
 
 /**
  * This is the gRPC definition of the CDDS TC Service for uplink of CLTUs or Telecommand frames.
@@ -33,25 +34,32 @@ service TcServiceProvider {
  * of the parameters provided below.
  */
 message TcServiceEndpoint {
+
+    /**
+     * An optional endpoint name to distinguish endpoints;
+     * for instance for spacecrafts supporting multiple bands.
+     */
+    optional string endpointName = 1;
+    
     /**
      * The CDDS service version of this service
      */
-    uint32 serviceVersion = 1;
+    uint32 serviceVersion = 10;
 
     /**
      * The name of the service provider organization providing the TC service
      */
-    string serviceProvider = 10;
+    string serviceProvider = 20;
 
     /**
      * The name of the terminal providing the TC service
      */
-    optional string terminal = 20;
+    optional string terminal = 30;
 
     /**
      * The service user (spacecraft) for which TC shall be delivered
      */
-    string serviceUser = 30;
+    string serviceUser = 40;
 
 
     /**
@@ -63,19 +71,32 @@ message TcServiceEndpoint {
         /**
          *  If the cltu filed is set to true, the endpoint supports CLTUs
          */
-        bool        cltu = 40;
+        bool        cltu = 50;
 
         /*
          * If the GVCIDs field is set, the endpoint supports TC frames conforming to the specified GVCIDs
          */
-        GvcIdList   gvcIds = 50;
+        GvcIdList   gvcIds = 60;
     }
 
+}
+
+/**
+ * The configuration of a telecommand service shared between user and provider.
+ */
+message TcServiceConfiguration {
+    
     /**
-     * An optional endpoint name to distinguish endpoints;
-     * for instance for spacecrafts supporting multiple bands.
+     * Address or DNS name of the gRPC server hosting the CDDS TC Service Provider.
+     * The IP address configuration is only needed for the CDDS TC Service User.
      */
-    optional string endpointName = 60;
+    ServiceProviderAddress gRpcServer = 1;
+
+    /**
+     * Configuration of TC service endpoints in terms of CLTU or global virtual channel identifier. Optionally provider and ground station names can be included.
+     * Note: The service user can also use the getEndpoints method to discover services at runtime.
+     */
+    TcServiceEndpointList endpoints = 10;
 }
 
 /**

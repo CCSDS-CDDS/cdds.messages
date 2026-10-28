@@ -260,6 +260,7 @@ public class TmServiceUser {
 
     /**
      * Creates a meta data header TM endpoint encoded in JSON
+     * @param endpointName      The name of the endpoint
      * @param serviceProvider   The service provider
      * @param terminal          The terminal supporting the endpoint
      * @param serviceUser       The service user using the service endpoint
@@ -269,10 +270,11 @@ public class TmServiceUser {
      * 
      * @return                  The created TmServiceEndpoint
      */
-    public static TmServiceEndpoint getTmEndpoint(String serviceProvider, String terminal, String serviceUser, int scId, FrameVersion frameVersion,
+    public static TmServiceEndpoint getTmEndpoint(String endpointName, String serviceProvider, String terminal, String serviceUser, int scId, FrameVersion frameVersion,
             int tmVcId) {
 
         return TmServiceEndpoint.newBuilder()
+                .setEndpointName(endpointName)
                 .setServiceProvider(serviceProvider)
                 .setTerminal(terminal)
                 .setServiceUser(serviceUser)

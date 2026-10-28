@@ -34,20 +34,23 @@ public class TcServiceTest {
 
     private static final int PROVIDER_PORT = 7666;
 
-    final TcServiceEndpoint authorizedTcEndpoint1 = TcServiceUser.getTcEndpoint("myProvider",
+    final TcServiceEndpoint authorizedTcEndpoint1 = TcServiceUser.getTcEndpoint("authorizedTcEndpoint1",
+            "myProvider",
             "myGroundStation",
             "theSpacecraft",
             4711,
             1);
 
-    final TcServiceEndpoint authorizedTcEndpoint2 = TcServiceUser.getTcEndpoint("myProvider",
+    final TcServiceEndpoint authorizedTcEndpoint2 = TcServiceUser.getTcEndpoint("authorizedTcEndpoint2",
+            "myProvider",
             "myGroundStation",
             "theSpacecraft",
             4711,
             2);
 
 
-   final TcServiceEndpoint unAuthorizedTcEndpoint = TcServiceUser.getTcEndpoint("myProvider",
+   final TcServiceEndpoint unAuthorizedTcEndpoint = TcServiceUser.getTcEndpoint("unAuthorizedTcEndpoint",
+            "myProvider",
             "unAuthorizedGroundStation",
             "theSpacecraft",
             4711,

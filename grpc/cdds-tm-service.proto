@@ -2,6 +2,7 @@ syntax = "proto3";
 package ccsds.cdds.v1.tm; 
 import "telemetry.proto";
 import "types.proto";
+import "cdds-service-provider.proto";
 
 
 /**
@@ -36,25 +37,32 @@ service TmServiceProvider {
  * of the parameters provided below.
  */
 message TmServiceEndpoint {
+
+    /**
+     * An optional endpoint name to distinguish endpoints;
+     * for instance for spacecrafts supporting multiple bands.
+     */
+    optional string endpointName = 1;
+
     /**
      * The CDDS service version of this service
      */
-    uint32 serviceVersion = 1;
+    uint32 serviceVersion = 10;
 
     /**
      * The name of the service provider organization providing the TM service
      */
-    string serviceProvider = 10;
+    string serviceProvider = 20;
 
     /**
      * The terminal providing the TM service
      */
-    optional string terminal = 20;
+    optional string terminal = 30;
 
     /**
      * The serviceUser (spacecraft) for which TM shall be delivered
      */
-    string serviceUser = 30;
+    string serviceUser = 40;
     
     /**
      * The Frame quality or the GVCID of the exchanged TM.
@@ -62,21 +70,33 @@ message TmServiceEndpoint {
      * If the check is successful, the requested GVCID(s) shall be provided.
      */
     oneof qualityOrGvcId {
-        FrameQuality frameQuality = 40;
+        FrameQuality frameQuality = 50;
 
-        GvcIdList gvcIds = 50;
+        GvcIdList gvcIds = 60;
     }
 
     /**
      * The QoS used for the provisioning of telemetry messages
      */
-    EnumQoS qos = 60;
+    EnumQoS qos = 70;
+}
+
+/**
+ * The configuration of a telemetry service shared between user and provider.
+ */
+message TmServiceConfiguration {
+    
+    /**
+     * Address or DNS name of the gRPC server hosting the CDDS TM Service Provider.
+     * The IP address configuration is only needed for the CDDS TM Service User.
+     */
+    ServiceProviderAddress gRpcServer = 1;
 
     /**
-     * An optional endpoint name to distinguish endpoints;
-     * for instance for spacecrafts supporting multiple bands.
+     * Configuration of TM service endpoints in terms of frame quality or global virtual channel identifier. Optionally provider and ground station names can be included.
+     * Note: The service user can also use the getEndpoints method to discover services at runtime.
      */
-    optional string endpointName = 70;
+    TmServiceEndpointList endpoints = 10;
 }
 
 /**

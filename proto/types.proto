@@ -326,8 +326,8 @@ message AlarmQualifier {
     string oidString = 1;
 
     /**
-     * The sequence of numbers representing the 
-     * Object Identifier
+     * The sequence of numbers representing the Object Identifier.
+     * Arc is the official ITU-T X.660 term for a component of an OID.
      */
     repeated uint64 arcs = 10;
   }

@@ -31,21 +31,24 @@ public class TmServiceTest {
     final long timeout = 30_000;
     final int frameLength = 1115;
 
-    final TmServiceEndpoint authorizedTmEndpoint1 = TmServiceUser.getTmEndpoint("myProvider",
+    final TmServiceEndpoint authorizedTmEndpoint1 = TmServiceUser.getTmEndpoint("authorizedTmEndpoint1",
+            "myProvider",
             "myGroundStation",
             "theSpacecraft",
             4711,
             FrameVersion.AOS,
             1);
 
-    final TmServiceEndpoint authorizedTmEndpoint2 = TmServiceUser.getTmEndpoint("myProvider",
+    final TmServiceEndpoint authorizedTmEndpoint2 = TmServiceUser.getTmEndpoint("authorizedTmEndpoint2",
+            "myProvider",
             "myGroundStation",
             "theSpacecraft",
             4711,
             FrameVersion.AOS,
             2);
 
-   final TmServiceEndpoint unAuthorizedTmEndpoint = TmServiceUser.getTmEndpoint("myProvider",
+   final TmServiceEndpoint unAuthorizedTmEndpoint = TmServiceUser.getTmEndpoint("unAuthorizedTmEndpoint",
+            "myProvider",
             "unAuthorizedGroundStation",
             "theSpacecraft",
             4711,

@@ -2,6 +2,7 @@ syntax = "proto3";
 package ccsds.cdds.v1.control;
 import "types.proto"; 
 import "control.proto";
+import "cdds-service-provider.proto";
 
 /**
  * This is the gRPC definition of the CDDS Control Service to invoke ground station control directives.
@@ -33,41 +34,60 @@ service ControlServiceProvider {
  * of the parameters provided below.
  */
 message ControlServiceEndpoint {
-    /**
-     * The CDDS service version of this service
-     */
-    uint32 serviceVersion = 1;
-
-    /**
-     * The name of the service provider organization providing the control service
-     */
-    string serviceProvider = 10;
-
-    /**
-     * The name of the terminal providing the control service
-     */
-    optional string terminal = 20;
-
-    /**
-     * The service user (spacecraft) for which control shall be provided
-     */
-    string serviceUser = 30;
-
-    /**
-     * The Object identifier list of the Functional Resource Directives available for this endpoint
-     */
-    repeated FunctionalResourceDirectiveName functionalResourceDirectives = 40;
-
-    /**
-     * The list of generic control directives available for this endpoint
-     */
-    repeated string genericDirectiveIds = 50;
 
     /**
      * An optional endpoint name to distinguish endpoints;
      * for instance for spacecrafts supporting multiple bands.
      */
-    optional string endpointName = 60;
+    optional string endpointName = 1;
+
+    /**
+     * The CDDS service version of this service
+     */
+    uint32 serviceVersion = 10;
+
+    /**
+     * The name of the service provider organization providing the control service
+     */
+    string serviceProvider = 20;
+
+    /**
+     * The name of the terminal providing the control service
+     */
+    optional string terminal = 30;
+
+    /**
+     * The service user (spacecraft) for which control shall be provided
+     */
+    string serviceUser = 40;
+
+    /**
+     * The Object identifier list of the Functional Resource Directives available for this endpoint
+     */
+    repeated FunctionalResourceDirectiveName functionalResourceDirectives = 50;
+
+    /**
+     * The list of generic control directives available for this endpoint
+     */
+    repeated string genericDirectiveIds = 60;
+}
+
+/**
+ * The configuration of a control service shared between user and provider.
+ */
+message ControlServiceConfiguration {
+    
+    /**
+     * Address or DNS name of the gRPC server hosting the CDDS Control Service Provider.
+     * The IP address configuration is only needed for the CDDS Control Service User.
+     */
+    ServiceProviderAddress gRpcServer = 1;
+
+    /**
+     * Configuration of control service endpoints denoting control directives.
+     * Note: The service user can also use the getEndpoints method to discover services at runtime.
+     */
+    ControlServiceEndpointList endpoints = 10;
 }
 
 /**

@@ -2,6 +2,7 @@ syntax = "proto3";
 package ccsds.cdds.v1.monitoring; 
 import "monitoring.proto";
 import "types.proto";
+import "cdds-service-provider.proto";
 
 
 /**
@@ -36,35 +37,39 @@ service MonitoringServiceProvider {
  * of the parameters provided below.
  */
 message MonitoringServiceEndpoint {
+
+    /**
+     * An optional endpoint name to distinguish endpoints;
+     * for instance for spacecrafts supporting multiple bands.
+     */
+    optional string endpointName = 1;
+
     /**
      * The CDDS service version of this service
      */
-    uint32 serviceVersion = 1;
-
+    uint32 serviceVersion = 10;
+    
     /**
      * The name of the service provider organization providing the monitoring service
      */
-    string serviceProvider = 10;
+    string serviceProvider = 20;
 
     /**
      * The terminal providing the monitoring service
      */
-    optional string terminal = 20;
+    optional string terminal = 30;
 
     /**
      * The serviceUser (spacecraft) for which monitoring shall be delivered
      */
-    string serviceUser = 30;
-    
-    /**
-     * One endpoint can provide one Parameter Group.
-     * The endpoint provided in the request openMonitoringEndpoint method meta data
-     * can use a subset of parameters specified for the endpoint of the monitoring provider.
-     * If the The endpoint provided in request empty, all parameters specified
-     * for the endpoint shall be delivered.
-     */
-    repeated ParameterIdentification monitoringParameters = 40;
+    string serviceUser = 40;
 
+    /**
+     * The QoS used for the provisioning of telemetry monitoring.
+     * If the qos is omitted, QoS 'exactly once' shall be used for monitoring message delivery
+     */
+    optional EnumQoS qos = 50;
+    
     /**
      * The monitoring cycle in seconds. At the end of the monitoring cycle the monitoring parameters
      * of the endpoint will be delivered. For mode cyclic, all parameters are delivered, for on-change
@@ -73,31 +78,29 @@ message MonitoringServiceEndpoint {
      * <b>Note: <b> The nominal precision for monitoring cycle is seconds as required for this service is seconds.
      * It is expected that precisions better than seconds have to be agreed among the service user and service provider.
      */
-    Duration monitoringCycle = 50;
+    Duration monitoringCycle = 60;
 
     /**
      * Monitoring mode of this endpoint. The monitoring provider shall support
      * both, cyclic and on-change. The service user chooses the desired mode when 
      * opening the endpoint.
      */
-    MonitoringMode mode = 60;
+    MonitoringMode mode = 70;
+
+    /**
+     * One endpoint can provide one Parameter Group.
+     * The endpoint provided in the request openMonitoringEndpoint method meta data
+     * can use a subset of parameters specified for the endpoint of the monitoring provider.
+     * If the The endpoint provided in request empty, all parameters specified
+     * for the endpoint shall be delivered.
+     */
+    repeated ParameterIdentification monitoringParameters = 80;
+
 
     /**
      * Events reported by this endpoint.
      */
-    repeated EventIdentification reportedEvents = 70;
-
-    /**
-     * The QoS used for the provisioning of telemetry monitoring.
-     * If the qos is omitted, QoS 'exactly once' shall be used for monitoring message delivery
-     */
-    optional EnumQoS qos = 80;
-
-    /**
-     * An optional endpoint name to distinguish endpoints;
-     * for instance for spacecrafts supporting multiple bands.
-     */
-    optional string endpointName = 90;
+    repeated EventIdentification reportedEvents = 90;
 }
 
 message ParameterIdentification {
@@ -186,6 +189,25 @@ message FunctionalResourceEventName {
    */
     uint64 functionalResourceInstance = 10; 
 }
+
+/**
+ * The configuration of a monitoring service shared between user and provider.
+ */
+message MonitoringServiceConfiguration {
+    
+    /**
+     * Address or DNS name of the gRPC server hosting the CDDS Monitoring Service Provider.
+     * The IP address configuration is only needed for the CDDS Monitoring Service User.
+     */
+    ServiceProviderAddress gRpcServer = 1;
+
+    /**
+     * Configuration of monitoring service endpoints denoting monitored items and monitoring cycle.
+     * Note: The service user can also use the getEndpoints method to discover services at runtime.
+     */
+    MonitoringServiceEndpointList endpoints = 10;
+}
+
 
 /**
  * List of endpoints

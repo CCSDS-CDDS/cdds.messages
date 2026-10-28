@@ -119,8 +119,8 @@ public class TrackingDataServiceConfigurationJsonTest {
      * Verifies that the JSON generated from the TrackingDataServiceConfiguration
      * example is compliant with the JSON schema derived from the Protobuf
      * definition: the JSON serialization of the message is validated against
-     * the JSON schema grpc/cdds-td-service-configuration.schema.json
-     * referencing the shared types of grpc/cdds-types.schema.json.
+     * the JSON schema schema/cdds-td-service-configuration.schema.json
+     * referencing the shared types of schema/cdds-types.schema.json.
      */
     @Test
     public void testJsonSchemaCompliance() throws InvalidProtocolBufferException, IOException {
@@ -131,9 +131,9 @@ public class TrackingDataServiceConfigurationJsonTest {
         // register the shared schemas so the $refs to cdds-types.schema.json and
         // cdds-grpc-service-provider-address.schema.json resolve offline
         final String typesSchemaJson =
-                Files.readString(Path.of("grpc", "cdds-types.schema.json"), StandardCharsets.UTF_8);
+                Files.readString(Path.of("schema", "cdds-types.schema.json"), StandardCharsets.UTF_8);
         final String providerAddressSchemaJson =
-                Files.readString(Path.of("grpc", "cdds-grpc-service-provider-address.schema.json"), StandardCharsets.UTF_8);
+                Files.readString(Path.of("schema", "cdds-grpc-service-provider-address.schema.json"), StandardCharsets.UTF_8);
         final JsonSchemaFactory factory = JsonSchemaFactory.getInstance(
                 SpecVersion.VersionFlag.V202012,
                 factoryBuilder -> factoryBuilder.schemaLoaders(loaders -> loaders.schemas(java.util.Map.of(
@@ -141,7 +141,7 @@ public class TrackingDataServiceConfigurationJsonTest {
                         "https://ccsds.org/cdds/v1/schemas/cdds-grpc-service-provider-address.schema.json", providerAddressSchemaJson))));
 
         final JsonSchema schema = factory.getSchema(
-                Files.readString(Path.of("grpc", "cdds-td-service-configuration.schema.json"), StandardCharsets.UTF_8));
+                Files.readString(Path.of("schema", "cdds-td-service-configuration.schema.json"), StandardCharsets.UTF_8));
 
         final ObjectMapper mapper = new ObjectMapper();
         final JsonNode configurationJsonNode = mapper.readTree(configurationJson);

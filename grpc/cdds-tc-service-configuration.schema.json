@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ccsds.org/cdds/v1/schemas/cdds-tc-service-configuration.schema.json",
+  "title": "TcServiceConfiguration",
+  "description": "The configuration of a telecommand service shared between user and provider.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "gRpcServer": {
+      "$ref": "#/$defs/ServiceProviderAddress"
+    },
+    "endpoints": {
+      "$ref": "#/$defs/TcServiceEndpointList"
+    }
+  },
+  "required": [
+    "gRpcServer",
+    "endpoints"
+  ],
+  "$defs": {
+    "ServiceProviderAddress": {
+      "title": "ServiceProviderAddress",
+      "description": "Address or DNS name of the gRPC server hosting the CDDS TC Service Provider. The IP address configuration is only needed for the CDDS TC Service User.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "serviceProvider": {
+          "type": "string",
+          "description": "The name of the service provider organization providing the TC service"
+        },
+        "terminal": {
+          "type": "string",
+          "description": "Optional: The name of the terminal providing the CDDS service"
+        },
+        "address": {
+          "type": "string",
+          "description": "The IP address or DNS resolve able name of the gRPC provider. For a provider the address can be omitted."
+        },
+        "port": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "The TCP port of the gRPC provider"
+        },
+        "rootCertificateFile": {
+          "type": "string",
+          "description": "The trust anchor / root certificate use to sign the CDDS user / CDDS provider certificates"
+        },
+        "certificateFile": {
+          "type": "string",
+          "description": "The certificate file of the CDDS user or the CDDS provider"
+        },
+        "privateKeyFile": {
+          "type": "string",
+          "description": "The private key file of the CDDS user or the CDDS provider"
+        }
+      },
+      "required": [
+        "serviceProvider",
+        "address",
+        "port"
+      ]
+    },
+    "TcServiceEndpointList": {
+      "title": "TcServiceEndpointList",
+      "description": "List of endpoints.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "endpoints": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TcServiceEndpoint"
+          },
+          "description": "The list of endpoints"
+        }
+      },
+      "required": [
+        "endpoints"
+      ]
+    },
+    "TcServiceEndpoint": {
+      "title": "TcServiceEndpoint",
+      "description": "Allows the identification of a service endpoint in terms of the parameters provided below.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "endpointName": {
+          "type": "string",
+          "description": "An optional endpoint name to distinguish endpoints; for instance for spacecrafts supporting multiple bands."
+        },
+        "serviceVersion": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The CDDS service version of this service"
+        },
+        "serviceProvider": {
+          "type": "string",
+          "description": "The name of the service provider organization providing the TC service"
+        },
+        "terminal": {
+          "type": "string",
+          "description": "The name of the terminal providing the TC service"
+        },
+        "serviceUser": {
+          "type": "string",
+          "description": "The service user (spacecraft) for which TC shall be delivered"
+        },
+        "cltu": {
+          "type": "boolean",
+          "description": "If the cltu filed is set to true, the endpoint supports CLTUs."
+        },
+        "gvcIds": {
+          "$ref": "cdds-types.schema.json#/$defs/GvcIdList",
+          "description": "If the GVCIDs field is set, the endpoint supports TC frames conforming to the specified GVCIDs."
+        }
+      },
+      "required": [
+        "serviceVersion",
+        "serviceProvider",
+        "serviceUser"
+      ],
+      "not": {
+        "required": [
+          "cltu",
+          "gvcIds"
+        ],
+        "description": "Indicates the use of the endpoint for uplink of CLTU, or a TC VC when the TC User provides TC frames for transmission; the endpoint is requested either for CLTU uplink or for the uplink of TC frames for the specified GVCIDs."
+      }
+    }
+  }
+}

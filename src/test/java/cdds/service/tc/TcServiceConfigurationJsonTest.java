@@ -7,11 +7,18 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.networknt.schema.JsonSchema;
+import com.networknt.schema.JsonSchemaFactory;
+import com.networknt.schema.SpecVersion;
+import com.networknt.schema.ValidationMessage;
 
 import ccsds.cdds.v1.CddsServiceProvider.ServiceProviderAddress;
 import ccsds.cdds.v1.Types.FrameVersion;
@@ -29,7 +36,8 @@ import cdds.service.common.ProtoJsonUtil;
  * The TcServiceConfiguration is the configuration of a telecommand service
  * shared between CDDS TC user and CDDS TC provider. The test verifies that a
  * TcServiceConfiguration example can be written to JSON and read back without
- * loss, both in memory and via a JSON file.
+ * loss, both in memory and via a JSON file, and that the generated JSON is
+ * compliant with the JSON schema derived from the Protobuf definition.
  */
 public class TcServiceConfigurationJsonTest {
 
@@ -60,16 +68,12 @@ public class TcServiceConfigurationJsonTest {
      * Verifies the JSON file round trip of a TcServiceConfiguration:
      * the message is written to a JSON file, the file is read back and the
      * JSON read from the file is parsed into an equal message.
-     * The JSON is printed on the command line.
      */
     @Test
     public void testJsonTcServiceConfigurationFile() throws InvalidProtocolBufferException, IOException {
         final TcServiceConfiguration configurationOne = createTcServiceConfiguration();
 
         final String configurationJson = ProtoJsonUtil.toJson(configurationOne);
-
-        System.out.println("TcServiceConfiguration");
-        System.out.println(configurationJson);
 
         // write the JSON to a file and read it back
         final Path jsonFile = tempDir.resolve("tc-service-configuration.json");
@@ -84,6 +88,43 @@ public class TcServiceConfigurationJsonTest {
                 ProtoJsonUtil.fromJson(configurationJsonRead, TcServiceConfiguration.newBuilder());
 
         assertTrue(configurationOne.equals(configurationTwo));
+    }
+
+    /**
+     * Verifies that the JSON generated from the TcServiceConfiguration example
+     * is compliant with the JSON schema derived from the Protobuf definition:
+     * the JSON serialization of the message is validated against the JSON schema
+     * grpc/cdds-tc-service-configuration.schema.json referencing the shared
+     * types of grpc/cdds-types.schema.json.
+     */
+    @Test
+    public void testJsonSchemaCompliance() throws InvalidProtocolBufferException, IOException {
+        final TcServiceConfiguration configuration = createTcServiceConfiguration();
+
+        final String configurationJson = ProtoJsonUtil.toJson(configuration);
+
+        // register the shared types schema so the $refs to cdds-types.schema.json resolve offline
+        final String typesSchemaJson =
+                Files.readString(Path.of("grpc", "cdds-types.schema.json"), StandardCharsets.UTF_8);
+        final JsonSchemaFactory factory = JsonSchemaFactory.getInstance(
+                SpecVersion.VersionFlag.V202012,
+                factoryBuilder -> factoryBuilder.schemaLoaders(loaders -> loaders.schemas(java.util.Map.of(
+                        "https://ccsds.org/cdds/v1/schemas/cdds-types.schema.json", typesSchemaJson))));
+
+        final JsonSchema schema = factory.getSchema(
+                Files.readString(Path.of("grpc", "cdds-tc-service-configuration.schema.json"), StandardCharsets.UTF_8));
+
+        final ObjectMapper mapper = new ObjectMapper();
+        final JsonNode configurationJsonNode = mapper.readTree(configurationJson);
+
+        final Set<ValidationMessage> validationMessages = schema.validate(configurationJsonNode);
+
+        for (final ValidationMessage validationMessage : validationMessages) {
+            System.out.println(validationMessage);
+        }
+
+        assertTrue(validationMessages.isEmpty(),
+                "The generated JSON is not compliant with the JSON schema: " + validationMessages);
     }
 
     /**
@@ -113,7 +154,7 @@ public class TcServiceConfigurationJsonTest {
             .setTerminal("myGroundStation")
             .setServiceUser("mySpacecraft")
             .setCltu(true)
-            .setEndpointName("myGroundStation.mySpacecraft.cltu")
+            .setEndpointName("myGroundStation.mySpacecraft.tc.cltu")
             .build();
 
         final TcServiceEndpoint tcEndpointTwo = TcServiceEndpoint.newBuilder()
@@ -128,7 +169,7 @@ public class TcServiceConfigurationJsonTest {
                     .setVirtualChannelId(0)
                     .build())
                 .build())
-            .setEndpointName("myGroundStation.mySpacecraft.vc0")
+            .setEndpointName("myGroundStation.mySpacecraft.tc.vc0")
             .build();
 
         return TcServiceConfiguration.newBuilder()

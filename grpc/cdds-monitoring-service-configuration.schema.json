@@ -1,0 +1,242 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ccsds.org/cdds/v1/schemas/cdds-monitoring-service-configuration.schema.json",
+  "title": "MonitoringServiceConfiguration",
+  "description": "The configuration of a monitoring service shared between user and provider.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "gRpcServer": {
+      "$ref": "#/$defs/ServiceProviderAddress"
+    },
+    "endpoints": {
+      "$ref": "#/$defs/MonitoringServiceEndpointList"
+    }
+  },
+  "required": [
+    "gRpcServer",
+    "endpoints"
+  ],
+  "$defs": {
+    "ServiceProviderAddress": {
+      "title": "ServiceProviderAddress",
+      "description": "Address or DNS name of the gRPC server hosting the CDDS Monitoring Service Provider. The IP address configuration is only needed for the CDDS Monitoring Service User.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "serviceProvider": {
+          "type": "string",
+          "description": "The name of the service provider organization providing the monitoring service"
+        },
+        "terminal": {
+          "type": "string",
+          "description": "Optional: The name of the terminal providing the CDDS service"
+        },
+        "address": {
+          "type": "string",
+          "description": "The IP address or DNS resolve able name of the gRPC provider. For a provider the address can be omitted."
+        },
+        "port": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "The TCP port of the gRPC provider"
+        },
+        "rootCertificateFile": {
+          "type": "string",
+          "description": "The trust anchor / root certificate use to sign the CDDS user / CDDS provider certificates"
+        },
+        "certificateFile": {
+          "type": "string",
+          "description": "The certificate file of the CDDS user or the CDDS provider"
+        },
+        "privateKeyFile": {
+          "type": "string",
+          "description": "The private key file of the CDDS user or the CDDS provider"
+        }
+      },
+      "required": [
+        "serviceProvider",
+        "address",
+        "port"
+      ]
+    },
+    "MonitoringServiceEndpointList": {
+      "title": "MonitoringServiceEndpointList",
+      "description": "List of endpoints.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "endpoints": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/MonitoringServiceEndpoint"
+          },
+          "description": "The list of endpoints"
+        }
+      },
+      "required": [
+        "endpoints"
+      ]
+    },
+    "MonitoringServiceEndpoint": {
+      "title": "MonitoringServiceEndpoint",
+      "description": "Allows the identification of a service endpoint in terms of the parameters provided below.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "endpointName": {
+          "type": "string",
+          "description": "An optional endpoint name to distinguish endpoints; for instance for spacecrafts supporting multiple bands."
+        },
+        "serviceVersion": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The CDDS service version of this service"
+        },
+        "serviceProvider": {
+          "type": "string",
+          "description": "The name of the service provider organization providing the monitoring service"
+        },
+        "terminal": {
+          "type": "string",
+          "description": "The terminal providing the monitoring service"
+        },
+        "serviceUser": {
+          "type": "string",
+          "description": "The serviceUser (spacecraft) for which monitoring shall be delivered"
+        },
+        "qos": {
+          "$ref": "cdds-types.schema.json#/$defs/EnumQoS",
+          "description": "The QoS used for the provisioning of telemetry monitoring. If the qos is omitted, QoS 'exactly once' shall be used for monitoring message delivery."
+        },
+        "monitoringCycle": {
+          "$ref": "cdds-types.schema.json#/$defs/Duration",
+          "description": "The monitoring cycle in seconds. At the end of the monitoring cycle the monitoring parameters of the endpoint will be delivered. For mode cyclic, all parameters are delivered, for on-change those parameters changed compared to the last cycle are delivered. For on-change all parameters are delivered at the end of the first cycle. Note: The nominal precision for monitoring cycle is seconds as required for this service is seconds. It is expected that precisions better than seconds have to be agreed among the service user and service provider."
+        },
+        "mode": {
+          "$ref": "#/$defs/MonitoringMode",
+          "description": "Monitoring mode of this endpoint. The monitoring provider shall support both, cyclic and on-change. The service user chooses the desired mode when opening the endpoint."
+        },
+        "monitoringParameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ParameterIdentification"
+          },
+          "description": "One endpoint can provide one Parameter Group. The endpoint provided in the request openMonitoringEndpoint method meta data can use a subset of parameters specified for the endpoint of the monitoring provider. If the endpoint provided in request is empty, all parameters specified for the endpoint shall be delivered."
+        },
+        "reportedEvents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EventIdentification"
+          },
+          "description": "Events reported by this endpoint."
+        }
+      },
+      "required": [
+        "serviceVersion",
+        "serviceProvider",
+        "serviceUser",
+        "mode",
+        "monitoringParameters",
+        "reportedEvents"
+      ]
+    },
+    "ParameterIdentification": {
+      "title": "ParameterIdentification",
+      "description": "Identifies a monitoring parameter, either a generic parameter, a Functional Resource parameter, a Functional Resource parameter name or a parameter group.",
+      "type": "object",
+      "additionalProperties": false,
+      "maxProperties": 1,
+      "properties": {
+        "genericParameterIdentifier": {
+          "type": "string",
+          "description": "Identifies a generic parameter by it's ID"
+        },
+        "functionalResourceParameterId": {
+          "$ref": "cdds-types.schema.json#/$defs/ObjectIdentifier",
+          "description": "The OID of the Functional Resource Parameter. If only the OID is specified but not the Functional Resource Instance the parameter is delivered for all Functional Resource instances available for monitoring. The underlying rationale is that a monitoring service user does not need to know Functional Resource Instance numbers."
+        },
+        "functionalResourceParameterName": {
+          "$ref": "#/$defs/FunctionalResourceParameterName",
+          "description": "The Functional Resource Parameter Name specifies a Functional Resource Parameter by OID and Functional Resource Instance Number."
+        },
+        "parameterGroup": {
+          "type": "string",
+          "description": "A generic name grouping a set of parameters. The name of the parameter group and the grouped parameters need to be agreed among the CDDS Monitoring Service Provider and CDDS Monitoring User before use."
+        }
+      }
+    },
+    "EventIdentification": {
+      "title": "EventIdentification",
+      "description": "Identifies an event reported by a monitoring endpoint, either a Functional Resource event, a Functional Resource event name or an event group.",
+      "type": "object",
+      "additionalProperties": false,
+      "maxProperties": 1,
+      "properties": {
+        "functionalResourceEventId": {
+          "$ref": "cdds-types.schema.json#/$defs/ObjectIdentifier",
+          "description": "The OID of the Functional Resource Event. If only the OID is specified but not the Functional Resource Instance the event is reported for all Functional Resource instances available for monitoring. The underlying rationale is that a monitoring service user does not need to know Functional Resource Instance numbers."
+        },
+        "functionalResourceEventName": {
+          "$ref": "#/$defs/FunctionalResourceEventName",
+          "description": "The Functional Resource Event Name specifies a Functional Resource Event by OID and Functional Resource Instance Number."
+        },
+        "eventGroup": {
+          "type": "string",
+          "description": "A generic name grouping a set of events"
+        }
+      }
+    },
+    "FunctionalResourceParameterName": {
+      "title": "FunctionalResourceParameterName",
+      "description": "The Functional Resource Parameter Name groups the OID of the Functional Resource Parameter and the Functional Resource Instance Number.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "functionalResourceParameterIdentifier": {
+          "$ref": "cdds-types.schema.json#/$defs/ObjectIdentifier",
+          "description": "The Object Identifier of the Functional Resource Parameter."
+        },
+        "functionalResourceInstance": {
+          "type": "string",
+          "pattern": "^[0-9]+$",
+          "description": "The instance number of the Functional Resource for which the parameter is reported for."
+        }
+      },
+      "required": [
+        "functionalResourceInstance"
+      ]
+    },
+    "FunctionalResourceEventName": {
+      "title": "FunctionalResourceEventName",
+      "description": "The Functional Resource Event Name groups the OID of the Functional Resource Event and the Functional Resource Instance Number.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "functionalResourceEventId": {
+          "$ref": "cdds-types.schema.json#/$defs/ObjectIdentifier",
+          "description": "The Object Identifier of the Functional Resource Event."
+        },
+        "functionalResourceInstance": {
+          "type": "string",
+          "pattern": "^[0-9]+$",
+          "description": "The instance number of the Functional Resource for which the event is reported for."
+        }
+      },
+      "required": [
+        "functionalResourceInstance"
+      ]
+    },
+    "MonitoringMode": {
+      "title": "MonitoringMode",
+      "description": "The enum defining the monitoring modes. INVALID_MONITORING_MODE: invalid monitoring mode; CYCLIC_MONITORING_MODE: cyclic monitoring, at the end of the cycle all parameters are reported; ON_CHANGE_MONITORING_MODE: on change monitoring, at the end of a cycle, the changed parameters are reported.",
+      "type": "string",
+      "enum": [
+        "INVALID_MONITORING_MODE",
+        "CYCLIC_MONITORING_MODE",
+        "ON_CHANGE_MONITORING_MODE"
+      ]
+    }
+  }
+}

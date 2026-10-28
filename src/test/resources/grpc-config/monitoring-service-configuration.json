@@ -1,0 +1,88 @@
+{
+  "$schema": "https://ccsds.org/cdds/v1/schemas/cdds-monitoring-service-configuration.schema.json",
+  "gRpcServer": {
+    "serviceProvider": "myProvider",
+    "terminal": "myGroundStation",
+    "address": "my-provider.example.com",
+    "port": 8443,
+    "rootCertificateFile": "cert/cdds-ca.pem",
+    "certificateFile": "cert/cdds-user.pem",
+    "privateKeyFile": "cert/cdds-user.key"
+  },
+  "endpoints": {
+    "endpoints": [
+      {
+        "endpointName": "myGroundStation.mySpacecraft.mon.cyclic",
+        "serviceVersion": 1,
+        "serviceProvider": "myProvider",
+        "terminal": "myGroundStation",
+        "serviceUser": "mySpacecraft",
+        "qos": "EXACTLY_ONCE",
+        "monitoringCycle": {
+          "seconds": 10,
+          "milliseconds": "500"
+        },
+        "mode": "CYCLIC_MONITORING_MODE",
+        "monitoringParameters": [
+          {
+            "functionalResourceParameterId": {
+              "oidString": "1.2.3.4.5",
+              "arcs": ["1", "2", "3", "4", "5"]
+            }
+          },
+          {
+            "functionalResourceParameterName": {
+              "functionalResourceParameterIdentifier": {
+                "oidString": "1.2.3.4.6",
+                "arcs": ["1", "2", "3", "4", "6"]
+              },
+              "functionalResourceInstance": "2"
+            }
+          },
+          {
+            "parameterGroup": "myParameterGroup"
+          }
+        ],
+        "reportedEvents": [
+          {
+            "functionalResourceEventId": {
+              "oidString": "1.2.3.5.1",
+              "arcs": ["1", "2", "3", "5", "1"]
+            }
+          },
+          {
+            "functionalResourceEventName": {
+              "functionalResourceEventId": {
+                "oidString": "1.2.3.5.2",
+                "arcs": ["1", "2", "3", "5", "2"]
+              },
+              "functionalResourceInstance": "2"
+            }
+          }
+        ]
+      },
+      {
+        "endpointName": "myGroundStation.mySpacecraft.mon.on-change",
+        "serviceVersion": 1,
+        "serviceProvider": "myProvider",
+        "terminal": "myGroundStation",
+        "serviceUser": "mySpacecraft",
+        "qos": "AT_LEAST_ONCE",
+        "monitoringCycle": {
+          "seconds": 1
+        },
+        "mode": "ON_CHANGE_MONITORING_MODE",
+        "monitoringParameters": [
+          {
+            "genericParameterIdentifier": "myGenericParameter"
+          }
+        ],
+        "reportedEvents": [
+          {
+            "eventGroup": "myEventGroup"
+          }
+        ]
+      }
+    ]
+  }
+}

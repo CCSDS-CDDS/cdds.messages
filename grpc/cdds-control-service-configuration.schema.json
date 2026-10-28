@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ccsds.org/cdds/v1/schemas/cdds-control-service-configuration.schema.json",
+  "title": "ControlServiceConfiguration",
+  "description": "The configuration of a control service shared between user and provider.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "gRpcServer": {
+      "$ref": "#/$defs/ServiceProviderAddress"
+    },
+    "endpoints": {
+      "$ref": "#/$defs/ControlServiceEndpointList"
+    }
+  },
+  "required": [
+    "gRpcServer",
+    "endpoints"
+  ],
+  "$defs": {
+    "ServiceProviderAddress": {
+      "title": "ServiceProviderAddress",
+      "description": "Address or DNS name of the gRPC server hosting the CDDS Control Service Provider. The IP address configuration is only needed for the CDDS Control Service User.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "serviceProvider": {
+          "type": "string",
+          "description": "The name of the service provider organization providing the control service"
+        },
+        "terminal": {
+          "type": "string",
+          "description": "Optional: The name of the terminal providing the CDDS service"
+        },
+        "address": {
+          "type": "string",
+          "description": "The IP address or DNS resolve able name of the gRPC provider. For a provider the address can be omitted."
+        },
+        "port": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "The TCP port of the gRPC provider"
+        },
+        "rootCertificateFile": {
+          "type": "string",
+          "description": "The trust anchor / root certificate use to sign the CDDS user / CDDS provider certificates"
+        },
+        "certificateFile": {
+          "type": "string",
+          "description": "The certificate file of the CDDS user or the CDDS provider"
+        },
+        "privateKeyFile": {
+          "type": "string",
+          "description": "The private key file of the CDDS user or the CDDS provider"
+        }
+      },
+      "required": [
+        "serviceProvider",
+        "address",
+        "port"
+      ]
+    },
+    "ControlServiceEndpointList": {
+      "title": "ControlServiceEndpointList",
+      "description": "List of endpoints.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "endpoints": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ControlServiceEndpoint"
+          },
+          "description": "The list of endpoints"
+        }
+      },
+      "required": [
+        "endpoints"
+      ]
+    },
+    "ControlServiceEndpoint": {
+      "title": "ControlServiceEndpoint",
+      "description": "Allows the identification of a service endpoint in terms of the parameters provided below.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "endpointName": {
+          "type": "string",
+          "description": "An optional endpoint name to distinguish endpoints; for instance for spacecrafts supporting multiple bands."
+        },
+        "serviceVersion": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The CDDS service version of this service"
+        },
+        "serviceProvider": {
+          "type": "string",
+          "description": "The name of the service provider organization providing the control service"
+        },
+        "terminal": {
+          "type": "string",
+          "description": "The name of the terminal providing the control service"
+        },
+        "serviceUser": {
+          "type": "string",
+          "description": "The service user (spacecraft) for which control shall be provided"
+        },
+        "functionalResourceDirectives": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/FunctionalResourceDirectiveName"
+          },
+          "description": "The Object identifier list of the Functional Resource Directives available for this endpoint"
+        },
+        "genericDirectiveIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The list of generic control directives available for this endpoint"
+        }
+      },
+      "required": [
+        "serviceVersion",
+        "serviceProvider",
+        "serviceUser",
+        "functionalResourceDirectives",
+        "genericDirectiveIds"
+      ]
+    },
+    "FunctionalResourceDirectiveName": {
+      "title": "FunctionalResourceDirectiveName",
+      "description": "Identifies a Functional Resource Directive by OID and optionally by the instance number.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "functionalResourceDirective": {
+          "$ref": "cdds-types.schema.json#/$defs/ObjectIdentifier",
+          "description": "The Directive Object Identifier"
+        },
+        "functionalResourceInstance": {
+          "type": "string",
+          "pattern": "^[0-9]+$",
+          "description": "The optional Functional Resource Instance number"
+        }
+      }
+    }
+  }
+}

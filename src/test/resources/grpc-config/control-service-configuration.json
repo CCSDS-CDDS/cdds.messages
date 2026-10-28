@@ -1,0 +1,48 @@
+{
+  "$schema": "https://ccsds.org/cdds/v1/schemas/cdds-control-service-configuration.schema.json",
+  "gRpcServer": {
+    "serviceProvider": "myProvider",
+    "terminal": "myGroundStation",
+    "address": "my-provider.example.com",
+    "port": 8443,
+    "rootCertificateFile": "cert/cdds-ca.pem",
+    "certificateFile": "cert/cdds-user.pem",
+    "privateKeyFile": "cert/cdds-user.key"
+  },
+  "endpoints": {
+    "endpoints": [
+      {
+        "endpointName": "myGroundStation.mySpacecraft.ctl.fr-directives",
+        "serviceVersion": 1,
+        "serviceProvider": "myProvider",
+        "terminal": "myGroundStation",
+        "serviceUser": "mySpacecraft",
+        "functionalResourceDirectives": [
+          {
+            "functionalResourceDirective": {
+              "oidString": "1.2.3.6.1",
+              "arcs": ["1", "2", "3", "6", "1"]
+            }
+          },
+          {
+            "functionalResourceDirective": {
+              "oidString": "1.2.3.6.2",
+              "arcs": ["1", "2", "3", "6", "2"]
+            },
+            "functionalResourceInstance": "2"
+          }
+        ],
+        "genericDirectiveIds": []
+      },
+      {
+        "endpointName": "myGroundStation.mySpacecraft.ctl.generic-directives",
+        "serviceVersion": 1,
+        "serviceProvider": "myProvider",
+        "terminal": "myGroundStation",
+        "serviceUser": "mySpacecraft",
+        "functionalResourceDirectives": [],
+        "genericDirectiveIds": ["my-generic-directive-one", "my-generic-directive-two"]
+      }
+    ]
+  }
+}

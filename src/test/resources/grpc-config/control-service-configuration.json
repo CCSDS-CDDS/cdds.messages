@@ -20,13 +20,13 @@
         "functionalResourceDirectives": [
           {
             "functionalResourceDirective": {
-              "oidString": "1.2.3.6.1",
+              "oidString": "my.fr-directive-all-instances",
               "arcs": ["1", "2", "3", "6", "1"]
             }
           },
           {
             "functionalResourceDirective": {
-              "oidString": "1.2.3.6.2",
+              "oidString": "my.fr-directive-instance",
               "arcs": ["1", "2", "3", "6", "2"]
             },
             "functionalResourceInstance": "2"

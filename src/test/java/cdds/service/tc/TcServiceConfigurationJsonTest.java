@@ -103,13 +103,17 @@ public class TcServiceConfigurationJsonTest {
 
         final String configurationJson = ProtoJsonUtil.toJson(configuration);
 
-        // register the shared types schema so the $refs to cdds-types.schema.json resolve offline
+        // register the shared schemas so the $refs to cdds-types.schema.json and
+        // cdds-grpc-service-provider-address.schema.json resolve offline
         final String typesSchemaJson =
                 Files.readString(Path.of("grpc", "cdds-types.schema.json"), StandardCharsets.UTF_8);
+        final String providerAddressSchemaJson =
+                Files.readString(Path.of("grpc", "cdds-grpc-service-provider-address.schema.json"), StandardCharsets.UTF_8);
         final JsonSchemaFactory factory = JsonSchemaFactory.getInstance(
                 SpecVersion.VersionFlag.V202012,
                 factoryBuilder -> factoryBuilder.schemaLoaders(loaders -> loaders.schemas(java.util.Map.of(
-                        "https://ccsds.org/cdds/v1/schemas/cdds-types.schema.json", typesSchemaJson))));
+                        "https://ccsds.org/cdds/v1/schemas/cdds-types.schema.json", typesSchemaJson,
+                        "https://ccsds.org/cdds/v1/schemas/cdds-grpc-service-provider-address.schema.json", providerAddressSchemaJson))));
 
         final JsonSchema schema = factory.getSchema(
                 Files.readString(Path.of("grpc", "cdds-tc-service-configuration.schema.json"), StandardCharsets.UTF_8));

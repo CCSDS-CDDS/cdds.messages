@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ccsds.org/cdds/v1/schemas/cdds-grpc-service-provider-address.schema.json",
+  "title": "CDDS gRPC Service Provider Address",
+  "description": "The address of a gRPC server hosting a CDDS service provider, derived from the ServiceProviderAddress message of cdds-service-provider.proto. The type is shared between the CDDS service configuration schemas.",
+  "type": "object",
+  "$defs": {
+    "ServiceProviderAddress": {
+      "title": "ServiceProviderAddress",
+      "description": "Address or DNS name of the gRPC server hosting the CDDS service provider. The IP address configuration is only needed for the CDDS service user.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "serviceProvider": {
+          "type": "string",
+          "description": "The name of the service provider organization providing the service"
+        },
+        "terminal": {
+          "type": "string",
+          "description": "Optional: The name of the terminal providing the CDDS service"
+        },
+        "address": {
+          "type": "string",
+          "description": "The IP address or DNS resolve able name of the gRPC provider. For a provider the address can be omitted."
+        },
+        "port": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "The TCP port of the gRPC provider"
+        },
+        "rootCertificateFile": {
+          "type": "string",
+          "description": "The trust anchor / root certificate use to sign the CDDS user / CDDS provider certificates"
+        },
+        "certificateFile": {
+          "type": "string",
+          "description": "The certificate file of the CDDS user or the CDDS provider"
+        },
+        "privateKeyFile": {
+          "type": "string",
+          "description": "The private key file of the CDDS user or the CDDS provider"
+        }
+      },
+      "required": [
+        "serviceProvider",
+        "address",
+        "port"
+      ]
+    }
+  }
+}

@@ -7,7 +7,8 @@
   "additionalProperties": false,
   "properties": {
     "gRpcServer": {
-      "$ref": "#/$defs/ServiceProviderAddress"
+      "$ref": "cdds-grpc-service-provider-address.schema.json#/$defs/ServiceProviderAddress",
+      "description": "Address or DNS name of the gRPC server hosting the CDDS TM Service Provider. The IP address configuration is only needed for the CDDS TM Service User."
     },
     "endpoints": {
       "$ref": "#/$defs/TmServiceEndpointList"
@@ -18,49 +19,6 @@
     "endpoints"
   ],
   "$defs": {
-    "ServiceProviderAddress": {
-      "title": "ServiceProviderAddress",
-      "description": "Address or DNS name of the gRPC server hosting the CDDS TM Service Provider. The IP address configuration is only needed for the CDDS TM Service User.",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "serviceProvider": {
-          "type": "string",
-          "description": "The name of the service provider organization providing the TM service"
-        },
-        "terminal": {
-          "type": "string",
-          "description": "Optional: The name of the terminal providing the CDDS service"
-        },
-        "address": {
-          "type": "string",
-          "description": "The IP address or DNS resolve able name of the gRPC provider. For a provider the address can be omitted."
-        },
-        "port": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 65535,
-          "description": "The TCP port of the gRPC provider"
-        },
-        "rootCertificateFile": {
-          "type": "string",
-          "description": "The trust anchor / root certificate use to sign the CDDS user / CDDS provider certificates"
-        },
-        "certificateFile": {
-          "type": "string",
-          "description": "The certificate file of the CDDS user or the CDDS provider"
-        },
-        "privateKeyFile": {
-          "type": "string",
-          "description": "The private key file of the CDDS user or the CDDS provider"
-        }
-      },
-      "required": [
-        "serviceProvider",
-        "address",
-        "port"
-      ]
-    },
     "TmServiceEndpointList": {
       "title": "TmServiceEndpointList",
       "description": "List of endpoints.",

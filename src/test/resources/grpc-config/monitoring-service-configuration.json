@@ -26,14 +26,14 @@
         "monitoringParameters": [
           {
             "functionalResourceParameterId": {
-              "oidString": "1.2.3.4.5",
+              "oidString": "my.fr-parameter-id",
               "arcs": ["1", "2", "3", "4", "5"]
             }
           },
           {
             "functionalResourceParameterName": {
               "functionalResourceParameterIdentifier": {
-                "oidString": "1.2.3.4.6",
+                "oidString": "my.fr-parameter-name-id",
                 "arcs": ["1", "2", "3", "4", "6"]
               },
               "functionalResourceInstance": "2"
@@ -46,14 +46,14 @@
         "reportedEvents": [
           {
             "functionalResourceEventId": {
-              "oidString": "1.2.3.5.1",
+              "oidString": "my.fr-event-id",
               "arcs": ["1", "2", "3", "5", "1"]
             }
           },
           {
             "functionalResourceEventName": {
               "functionalResourceEventId": {
-                "oidString": "1.2.3.5.2",
+                "oidString": "my.fr-event-name-id",
                 "arcs": ["1", "2", "3", "5", "2"]
               },
               "functionalResourceInstance": "2"

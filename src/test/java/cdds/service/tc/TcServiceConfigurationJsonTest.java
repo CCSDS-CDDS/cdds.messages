@@ -60,12 +60,16 @@ public class TcServiceConfigurationJsonTest {
      * Verifies the JSON file round trip of a TcServiceConfiguration:
      * the message is written to a JSON file, the file is read back and the
      * JSON read from the file is parsed into an equal message.
+     * The JSON is printed on the command line.
      */
     @Test
     public void testJsonTcServiceConfigurationFile() throws InvalidProtocolBufferException, IOException {
         final TcServiceConfiguration configurationOne = createTcServiceConfiguration();
 
         final String configurationJson = ProtoJsonUtil.toJson(configurationOne);
+
+        System.out.println("TcServiceConfiguration");
+        System.out.println(configurationJson);
 
         // write the JSON to a file and read it back
         final Path jsonFile = tempDir.resolve("tc-service-configuration.json");

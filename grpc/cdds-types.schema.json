@@ -1,0 +1,424 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ccsds.org/cdds/v1/schemas/cdds-types.schema.json",
+  "title": "CDDS Types",
+  "description": "The types of the CDDS type definitions (types.proto). The types are shared between the CDDS service configuration schemas.",
+  "type": "object",
+  "$defs": {
+    "TransmitterId": {
+      "title": "TransmitterId",
+      "description": "Denotes an transmitter like an antenna of the ground station involved in service production (reception or transmission).",
+      "type": "object",
+      "additionalProperties": false,
+      "maxProperties": 1,
+      "properties": {
+        "globalForm": {
+          "$ref": "#/$defs/ObjectIdentifier",
+          "description": "The OID for instance as per SANA Sites and Aperture registry: https://sanaregistry.org/r/service_sites_transmitters/. Other unique OIDs denoting terrestrial service providers or relay satellites may be used."
+        },
+        "localForm": {
+          "type": "string",
+          "description": "The local form is a string identifier of the transmitter agreed among service user and service provider"
+        }
+      },
+      "not": {
+        "required": [
+          "globalForm",
+          "localForm"
+        ],
+        "description": "The transmitter id is specified either in global form or in local form."
+      }
+    },
+    "ReceptionMetaData": {
+      "title": "ReceptionMetaData",
+      "description": "Meta data of received data. Indicates which transmitter or antenna received data at a certain time and a data link continuity.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "receiveTime": {
+          "$ref": "#/$defs/DateTime",
+          "description": "For a telemetry frame received on the data link layer, the receiveTime shall contain the UTC time at which the signal event corresponding to the leading edge of the first bit of the Attached Sync Marker that immediately preceded this encoded or un-coded frame was presented at the receiver used to receiver the frame. For frames received somehow encapsulated, the receive time shall indicate the receive time of the underlying unit encapsulating this unit."
+        },
+        "transmitterId": {
+          "$ref": "#/$defs/TransmitterId",
+          "description": "The transmitterId shall indicate which transmitter or antenna was used to acquire the frame."
+        },
+        "dataLinkContinuity": {
+          "type": "string",
+          "pattern": "^-?[0-9]+$",
+          "description": "The dataLinkContinuity shall indicate whether the extracted frame is the direct successor of the previous frame on the selected Master or Virtual Channel. A value of '-1' indicates that this is the first frame after the start of production or the selected channel is a Master Channel carrying AOS Transfer Frames or USLP Transfer Frames and therefore no information regarding a discontinuity on the channel can be provided."
+        }
+      },
+      "required": [
+        "dataLinkContinuity"
+      ]
+    },
+    "FrameQuality": {
+      "title": "FrameQuality",
+      "description": "An enum indicating the frame quality. INVALID_FRAME_QUALITY: not initialized; GOOD: the frame decoded successfully; ERRED: the frame is undecodable; UNDETERMINED: frame decoding was not performed; ALL: all frame qualities.",
+      "type": "string",
+      "enum": [
+        "INVALID_FRAME_QUALITY",
+        "GOOD",
+        "ERRED",
+        "UNDETERMINED",
+        "ALL"
+      ]
+    },
+    "DateTime": {
+      "title": "DateTime",
+      "description": "Date / Time definition for epoch 1958 with pico second precision. When a lower resolution is used, the unused least significant time components shall be represented by zero-valued fields.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "days": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The days since CCSDS epoch 01/01/1958"
+        },
+        "msOfDay": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The milli seconds of the day"
+        },
+        "picoSecsOfMs": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The pico seconds of the milli second"
+        }
+      },
+      "required": [
+        "days",
+        "msOfDay",
+        "picoSecsOfMs"
+      ]
+    },
+    "Duration": {
+      "title": "Duration",
+      "description": "A type to represent durations in seconds, optionally with a milli second or pico seconds precision.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "seconds": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The duration in seconds"
+        },
+        "milliseconds": {
+          "type": "string",
+          "pattern": "^[0-9]+$",
+          "description": "Optional milli seconds of the seconds"
+        },
+        "picoseconds": {
+          "type": "string",
+          "pattern": "^[0-9]+$",
+          "description": "Optional pico seconds of the seconds"
+        }
+      },
+      "required": [
+        "seconds"
+      ],
+      "not": {
+        "required": [
+          "milliseconds",
+          "picoseconds"
+        ],
+        "description": "The fractions of the seconds are specified either in milli seconds or in pico seconds."
+      }
+    },
+    "Annotation": {
+      "title": "Annotation",
+      "description": "An annotation composed out of a name and a value.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the annotation"
+        },
+        "value": {
+          "$ref": "#/$defs/Value",
+          "description": "The value of the annotation"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "Value": {
+      "title": "Value",
+      "description": "A value composed out of a particular type. For more details see https://protobuf.dev/programming-guides/proto3/#scalar",
+      "type": "object",
+      "additionalProperties": false,
+      "maxProperties": 1,
+      "properties": {
+        "doubleValue": {
+          "type": "number",
+          "description": "IEEE 754 double-precision format"
+        },
+        "floatValue": {
+          "type": "number",
+          "description": "IEEE 754 single-precision format"
+        },
+        "int32Value": {
+          "type": "integer",
+          "description": "32 bit signed integer"
+        },
+        "uint32Value": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "32 bit unsigned integer"
+        },
+        "int64Value": {
+          "type": "string",
+          "pattern": "^-?[0-9]+$",
+          "description": "64 bit signed integer"
+        },
+        "uint64Value": {
+          "type": "string",
+          "pattern": "^[0-9]+$",
+          "description": "64 bit unsigned integer"
+        },
+        "boolValue": {
+          "type": "boolean",
+          "description": "boolean: true / false"
+        },
+        "stringValue": {
+          "type": "string",
+          "description": "UTF-8 encoded or 7-bit ASCII text"
+        },
+        "octetStringValue": {
+          "type": "string",
+          "description": "Base64 encoded sequence of bytes no longer than 2^32"
+        }
+      }
+    },
+    "QualifiedValue": {
+      "title": "QualifiedValue",
+      "description": "A qualified value has a value and is qualified to indicate validity and alarm states.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "$ref": "#/$defs/Value",
+          "description": "The value itself"
+        },
+        "valueQualifier": {
+          "$ref": "#/$defs/ValueQualifier",
+          "description": "The value qualifier providing the validity of the value"
+        },
+        "alarmQualifier": {
+          "$ref": "#/$defs/AlarmQualifier",
+          "description": "The alarm qualifier providing the alarm state of the value"
+        }
+      },
+      "required": [
+        "valueQualifier"
+      ]
+    },
+    "EncodedQualifiedValue": {
+      "title": "EncodedQualifiedValue",
+      "description": "A qualified value for encoded values. An encoded value (e.g. in Protobuf) must be encoded and decoded.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "encodedTypeIdentifier": {
+          "$ref": "#/$defs/ObjectIdentifier",
+          "description": "The Object Identifier identifying the type of the encoded value"
+        },
+        "encodedValue": {
+          "type": "string",
+          "description": "The encoded value, e.g. Protobuf encoded, base64 encoded"
+        },
+        "valueQualifier": {
+          "$ref": "#/$defs/ValueQualifier",
+          "description": "The value qualifier providing the validity of the value"
+        },
+        "alarmQualifier": {
+          "$ref": "#/$defs/AlarmQualifier",
+          "description": "The alarm qualifier providing the alarm state of the value"
+        }
+      },
+      "required": [
+        "encodedValue",
+        "valueQualifier"
+      ]
+    },
+    "ValueQualifier": {
+      "title": "ValueQualifier",
+      "description": "A value qualifier qualifies values with respect to the validity of the value. INVALID_VALUE_QUALIFIER: not initialized; VALID_VALUE: the value is valid; UNKNOWN_VALUE: the value is now known to the provider; UNDEFINED_VALUE: the value is in known to the provider, but not defined in the current context.",
+      "type": "string",
+      "enum": [
+        "INVALID_VALUE_QUALIFIER",
+        "VALID_VALUE",
+        "UNKNOWN_VALUE",
+        "UNDEFINED_VALUE"
+      ]
+    },
+    "Alarm": {
+      "title": "Alarm",
+      "description": "An enum to report on alarms and warnings. INVALID_ALARM: not initialized; NO_ALARM: no alarm present; WARNING: a warning is present; ALARM: an alarm is present.",
+      "type": "string",
+      "enum": [
+        "INVALID_ALARM",
+        "NO_ALARM",
+        "WARNING",
+        "ALARM"
+      ]
+    },
+    "AlarmQualifier": {
+      "title": "AlarmQualifier",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "alarm": {
+          "$ref": "#/$defs/Alarm",
+          "description": "Indicates an alarm"
+        },
+        "alarmReason": {
+          "type": "string",
+          "pattern": "^-?[0-9]+$",
+          "description": "A generic optional reason code for alarms"
+        },
+        "alarmMessage": {
+          "type": "string",
+          "description": "An optional message describing the alarm for operators"
+        }
+      },
+      "required": [
+        "alarm"
+      ]
+    },
+    "ProductionState": {
+      "title": "ProductionState",
+      "description": "The state of the service production. Note: CDDS Services can refine the meaning of the service production. INVALID_PRODUCTION_STATE: not initialized; CONFIGURED: the service is configured but is not yet operational; OPERATIONAL: the service is operating and functioning; HALTED: the service has been halted by a management action; INTERRUPTED: the service has encountered a fault and is interrupted.",
+      "type": "string",
+      "enum": [
+        "INVALID_PRODUCTION_STATE",
+        "CONFIGURED",
+        "OPERATIONAL",
+        "HALTED",
+        "INTERRUPTED"
+      ]
+    },
+    "LockStatus": {
+      "title": "LockStatus",
+      "description": "INVALID_LOCK_STATE: not initialized; IN_LOCK: in lock; OUT_OF_LOCK: out of lock; UNKNOWN_LOCK: unknown.",
+      "type": "string",
+      "enum": [
+        "INVALID_LOCK_STATE",
+        "IN_LOCK",
+        "OUT_OF_LOCK",
+        "UNKNOWN_LOCK"
+      ]
+    },
+    "GvcId": {
+      "title": "GvcId",
+      "description": "The Global Virtual Channel identifier.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "spacecraftId": {
+          "type": "string",
+          "pattern": "^[0-9]+$",
+          "description": "The spacecraft identifier"
+        },
+        "version": {
+          "$ref": "#/$defs/FrameVersion",
+          "description": "The frame transfer version"
+        },
+        "virtualChannelId": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The virtual channel identifier of the frame"
+        }
+      },
+      "required": [
+        "spacecraftId",
+        "version"
+      ]
+    },
+    "GvcIdList": {
+      "title": "GvcIdList",
+      "description": "A list of Global Virtual Channel Identifiers.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "gvcId": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/GvcId"
+          },
+          "description": "The list of Global Virtual Channel Identifier"
+        }
+      },
+      "required": [
+        "gvcId"
+      ]
+    },
+    "FrameVersion": {
+      "title": "FrameVersion",
+      "description": "The frame version corresponding to the CCSDS frame versions. TM_TC_SDLP (0): CCSDS 132.0 TM Space Data Link Protocol or CCSDS 232.0 TC Space Data Link Protocol; AOS (1): CCSDS 732.0 AOS Space Data Link Protocol; PROX1 (2): CCSDS 211.0 Proximity-1 Space Data Link Protocol; USLP (12): CCSDS 732.1 USLP Space Data Link Protocol; UNKNOWN (100): unknown frame version (non CCSDS).",
+      "type": "string",
+      "enum": [
+        "TM_TC_SDLP",
+        "AOS",
+        "PROX1",
+        "USLP",
+        "UNKNOWN"
+      ]
+    },
+    "ObjectIdentifier": {
+      "title": "ObjectIdentifier",
+      "description": "An Object Identifier.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "oidString": {
+          "type": "string",
+          "description": "An optional OID string in dotted notation. Example: 1.2.3.4.5"
+        },
+        "arcs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9]+$"
+          },
+          "description": "The sequence of numbers representing the Object Identifier. Arc is the official ITU-T X.660 term for a component of an OID."
+        }
+      }
+    },
+    "QoS": {
+      "title": "QoS",
+      "description": "The QoS for data exchange.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "qos": {
+          "$ref": "#/$defs/EnumQoS"
+        }
+      },
+      "required": [
+        "qos"
+      ]
+    },
+    "EnumQoS": {
+      "title": "EnumQoS",
+      "description": "The Quality of Service definition governs the message delivery. INVALID_QOS: not initialized; AT_MOST_ONCE: data shall be delivered 0..1 time; AT_LEAST_ONCE: data shall be delivered at least once, but potentially more often; EXACTLY_ONCE: data shall be delivered exactly once.",
+      "type": "string",
+      "enum": [
+        "INVALID_QOS",
+        "AT_MOST_ONCE",
+        "AT_LEAST_ONCE",
+        "EXACTLY_ONCE"
+      ]
+    },
+    "NoArg": {
+      "title": "NoArg",
+      "description": "Used for gRPC methods without argument.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {}
+    }
+  }
+}

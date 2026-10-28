@@ -1,0 +1,58 @@
+{
+  "$schema": "https://ccsds.org/cdds/v1/schemas/cdds-tm-service-configuration.schema.json",
+  "gRpcServer": {
+    "serviceProvider": "myProvider",
+    "terminal": "myGroundStation",
+    "address": "my-provider.example.com",
+    "port": 8443,
+    "rootCertificateFile": "cert/cdds-ca.pem",
+    "certificateFile": "cert/cdds-user.pem",
+    "privateKeyFile": "cert/cdds-user.key"
+  },
+  "endpoints": {
+    "endpoints": [
+      {
+        "endpointName": "myGroundStation.mySpacecraft.tm.vc0",
+        "serviceVersion": 1,
+        "serviceProvider": "myProvider",
+        "terminal": "myGroundStation",
+        "serviceUser": "mySpacecraft",
+        "gvcIds": {
+          "gvcId": [
+            {
+              "spacecraftId": "4711",
+              "version": "USLP",
+              "virtualChannelId": 0
+            }
+          ]
+        },
+        "qos": "EXACTLY_ONCE"
+      },
+      {
+        "endpointName": "myGroundStation.mySpacecraft.tm.vc7",
+        "serviceVersion": 1,
+        "serviceProvider": "myProvider",
+        "terminal": "myGroundStation",
+        "serviceUser": "mySpacecraft",
+        "gvcIds": {
+          "gvcId": [
+            {
+              "spacecraftId": "4711",
+              "version": "USLP",
+              "virtualChannelId": 7
+            }
+          ]
+        },
+        "qos": "AT_MOST_ONCE"
+      },
+      {
+        "endpointName": "myGroundStation.mySpacecraft.tm.good-frames",
+        "serviceVersion": 1,
+        "serviceProvider": "myProvider",
+        "serviceUser": "mySpacecraft",
+        "frameQuality": "GOOD",
+        "qos": "AT_LEAST_ONCE"
+      }
+    ]
+  }
+}

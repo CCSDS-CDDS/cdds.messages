@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ccsds.org/cdds/v1/schemas/cdds-tm-service-configuration.schema.json",
+  "title": "TmServiceConfiguration",
+  "description": "The configuration of a telemetry service shared between user and provider.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "gRpcServer": {
+      "$ref": "#/$defs/ServiceProviderAddress"
+    },
+    "endpoints": {
+      "$ref": "#/$defs/TmServiceEndpointList"
+    }
+  },
+  "required": [
+    "gRpcServer",
+    "endpoints"
+  ],
+  "$defs": {
+    "ServiceProviderAddress": {
+      "title": "ServiceProviderAddress",
+      "description": "Address or DNS name of the gRPC server hosting the CDDS TM Service Provider. The IP address configuration is only needed for the CDDS TM Service User.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "serviceProvider": {
+          "type": "string",
+          "description": "The name of the service provider organization providing the TM service"
+        },
+        "terminal": {
+          "type": "string",
+          "description": "Optional: The name of the terminal providing the CDDS service"
+        },
+        "address": {
+          "type": "string",
+          "description": "The IP address or DNS resolve able name of the gRPC provider. For a provider the address can be omitted."
+        },
+        "port": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "The TCP port of the gRPC provider"
+        },
+        "rootCertificateFile": {
+          "type": "string",
+          "description": "The trust anchor / root certificate use to sign the CDDS user / CDDS provider certificates"
+        },
+        "certificateFile": {
+          "type": "string",
+          "description": "The certificate file of the CDDS user or the CDDS provider"
+        },
+        "privateKeyFile": {
+          "type": "string",
+          "description": "The private key file of the CDDS user or the CDDS provider"
+        }
+      },
+      "required": [
+        "serviceProvider",
+        "address",
+        "port"
+      ]
+    },
+    "TmServiceEndpointList": {
+      "title": "TmServiceEndpointList",
+      "description": "List of endpoints.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "endpoints": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TmServiceEndpoint"
+          },
+          "description": "The list of endpoints"
+        }
+      },
+      "required": [
+        "endpoints"
+      ]
+    },
+    "TmServiceEndpoint": {
+      "title": "TmServiceEndpoint",
+      "description": "Allows the identification of a service endpoint in terms of the parameters provided below.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "endpointName": {
+          "type": "string",
+          "description": "An optional endpoint name to distinguish endpoints; for instance for spacecrafts supporting multiple bands."
+        },
+        "serviceVersion": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The CDDS service version of this service"
+        },
+        "serviceProvider": {
+          "type": "string",
+          "description": "The name of the service provider organization providing the TM service"
+        },
+        "terminal": {
+          "type": "string",
+          "description": "The terminal providing the TM service"
+        },
+        "serviceUser": {
+          "type": "string",
+          "description": "The serviceUser (spacecraft) for which TM shall be delivered"
+        },
+        "frameQuality": {
+          "$ref": "cdds-types.schema.json#/$defs/FrameQuality",
+          "description": "The frame quality of the exchanged TM."
+        },
+        "gvcIds": {
+          "$ref": "cdds-types.schema.json#/$defs/GvcIdList",
+          "description": "The GVCIDs of the exchanged TM. Requested GVCIDs shall be checked against provided GVCIDs. If the check is successful, the requested GVCID(s) shall be provided."
+        },
+        "qos": {
+          "$ref": "cdds-types.schema.json#/$defs/EnumQoS"
+        }
+      },
+      "required": [
+        "serviceVersion",
+        "serviceProvider",
+        "serviceUser",
+        "qos"
+      ],
+      "not": {
+        "required": [
+          "frameQuality",
+          "gvcIds"
+        ],
+        "description": "The frame quality and the GVCIDs are mutually exclusive; a service endpoint is requested either by frame quality or by GVCID."
+      }
+    }
+  }
+}

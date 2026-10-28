@@ -1,0 +1,44 @@
+{
+  "$schema": "https://ccsds.org/cdds/v1/schemas/cdds-td-service-configuration.schema.json",
+  "gRpcServer": {
+    "serviceProvider": "myProvider",
+    "terminal": "myGroundStation",
+    "address": "my-provider.example.com",
+    "port": 8443,
+    "rootCertificateFile": "cert/cdds-ca.pem",
+    "certificateFile": "cert/cdds-user.pem",
+    "privateKeyFile": "cert/cdds-user.key"
+  },
+  "endpoints": {
+    "endpoints": [
+      {
+        "endpointName": "myGroundStation.mySpacecraft.td.kvn",
+        "serviceVersion": 1,
+        "serviceProvider": "myProvider",
+        "terminal": "myGroundStation",
+        "serviceUser": "mySpacecraft",
+        "trackingDataType": ["DOPPLER_INSTANTANEOUS", "DOPPLER_INTEGRATED", "RANGE"],
+        "trackingDataFormat": "KVN",
+        "latencyLimit": {
+          "seconds": 1,
+          "milliseconds": "500"
+        },
+        "qos": "EXACTLY_ONCE"
+      },
+      {
+        "endpointName": "myGroundStation.mySpacecraft.td.protobuf",
+        "serviceVersion": 1,
+        "serviceProvider": "myProvider",
+        "terminal": "myGroundStation",
+        "serviceUser": "mySpacecraft",
+        "trackingDataType": ["ANTENNA_ANGLES", "CARRIER_POWER"],
+        "trackingDataFormat": "PROTOBUF",
+        "latencyLimit": {
+          "seconds": 2,
+          "milliseconds": "500"
+        },
+        "qos": "AT_LEAST_ONCE"
+      }
+    ]
+  }
+}

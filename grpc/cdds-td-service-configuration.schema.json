@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ccsds.org/cdds/v1/schemas/cdds-td-service-configuration.schema.json",
+  "title": "TrackingDataServiceConfiguration",
+  "description": "The configuration of a tracking data service shared between user and provider.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "gRpcServer": {
+      "$ref": "#/$defs/ServiceProviderAddress"
+    },
+    "endpoints": {
+      "$ref": "#/$defs/TrackingDataServiceEndpointList"
+    }
+  },
+  "required": [
+    "gRpcServer",
+    "endpoints"
+  ],
+  "$defs": {
+    "ServiceProviderAddress": {
+      "title": "ServiceProviderAddress",
+      "description": "Address or DNS name of the gRPC server hosting the CDDS Tracking Data Service Provider. The IP address configuration is only needed for the CDDS Tracking Data Service User.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "serviceProvider": {
+          "type": "string",
+          "description": "The name of the service provider organization providing the tracking data service"
+        },
+        "terminal": {
+          "type": "string",
+          "description": "Optional: The name of the terminal providing the CDDS service"
+        },
+        "address": {
+          "type": "string",
+          "description": "The IP address or DNS resolve able name of the gRPC provider. For a provider the address can be omitted."
+        },
+        "port": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "The TCP port of the gRPC provider"
+        },
+        "rootCertificateFile": {
+          "type": "string",
+          "description": "The trust anchor / root certificate use to sign the CDDS user / CDDS provider certificates"
+        },
+        "certificateFile": {
+          "type": "string",
+          "description": "The certificate file of the CDDS user or the CDDS provider"
+        },
+        "privateKeyFile": {
+          "type": "string",
+          "description": "The private key file of the CDDS user or the CDDS provider"
+        }
+      },
+      "required": [
+        "serviceProvider",
+        "address",
+        "port"
+      ]
+    },
+    "TrackingDataServiceEndpointList": {
+      "title": "TrackingDataServiceEndpointList",
+      "description": "List of endpoints.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "endpoints": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TrackingDataServiceEndpoint"
+          },
+          "description": "The list of endpoints"
+        }
+      },
+      "required": [
+        "endpoints"
+      ]
+    },
+    "TrackingDataServiceEndpoint": {
+      "title": "TrackingDataServiceEndpoint",
+      "description": "Allows the identification of a service endpoint in terms of the parameters provided below.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "endpointName": {
+          "type": "string",
+          "description": "An optional endpoint name to distinguish endpoints; for instance for spacecrafts supporting multiple bands."
+        },
+        "serviceVersion": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The CDDS service version of this service"
+        },
+        "serviceProvider": {
+          "type": "string",
+          "description": "The name of the service provider organization providing the tracking data service"
+        },
+        "terminal": {
+          "type": "string",
+          "description": "The terminal providing the tracking data service"
+        },
+        "serviceUser": {
+          "type": "string",
+          "description": "The serviceUser (spacecraft) for which tracking data shall be delivered"
+        },
+        "trackingDataType": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TrackingDataType"
+          },
+          "description": "The endpoint provided by the provider contains all available tracking data types available for the service user. The endpoint included as metadata to the gRPC method open tracking data endpoint method shall include tracking data types requested by the service user. The requested tracking data types shall be subset of the tracking data types available from the provider. If the user provides an empty list of tracking data types, the provider shall deliver all tracking data types configured for this endpoint."
+        },
+        "trackingDataFormat": {
+          "$ref": "#/$defs/TrackingDataFormat",
+          "description": "For this endpoint, tracking data is formatted according as KVN, XML or Protobuf."
+        },
+        "latencyLimit": {
+          "$ref": "cdds-types.schema.json#/$defs/Duration",
+          "description": "The tracking data measurements are guaranteed to be delivered within the latency limit that is defined for the service endpoint, respecting the minimum latency supported by the given service provider."
+        },
+        "qos": {
+          "$ref": "cdds-types.schema.json#/$defs/EnumQoS",
+          "description": "The QoS used for the provisioning of tracking data messages"
+        }
+      },
+      "required": [
+        "serviceVersion",
+        "serviceProvider",
+        "serviceUser",
+        "trackingDataType",
+        "trackingDataFormat",
+        "qos"
+      ]
+    },
+    "TrackingDataType": {
+      "title": "TrackingDataType",
+      "description": "This enum identifies the observation types as an enum.",
+      "type": "string",
+      "enum": [
+        "TRACKING_DATA_TYPE_UNSPECIFIED",
+        "DOPPLER_INSTANTANEOUS",
+        "DOPPLER_INTEGRATED",
+        "RANGE",
+        "CARRIER_POWER",
+        "CARRIER_POWER_TO_NOISE_SPECTRAL_DENSITY",
+        "RANGING_POWER_TO_NOISE_SPECTRAL_DENSITY",
+        "RECEIVE_FREQUENCY",
+        "TRANSMIT_FREQUENCY",
+        "TRANSMIT_FREQUENCY_RATE",
+        "ANTENNA_ANGLES"
+      ]
+    },
+    "TrackingDataFormat": {
+      "title": "TrackingDataFormat",
+      "description": "The format of the tracking data. UNSPECIFIED: the format of the tracking data is not specified; KVN: tracking data is formatted in Key Value Notation; XML: tracking data is formatted as XML; PROTOBUF: tracking data is encoded in Protobuf binary format.",
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "KVN",
+        "XML",
+        "PROTOBUF"
+      ]
+    }
+  }
+}

@@ -21,7 +21,19 @@ import cdds.service.common.InterceptedService;
 import cdds.service.common.ProviderServer;
 
 /**
- * Test the communication among a monitoring service user and a monitoring service provider
+ * Test the communication among a CDDS monitoring service user and a CDDS
+ * monitoring service provider using the gRPC MonitoringServiceProvider service.
+ * <p>
+ * Both tests start a secure (mTLS) CDDS monitoring provider on a local port,
+ * register a monitoring service endpoint together with a monitoring production
+ * and connect a monitoring service user using mutual TLS. The user discovers
+ * the endpoints authorized for the authenticated service user by calling
+ * getEndpoints, opens the monitoring endpoint by calling openMonitoringEndpoint
+ * providing the endpoint as monitoring-endpoint-bin meta data and receives the
+ * monitoring messages produced by the production. At the end of each test, the
+ * parameter updates and events received by the user are verified to be equal
+ * to the parameter updates and events sent by the production and the maps of
+ * the received parameter updates and events are printed.
  */
 public class MonitoringServiceTest {
 
@@ -77,8 +89,17 @@ public class MonitoringServiceTest {
     }
 
     /**
-     * Test the communication of a monitoring service endpoint
-     * delivering generic monitoring parameters
+     * Tests the delivery of generic monitoring parameters:
+     * the user opens the cyclic monitoring endpoint genericParameterEndpoint
+     * listing two generic parameters and receives numMonitoringMessages
+     * monitoring messages, each message carrying the two generic parameter
+     * updates produced by the {@link MonitoringProductionNGenericParam}
+     * production.
+     * <p>
+     * The test verifies that getEndpoints returns exactly the endpoint
+     * authorized for the authenticated service user and that the parameter
+     * updates received by the user are equal to the parameter updates sent
+     * by the production.
      */
     @Test
     public void testNGenericParameter()
@@ -122,8 +143,20 @@ public class MonitoringServiceTest {
     }
 
     /**
-     * Test the communication of a monitoring service endpoint monitoring
-     * Functional Resource parameters and reporting Functional Resource events
+     * Tests the delivery of Functional Resource monitoring parameters and events:
+     * the user opens the on-change monitoring endpoint
+     * functionalResourceParameterEndpoint listing two Functional Resource
+     * parameters, one identified by its OID and one identified by its OID
+     * and Functional Resource instance, and one Functional Resource event,
+     * and receives numFrMonitoringMessages monitoring messages, each message
+     * carrying the two Functional Resource parameter updates and the
+     * Functional Resource event produced by the
+     * {@link MonitoringProductionNFunctionalResource} production.
+     * <p>
+     * The test verifies that getEndpoints returns exactly the endpoint
+     * authorized for the authenticated service user and that the parameter
+     * updates and events received by the user are equal to the parameter
+     * updates and events sent by the production.
      */
     @Test
     public void testNFunctionalResourceParameter()

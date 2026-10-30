@@ -243,6 +243,7 @@ public class TcServiceUser {
                         .build())
                     .build())
                 .setServiceVersion(1)
+                .setAckTimeout(5)
                 .build();
     }
 
@@ -264,7 +265,7 @@ public class TcServiceUser {
     }
 
     /**
-     * Shuts down the communcation channel
+     * Shuts down the communication channel
      * @throws InterruptedException
      */
     public void shutdown() throws InterruptedException {

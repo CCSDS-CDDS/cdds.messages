@@ -17,7 +17,8 @@
         "serviceProvider": "myProvider",
         "terminal": "myGroundStation",
         "serviceUser": "mySpacecraft",
-        "cltu": true
+        "cltu": true,
+        "ackTimeout": 5
       },
       {
         "endpointName": "myGroundStation.mySpacecraft.tc.vc0",
@@ -33,7 +34,8 @@
               "virtualChannelId": 0
             }
           ]
-        }
+        },
+        "ackTimeout": 5
       }
     ]
   }

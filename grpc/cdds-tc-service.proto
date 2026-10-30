@@ -79,6 +79,12 @@ message TcServiceEndpoint {
         GvcIdList   gvcIds = 60;
     }
 
+    /**
+     * Within ack timeout in seconds, the provider shall respond to TelecommandMessage#transmissionRequest message with either
+     * <br/> - TelecommandReport#ack or
+     * <br/> - TelecommandReport#failure
+     */
+    uint32 ackTimeout = 70;
 }
 
 /**

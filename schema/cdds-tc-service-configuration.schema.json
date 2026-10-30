@@ -71,12 +71,18 @@
         "gvcIds": {
           "$ref": "cdds-types.schema.json#/$defs/GvcIdList",
           "description": "If the GVCIDs field is set, the endpoint supports TC frames conforming to the specified GVCIDs."
+        },
+        "ackTimeout": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Within ack timeout in seconds, the provider shall respond to TelecommandMessage#transmissionRequest message with either TelecommandReport#ack or TelecommandReport#failure"
         }
       },
       "required": [
         "serviceVersion",
         "serviceProvider",
-        "serviceUser"
+        "serviceUser",
+        "ackTimeout"
       ],
       "not": {
         "required": [

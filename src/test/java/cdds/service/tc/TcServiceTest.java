@@ -113,6 +113,7 @@ public class TcServiceTest {
 
         tcServiceUser.waitForTcReports(2);
         tcServiceUser.stop();
+        tcServiceUser.shutdown();
 
         server.stop();
     }
@@ -170,6 +171,9 @@ public class TcServiceTest {
             tcServiceUser2.stop();
         }
 
+        tcServiceUser1.shutdown();
+        tcServiceUser2.shutdown();
+
         server.stop();
     }
 
@@ -208,7 +212,9 @@ public class TcServiceTest {
         TcServiceEndpoint endpoint = ProtoJsonUtil.fromJson(endpointBytes, TcServiceEndpoint.newBuilder());
         LOG.info("TC endpoint custom trailer for " + TcServiceAuthorization.TC_ENDPOINT_KEY + "\n\t custom endpoint trailer " + endpoint);
 
-        server.stop(); 
+        tcServiceUser.shutdown();
+
+        server.stop();
     }
 
     /**
@@ -240,8 +246,10 @@ public class TcServiceTest {
         Throwable error = tcServiceUser.getLastError(1000);
         assert(error != null);
         System.out.println("Unauthenticated TC Service. Got expected error " + error);
-        
-        server.stop(); 
+
+        tcServiceUser.shutdown();
+
+        server.stop();
     }
 
     /**

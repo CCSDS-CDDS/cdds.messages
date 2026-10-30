@@ -129,6 +129,13 @@ message QualifierValue {
     bytes encodedQualifierValue = 30;
 }
 
+/**
+ * The CDDS Control Service provider shall send the following directive reports for received control directive:
+ * <ol>
+ * <li>a report indicating result ACCEPTED or REJECTED.</li>
+ * <li>for ACCEPTED control directives a report, indicating result EXECUTED or EXECUTION_ERROR. For the latter, a diagnostic shall be provided.</li>
+ * </ol>
+ */
 message DirectiveReport {
     /**
      * The production state of the CDDS Ground Station Control Service Provider.
@@ -157,7 +164,7 @@ message DirectiveReport {
  */ 
 enum DirectiveResult {
     INVALID_DIRECTIVE_RESULT = 0;       // not initialized
-    ACCEPTED = 1;                       // The directive has been accepted for execution
+    ACK = 1;                            // The directive has been acknowledged and the accepted for execution
     REJECTED = 2;                       // The directive has been rejected for execution
     EXECUTED = 3;                       // The directive has been successfully executed
     EXECUTION_ERROR = 4;                // The directive execution had an error

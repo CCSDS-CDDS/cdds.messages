@@ -55,21 +55,28 @@ message ControlServiceEndpoint {
      * The name of the terminal providing the control service
      */
     optional string terminal = 30;
-
+ 
     /**
      * The service user (spacecraft) for which control shall be provided
      */
     string serviceUser = 40;
 
     /**
+     * Within ack timeout in seconds, the provider shall respond to a ControlDirective message with either
+     * <br/> - DirectiveReport#result=ACK or
+     * <br/> - DirectiveReport#result=REJECTED
+     */
+    uint32 ackTimeout = 50;
+
+    /**
      * The Object identifier list of the Functional Resource Directives available for this endpoint
      */
-    repeated FunctionalResourceDirectiveName functionalResourceDirectives = 50;
+    repeated FunctionalResourceDirectiveName functionalResourceDirectives = 60;
 
     /**
      * The list of generic control directives available for this endpoint
      */
-    repeated string genericDirectiveIds = 60;
+    repeated string genericDirectiveIds = 70;
 }
 
 /**

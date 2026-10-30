@@ -17,6 +17,7 @@
         "serviceProvider": "myProvider",
         "terminal": "myGroundStation",
         "serviceUser": "mySpacecraft",
+        "ackTimeout": 5,
         "functionalResourceDirectives": [
           {
             "functionalResourceDirective": {
@@ -40,6 +41,7 @@
         "serviceProvider": "myProvider",
         "terminal": "myGroundStation",
         "serviceUser": "mySpacecraft",
+        "ackTimeout": 5,
         "functionalResourceDirectives": [],
         "genericDirectiveIds": ["my-generic-directive-one", "my-generic-directive-two"]
       }

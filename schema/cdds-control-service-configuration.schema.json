@@ -64,6 +64,11 @@
           "type": "string",
           "description": "The service user (spacecraft) for which control shall be provided"
         },
+        "ackTimeout": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Within ack timeout in seconds, the provider shall respond to a ControlDirective message with either DirectiveReport#result=ACCEPTED or DirectiveReport#result=REJECTED"
+        },
         "functionalResourceDirectives": {
           "type": "array",
           "items": {
@@ -83,6 +88,7 @@
         "serviceVersion",
         "serviceProvider",
         "serviceUser",
+        "ackTimeout",
         "functionalResourceDirectives",
         "genericDirectiveIds"
       ]

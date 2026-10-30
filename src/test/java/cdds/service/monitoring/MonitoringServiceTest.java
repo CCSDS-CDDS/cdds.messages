@@ -17,8 +17,10 @@ import org.apache.logging.log4j.Logger;
 
 import ccsds.cdds.v1.monitoring.CddsMonitoringService.MonitoringMode;
 import ccsds.cdds.v1.monitoring.CddsMonitoringService.MonitoringServiceEndpoint;
+import ccsds.cdds.v1.monitoring.CddsMonitoringService.MonitoringServiceEndpointList;
 import cdds.service.common.InterceptedService;
 import cdds.service.common.ProviderServer;
+import cdds.service.common.ProtoJsonUtil;
 
 /**
  * Test the communication among a CDDS monitoring service user and a CDDS
@@ -78,6 +80,12 @@ public class MonitoringServiceTest {
 
     private static final Logger LOG = LogManager.getLogger("cdds.monitoring.test");
 
+    /**
+     * Set once the endpoints have been printed in JSON to print the
+     * endpoints only once for all tests of this class
+     */
+    private static boolean endpointsPrinted = false;
+
     @BeforeEach
     void before(TestInfo info) {
         LOG.info("START " + info.getDisplayName());
@@ -129,6 +137,8 @@ public class MonitoringServiceTest {
         List<MonitoringServiceEndpoint> endpoints = monitoringServiceUser.getEndpoints(5000);
 
         assert(endpoints.get(0).equals(genericParameterEndpoint));
+
+        printEndpoints(endpoints);
 
         // use the first provided endpoint for this test, wait for numMonitoringMessages
         monitoringServiceUser.openMonitoringEndpoint(endpoints.get(0), numMonitoringMessages);
@@ -187,6 +197,8 @@ public class MonitoringServiceTest {
 
         assert(endpoints.get(0).equals(functionalResourceParameterEndpoint));
 
+        printEndpoints(endpoints);
+
         // use the first provided endpoint for this test, wait for numFrMonitoringMessages
         monitoringServiceUser.openMonitoringEndpoint(endpoints.get(0), numFrMonitoringMessages);
 
@@ -197,6 +209,21 @@ public class MonitoringServiceTest {
         monitoringServiceUser.shutdown();
 
         server.stop();
+    }
+
+    /**
+     * Prints the provided endpoints in JSON, only once for all tests
+     * of this class
+     * @param endpoints  The endpoints to print
+     */
+    private static void printEndpoints(List<MonitoringServiceEndpoint> endpoints) throws IOException {
+        if(endpointsPrinted == false) {
+            endpointsPrinted = true;
+
+            LOG.info("Endpoints:\n" + ProtoJsonUtil.toJson(MonitoringServiceEndpointList.newBuilder()
+                    .addAllEndpoints(endpoints)
+                    .build()));
+        }
     }
 
     /**

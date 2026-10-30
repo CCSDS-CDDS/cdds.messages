@@ -25,8 +25,10 @@ import ccsds.cdds.v1.Control.QualifierValue;
 import ccsds.cdds.v1.Types.ObjectIdentifier;
 import ccsds.cdds.v1.Types.Value;
 import ccsds.cdds.v1.control.CddsControlService.ControlServiceEndpoint;
+import ccsds.cdds.v1.control.CddsControlService.ControlServiceEndpointList;
 import cdds.service.common.InterceptedService;
 import cdds.service.common.ProviderServer;
+import cdds.service.common.ProtoJsonUtil;
 
 /**
  * Test the communication among a CDDS control service user and a CDDS
@@ -72,6 +74,12 @@ public class ControlServiceTest {
             ControlProductionFunctionalResourceDirectiveAckExec.FR_INSTANCE);
 
     private static final Logger LOG = LogManager.getLogger("cdds.control.test");
+
+    /**
+     * Set once the endpoints have been printed in JSON to print the
+     * endpoints only once for all tests of this class
+     */
+    private static boolean endpointsPrinted = false;
 
     @BeforeEach
     void before(TestInfo info) {
@@ -126,6 +134,8 @@ public class ControlServiceTest {
         List<ControlServiceEndpoint> endpoints = controlServiceUser.getEndpoints(5000);
 
         assert(endpoints.get(0).equals(genericDirectiveEndpoint));
+
+        printEndpoints(endpoints);
 
         // use the first provided endpoint for this test, wait for two directive reports
         controlServiceUser.openControlEndpoint(endpoints.get(0), 2);
@@ -206,6 +216,8 @@ public class ControlServiceTest {
 
         assert(endpoints.get(0).equals(functionalResourceDirectiveEndpoint));
 
+        printEndpoints(endpoints);
+
         // use the first provided endpoint for this test, wait for two directive reports
         controlServiceUser.openControlEndpoint(endpoints.get(0), 2);
 
@@ -279,6 +291,8 @@ public class ControlServiceTest {
         List<ControlServiceEndpoint> endpoints = controlServiceUser.getEndpoints(5000);
 
         assert(endpoints.get(0).equals(genericDirectiveEndpoint));
+
+        printEndpoints(endpoints);
 
         // use the first provided endpoint for this test, wait for one directive report
         controlServiceUser.openControlEndpoint(endpoints.get(0), 1);
@@ -360,6 +374,8 @@ public class ControlServiceTest {
 
         assert(endpoints.get(0).equals(genericDirectiveEndpoint));
 
+        printEndpoints(endpoints);
+
         // use the first provided endpoint for this test, wait for one directive report
         controlServiceUser.openControlEndpoint(endpoints.get(0), 1);
 
@@ -389,6 +405,21 @@ public class ControlServiceTest {
         controlServiceUser.shutdown();
 
         server.stop();
+    }
+
+    /**
+     * Prints the provided endpoints in JSON, only once for all tests
+     * of this class
+     * @param endpoints  The endpoints to print
+     */
+    private static void printEndpoints(List<ControlServiceEndpoint> endpoints) throws IOException {
+        if(endpointsPrinted == false) {
+            endpointsPrinted = true;
+
+            LOG.info("Endpoints:\n" + ProtoJsonUtil.toJson(ControlServiceEndpointList.newBuilder()
+                    .addAllEndpoints(endpoints)
+                    .build()));
+        }
     }
 
     /**

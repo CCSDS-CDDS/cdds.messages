@@ -3,7 +3,7 @@
 This repository is associated with The Consultative Committee for Space Data Systems (CCSDS). 
 CCSDS is an international organization comprised of 11 Member Agencies and multiple Observer Agencies. This repository is an official technical output of the 
 **Cloud Data Delivery Standards (CDDS) Working Group** under the **Cross Support Services (CSS) Area** of CCSDS. 
-This repository contains Protobuf CDDS message definitions corresponding to CCSDS 931.1 (Recommended Practice) and gRPC CDDS service definitions CCSDS 931.10 (Experimental Specification).
+This repository contains Protobuf CDDS message definitions corresponding to CCSDS 931.1 (Recommended Practice) and gRPC CDDS service definitions of CCSDS of 931.10 (Experimental Specification).
 The content is developed and maintained by the Consultative Committee for Space Data Systems (CCSDS).
 
 The CDDS context is the data transfer between terrestrial ground stations or CDDS service providers and mission data systems potentially deployed in a cloud.
@@ -46,14 +46,10 @@ These artifacts are provided to the international space community to promote int
 ---
 As an international consensus-based body, CCSDS cannot accept changes to a standard without formal review. 
 Bug Reports and Requested Technical Changes (dealt with on best effort basis):
-*Please contact the CCSDS Working Group via secretariat@mailman.ccsds.org and
-*Please open an Issue via GitHub Issues. These will be reviewed and answered by CCSDS CDDS Working Group.
-*In addition feel free proposing changes via creating GitHub Pull Request. The Pull Request is subject to review by the CDDS CCSDS Working Group. Note: depending on the nature of the change(s) it may be subject to formal CCSDS review process.
+Please contact the CCSDS Working Group via secretariat@mailman.ccsds.org and
+Please open an Issue via GitHub Issues. These will be reviewed and answered by CCSDS CDDS Working Group.
+In addition feel free proposing changes via creating GitHub Pull Request. The Pull Request is subject to review by the CDDS CCSDS Working Group. Note: depending on the nature of the change(s) it may be subject to formal CCSDS review process.
 
 **Disclaimer**
 Use of these definitions is at the user's risk. Neither CCSDS nor the contributing Member Agencies assume any liability from the use of these files.
-
-**Copyright Notice**
-
-Copyright © 2026 CCSDS. These artifacts are derived from CCSDS standards which are the collective intellectual property of the CCSDS Member Agencies.
 

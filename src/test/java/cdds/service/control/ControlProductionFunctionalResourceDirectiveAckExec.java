@@ -7,17 +7,26 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import ccsds.cdds.v1.Control.ControlDirective;
+import ccsds.cdds.v1.Control.DirectiveExecutionDiagnostic;
 import ccsds.cdds.v1.Control.DirectiveReport;
+import ccsds.cdds.v1.Control.DirectiveResult;
+import ccsds.cdds.v1.Control.FunctionalResourceDirective;
 import ccsds.cdds.v1.Types.ProductionState;
 import ccsds.cdds.v1.control.CddsControlService.ControlServiceEndpoint;
+import ccsds.cdds.v1.control.CddsControlService.FunctionalResourceDirectiveName;
 import io.grpc.stub.StreamObserver;
 
 /**
  * Test control production handling Functional Resource control directives.
- * Each received Functional Resource control directive is responded with one
- * {@link ccsds.cdds.v1.Control.DirectiveResult#ACCEPTED} directive report
- * and one {@link ccsds.cdds.v1.Control.DirectiveResult#EXECUTED}
- * directive report for the invocation.
+ * Each received Functional Resource control directive authorized by the
+ * endpoint, that is the directive identifier and instance number are listed
+ * in the endpoint, is responded with one {@link DirectiveResult#ACK}
+ * directive report and one {@link DirectiveResult#EXECUTED} directive
+ * report for the invocation. Each received Functional Resource control
+ * directive not authorized by the endpoint is responded with one
+ * {@link DirectiveResult#REJECTED} directive report carrying the
+ * {@link DirectiveExecutionDiagnostic#UNKNOWN_DIRECTIVE} diagnostic
+ * for the invocation.
  */
 public class ControlProductionFunctionalResourceDirectiveAckExec implements ControlProductionInterface {
 
@@ -66,26 +75,44 @@ public class ControlProductionFunctionalResourceDirectiveAckExec implements Cont
                 LOG.info("Received control directive\n" + controlDirective);
 
                 if(controlDirective.hasFunctionalResourceControlDirective()) {
-                    final int invocationId =
-                            controlDirective.getFunctionalResourceControlDirective().getInvocationId();
+                    final FunctionalResourceDirective frDirective =
+                            controlDirective.getFunctionalResourceControlDirective();
+                    final int invocationId = frDirective.getInvocationId();
 
-                    // send the ACCEPTED directive report
-                    final DirectiveReport acceptedReport = DirectiveReport.newBuilder()
-                            .setProductionState(ProductionState.OPERATIONAL)
-                            .setInvocationId(invocationId)
-                            .setResult(ccsds.cdds.v1.Control.DirectiveResult.ACK)
-                            .build();
-                    controlUserStream.onNext(acceptedReport);
-                    sentDirectiveReports.add(acceptedReport);
+                    if(isDirectiveAuthorized(controlEndpoint, frDirective)) {
 
-                    // send the EXECUTED directive report
-                    final DirectiveReport executedReport = DirectiveReport.newBuilder()
-                            .setProductionState(ProductionState.OPERATIONAL)
-                            .setInvocationId(invocationId)
-                            .setResult(ccsds.cdds.v1.Control.DirectiveResult.EXECUTED)
-                            .build();
-                    controlUserStream.onNext(executedReport);
-                    sentDirectiveReports.add(executedReport);
+                        // send the ACK directive report
+                        final DirectiveReport acceptedReport = DirectiveReport.newBuilder()
+                                .setProductionState(ProductionState.OPERATIONAL)
+                                .setInvocationId(invocationId)
+                                .setResult(DirectiveResult.ACK)
+                                .build();
+                        controlUserStream.onNext(acceptedReport);
+                        sentDirectiveReports.add(acceptedReport);
+
+                        // send the EXECUTED directive report
+                        final DirectiveReport executedReport = DirectiveReport.newBuilder()
+                                .setProductionState(ProductionState.OPERATIONAL)
+                                .setInvocationId(invocationId)
+                                .setResult(DirectiveResult.EXECUTED)
+                                .build();
+                        controlUserStream.onNext(executedReport);
+                        sentDirectiveReports.add(executedReport);
+                    } else {
+                        LOG.warn("Directive " + frDirective.getFunctionalResourceDirectiveIdentifier()
+                                + " instance " + frDirective.getFunctionalResourceInstance()
+                                + " not authorized by the endpoint");
+
+                        // send the REJECTED directive report
+                        final DirectiveReport rejectedReport = DirectiveReport.newBuilder()
+                                .setProductionState(ProductionState.OPERATIONAL)
+                                .setInvocationId(invocationId)
+                                .setResult(DirectiveResult.REJECTED)
+                                .setDiagnostic(DirectiveExecutionDiagnostic.UNKNOWN_DIRECTIVE)
+                                .build();
+                        controlUserStream.onNext(rejectedReport);
+                        sentDirectiveReports.add(rejectedReport);
+                    }
                 }
             }
 
@@ -104,6 +131,34 @@ public class ControlProductionFunctionalResourceDirectiveAckExec implements Cont
 
     @Override
     public void stopControlEndpointService(ControlServiceEndpoint controlEndpoint) {
+    }
+
+    /**
+     * Checks if the given Functional Resource directive is authorized by
+     * the endpoint: the directive OID arcs match one of the Functional
+     * Resource directive OIDs of the endpoint and, if the endpoint names a
+     * Functional Resource instance, the directive instance number matches
+     * the instance number of the endpoint.
+     * @param controlEndpoint   The control endpoint authorizing the directive
+     * @param frDirective       The invoked Functional Resource directive
+     * @return                  true if the directive is authorized by the endpoint
+     */
+    private static boolean isDirectiveAuthorized(ControlServiceEndpoint controlEndpoint,
+            FunctionalResourceDirective frDirective) {
+
+        for(final FunctionalResourceDirectiveName directiveName :
+                controlEndpoint.getFunctionalResourceDirectivesList()) {
+
+            if(frDirective.getFunctionalResourceDirectiveIdentifier().getArcsList()
+                    .equals(directiveName.getFunctionalResourceDirective().getArcsList())
+                    && (directiveName.hasFunctionalResourceInstance() == false
+                        || directiveName.getFunctionalResourceInstance()
+                            == frDirective.getFunctionalResourceInstance())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

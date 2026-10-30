@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 
 import ccsds.cdds.v1.Control.ControlDirective;
+import ccsds.cdds.v1.Control.DirectiveExecutionDiagnostic;
 import ccsds.cdds.v1.Control.DirectiveReport;
 import ccsds.cdds.v1.Control.DirectiveResult;
 import ccsds.cdds.v1.Control.FunctionalResourceDirective;
@@ -45,6 +46,11 @@ import cdds.service.common.ProviderServer;
 public class ControlServiceTest {
 
     private static final int PROVIDER_PORT = 7668;
+
+    /**
+     * The identifier of a generic control directive not authorized by the generic directive endpoint
+     */
+    private static final String UNAUTHORIZED_DIRECTIVE_ID = "test-generic-directive-unauthorized";
 
     final long timeout = 30_000;
 
@@ -228,6 +234,156 @@ public class ControlServiceTest {
         controlServiceUser.waitForDirectiveReports(timeout);
 
         verifyReceivedDirectiveReports(frDirectiveProduction, controlServiceUser, invocationId);
+
+        controlServiceUser.stop();
+        controlServiceUser.shutdown();
+
+        server.stop();
+    }
+
+    /**
+     * Tests the directive report timeout when the production is not
+     * responding: the user opens the control endpoint genericDirectiveEndpoint
+     * with the {@link ControlProductionDirectiveNoResponse} production not
+     * responding to control directives and sends one GenericControlDirective.
+     * <p>
+     * The test verifies that no directive report is received within the ack
+     * timeout specified in the endpoint and that waiting for the directive
+     * report fails with a timeout.
+     */
+    @Test
+    public void testDirectiveAckTimeout()
+            throws IOException, TimeLimitExceededException, InterruptedException,
+            ExecutionException, TimeoutException {
+
+        // create a control provider and add the not responding production for the endpoint
+        final ControlProductionDirectiveNoResponse noResponseProduction =
+                new ControlProductionDirectiveNoResponse();
+        ControlServiceProvider controlProvider = new ControlServiceProvider();
+        controlProvider.addControlProduction(genericDirectiveEndpoint, noResponseProduction);
+
+        ProviderServer server = new ProviderServer(PROVIDER_PORT, new InterceptedService[]{controlProvider},
+                ProviderServer.resourceToFile("cert/cdds-ca.pem"),
+                ProviderServer.resourceToFile("cert/cdds-provider.pem"),
+                ProviderServer.resourceToFile("cert/cdds-provider.key"));
+
+        server.start();
+        controlProvider.addAuthorizedControlEndpoint(genericDirectiveEndpoint);
+
+        final ControlServiceUser controlServiceUser =
+                ControlServiceUser.buildSecureControlService("localhost", PROVIDER_PORT,
+                ProviderServer.resourceToFile("cert/cdds-ca.pem"),
+                ProviderServer.resourceToFile("cert/cdds-user.pem"),
+                ProviderServer.resourceToFile("cert/cdds-user.key"));
+
+        List<ControlServiceEndpoint> endpoints = controlServiceUser.getEndpoints(5000);
+
+        assert(endpoints.get(0).equals(genericDirectiveEndpoint));
+
+        // use the first provided endpoint for this test, wait for one directive report
+        controlServiceUser.openControlEndpoint(endpoints.get(0), 1);
+
+        final int invocationId = controlServiceUser.nextInvocationId();
+
+        controlServiceUser.sendControlDirective(ControlDirective.newBuilder()
+                .setGenericControlDirective(GenericControlDirective.newBuilder()
+                        .setInvocationId(invocationId)
+                        .setDirectiveId(ControlProductionGenericDirectiveAckExec.FIRST_DIRECTIVE_ID)
+                        .build())
+                .build());
+
+        // the production does not respond: the wait for the directive report
+        // must fail with a timeout within the ack timeout of the endpoint
+        final long ackTimeout = endpoints.get(0).getAckTimeout() * 1000;
+
+        boolean timedOut = false;
+        try {
+            controlServiceUser.waitForDirectiveReports(ackTimeout);
+        } catch(TimeLimitExceededException expected) {
+            timedOut = true;
+        }
+        assert(timedOut);
+
+        assert(controlServiceUser.getReceivedDirectiveReports().isEmpty());
+        assert(noResponseProduction.getSentDirectiveReports().isEmpty());
+
+        controlServiceUser.stop();
+        controlServiceUser.shutdown();
+
+        server.stop();
+    }
+
+    /**
+     * Tests the invocation of a generic control directive not authorized
+     * by the endpoint: the user opens the control endpoint
+     * genericDirectiveEndpoint listing two generic directive identifiers
+     * and sends one GenericControlDirective with a directive identifier
+     * not provided by the endpoint. The
+     * {@link ControlProductionGenericDirectiveAckExec} production checks
+     * the directive against the endpoint and responds with one REJECTED
+     * directive report carrying the UNKNOWN_DIRECTIVE diagnostic for
+     * the invocation.
+     * <p>
+     * The test verifies that getEndpoints returns exactly the endpoint
+     * authorized for the authenticated service user, that one directive
+     * report arrives carrying the REJECTED result and the UNKNOWN_DIRECTIVE
+     * diagnostic for the directive invocation, and that the directive
+     * report received by the user is equal to the directive report sent
+     * by the production.
+     */
+    @Test
+    public void testUnauthorizedDirectiveRejected()
+            throws IOException, TimeLimitExceededException, InterruptedException,
+            ExecutionException, TimeoutException {
+
+        // create a control provider and add a control production for the endpoint
+        final ControlProductionGenericDirectiveAckExec genericDirectiveProduction =
+                new ControlProductionGenericDirectiveAckExec();
+        ControlServiceProvider controlProvider = new ControlServiceProvider();
+        controlProvider.addControlProduction(genericDirectiveEndpoint, genericDirectiveProduction);
+
+        ProviderServer server = new ProviderServer(PROVIDER_PORT, new InterceptedService[]{controlProvider},
+                ProviderServer.resourceToFile("cert/cdds-ca.pem"),
+                ProviderServer.resourceToFile("cert/cdds-provider.pem"),
+                ProviderServer.resourceToFile("cert/cdds-provider.key"));
+
+        server.start();
+        controlProvider.addAuthorizedControlEndpoint(genericDirectiveEndpoint);
+
+        final ControlServiceUser controlServiceUser =
+                ControlServiceUser.buildSecureControlService("localhost", PROVIDER_PORT,
+                ProviderServer.resourceToFile("cert/cdds-ca.pem"),
+                ProviderServer.resourceToFile("cert/cdds-user.pem"),
+                ProviderServer.resourceToFile("cert/cdds-user.key"));
+
+        List<ControlServiceEndpoint> endpoints = controlServiceUser.getEndpoints(5000);
+
+        assert(endpoints.get(0).equals(genericDirectiveEndpoint));
+
+        // use the first provided endpoint for this test, wait for one directive report
+        controlServiceUser.openControlEndpoint(endpoints.get(0), 1);
+
+        final int invocationId = controlServiceUser.nextInvocationId();
+
+        controlServiceUser.sendControlDirective(ControlDirective.newBuilder()
+                .setGenericControlDirective(GenericControlDirective.newBuilder()
+                        .setInvocationId(invocationId)
+                        .setDirectiveId(UNAUTHORIZED_DIRECTIVE_ID)
+                        .build())
+                .build());
+
+        controlServiceUser.waitForDirectiveReports(timeout);
+
+        final List<DirectiveReport> receivedReports = controlServiceUser.getReceivedDirectiveReports();
+
+        assert(receivedReports.size() == 1);
+        assert(receivedReports.get(0).getResult() == DirectiveResult.REJECTED);
+        assert(receivedReports.get(0).getDiagnostic() == DirectiveExecutionDiagnostic.UNKNOWN_DIRECTIVE);
+        assert(receivedReports.get(0).getInvocationId() == invocationId);
+
+        assert(genericDirectiveProduction.getSentDirectiveReports().equals(receivedReports));
+
+        LOG.info("Received rejected directive report for directive '" + UNAUTHORIZED_DIRECTIVE_ID + "'");
 
         controlServiceUser.stop();
         controlServiceUser.shutdown();

@@ -7,17 +7,23 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import ccsds.cdds.v1.Control.ControlDirective;
+import ccsds.cdds.v1.Control.DirectiveExecutionDiagnostic;
 import ccsds.cdds.v1.Control.DirectiveReport;
+import ccsds.cdds.v1.Control.DirectiveResult;
 import ccsds.cdds.v1.Types.ProductionState;
 import ccsds.cdds.v1.control.CddsControlService.ControlServiceEndpoint;
 import io.grpc.stub.StreamObserver;
 
 /**
  * Test control production handling generic control directives.
- * Each received generic control directive is responded with one
- * {@link ccsds.cdds.v1.Control.DirectiveResult#ACCEPTED} directive report
- * and one {@link ccsds.cdds.v1.Control.DirectiveResult#EXECUTED}
- * directive report for the invocation.
+ * Each received generic control directive authorized by the endpoint,
+ * that is the directive identifier is listed in the endpoint, is responded
+ * with one {@link DirectiveResult#ACK} directive report and one
+ * {@link DirectiveResult#EXECUTED} directive report for the invocation.
+ * Each received generic control directive not authorized by the endpoint
+ * is responded with one {@link DirectiveResult#REJECTED} directive report
+ * carrying the {@link DirectiveExecutionDiagnostic#UNKNOWN_DIRECTIVE}
+ * diagnostic for the invocation.
  */
 public class ControlProductionGenericDirectiveAckExec implements ControlProductionInterface {
 
@@ -61,25 +67,41 @@ public class ControlProductionGenericDirectiveAckExec implements ControlProducti
                 LOG.info("Received control directive\n" + controlDirective);
 
                 if(controlDirective.hasGenericControlDirective()) {
+                    final String directiveId = controlDirective.getGenericControlDirective().getDirectiveId();
                     final int invocationId = controlDirective.getGenericControlDirective().getInvocationId();
 
-                    // send the ACCEPTED directive report
-                    final DirectiveReport acceptedReport = DirectiveReport.newBuilder()
-                            .setProductionState(ProductionState.OPERATIONAL)
-                            .setInvocationId(invocationId)
-                            .setResult(ccsds.cdds.v1.Control.DirectiveResult.ACK)
-                            .build();
-                    controlUserStream.onNext(acceptedReport);
-                    sentDirectiveReports.add(acceptedReport);
+                    if(controlEndpoint.getGenericDirectiveIdsList().contains(directiveId)) {
 
-                    // send the EXECUTED directive report
-                    final DirectiveReport executedReport = DirectiveReport.newBuilder()
-                            .setProductionState(ProductionState.OPERATIONAL)
-                            .setInvocationId(invocationId)
-                            .setResult(ccsds.cdds.v1.Control.DirectiveResult.EXECUTED)
-                            .build();
-                    controlUserStream.onNext(executedReport);
-                    sentDirectiveReports.add(executedReport);
+                        // send the ACK directive report
+                        final DirectiveReport acceptedReport = DirectiveReport.newBuilder()
+                                .setProductionState(ProductionState.OPERATIONAL)
+                                .setInvocationId(invocationId)
+                                .setResult(DirectiveResult.ACK)
+                                .build();
+                        controlUserStream.onNext(acceptedReport);
+                        sentDirectiveReports.add(acceptedReport);
+
+                        // send the EXECUTED directive report
+                        final DirectiveReport executedReport = DirectiveReport.newBuilder()
+                                .setProductionState(ProductionState.OPERATIONAL)
+                                .setInvocationId(invocationId)
+                                .setResult(DirectiveResult.EXECUTED)
+                                .build();
+                        controlUserStream.onNext(executedReport);
+                        sentDirectiveReports.add(executedReport);
+                    } else {
+                        LOG.warn("Directive '" + directiveId + "' not authorized by the endpoint");
+
+                        // send the REJECTED directive report
+                        final DirectiveReport rejectedReport = DirectiveReport.newBuilder()
+                                .setProductionState(ProductionState.OPERATIONAL)
+                                .setInvocationId(invocationId)
+                                .setResult(DirectiveResult.REJECTED)
+                                .setDiagnostic(DirectiveExecutionDiagnostic.UNKNOWN_DIRECTIVE)
+                                .build();
+                        controlUserStream.onNext(rejectedReport);
+                        sentDirectiveReports.add(rejectedReport);
+                    }
                 }
             }
 

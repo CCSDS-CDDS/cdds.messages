@@ -264,7 +264,8 @@ public class ControlServiceUser {
                 .setServiceProvider(serviceProvider)
                 .setTerminal(terminal)
                 .setServiceUser(serviceUser)
-                .setServiceVersion(1);
+                .setServiceVersion(1)
+                .setAckTimeout(1);
 
         for(String genericDirectiveId : genericDirectiveIds) {
             controlEndpoint.addGenericDirectiveIds(genericDirectiveId);
@@ -295,6 +296,7 @@ public class ControlServiceUser {
                 .setTerminal(terminal)
                 .setServiceUser(serviceUser)
                 .setServiceVersion(1)
+                .setAckTimeout(1)
                 .addFunctionalResourceDirectives(FunctionalResourceDirectiveName.newBuilder()
                     .setFunctionalResourceDirective(createObjectIdentifier(frDirectiveDescription, frDirectiveOid))
                     .setFunctionalResourceInstance(frDirectiveInstance)

@@ -2,6 +2,92 @@
 syntax = "proto3";
 package ccsds.schema.ndmxml;
 
+// ---------------------------------------------------------------------------
+// Comments transferred from the NDM/XML schema files this proto is derived from:
+// Source: ndmxml-4.0.0-common-4.0.xsd
+// ********************************************************************
+//  NOTE: This is version 4.0, Rev 0 of the NDM/XML Schema (11/06/2022.
+//  If this schema changed in Rev 0, it is noted below, else no change.
+// ********************************************************************
+// ********************************************************************
+//  NOTE: This is version 4.0.0 of the NDM/XML Schema (05/2023)
+//  This component of the schema is the "Navigation WG common" module,
+//  which contains only simple types and complex types used by the
+//  constituent schemas that make up Navigation Data Messages:
+//  ACM, AEM, APM, CDM, OCM, OEM, OMM, OPM, RDM, TDM.
+//
+//  Compatible document versions are:
+//     NDM/XML 505.0-B-4 Blue Book   (xx/2023)
+//     ADM     504.0-B-2 Blue Book   (07/2023)
+//     CDM     508.0-B-1 Blue Book   (06/2013)
+//     ODM     502.0-B-3 Blue Book   (04/2023)
+//     RDM     508.1-B-1 Blue Book   (11/2019)
+//     TDM     503.0-B-2 Blue Book   (06/2020)
+//
+//  *********************  BLUE BOOK CHANGE LOG  *********************
+//  03/14/2010: Original implemementation of schemas.
+//  01/08/2013  Rev 0: Updated for CDM
+//  10/13/2017: Rev A: Corrected units errors in covariance matrix.
+//                     Modified to include revA common schemas.
+//  08/29/2018: Rev B: Modified to remove revision version from file
+//                     names, since file names on SANA were static
+//                     and the schemas basically did not work. Also
+//                     corrected error in OEM covariance matrix.
+//  08/16/2019: Rev C: Merged all "CCSDS common" schema components
+//                     with this schema. Now only "NAVWG common".
+//                     The "CCSDS Common" is temporarily empty schema.
+//  07/23/2020: 2.0.0: Updated for NDM/XML 2.0 changes (common, etc.)
+//  08/12/2021: 3.0.0: Updated for NDM/XML 3.0 changes (common, etc.)
+//  09/15/2022: 3.0.0: Updated for NDM/XML 3.0, ODM 3.0 changes
+//  12/04/2022: 4.0.0: Updated for NDM/XML 4.0 changes (common, etc.)
+//  05/19/2023: 4.0.0: Preparations for ADM B-2 publication
+// ********************************************************************
+// ********************************************************************
+//  Simple Types and Complex Types shared in the various NDM messages
+// ********************************************************************
+// ********************************************************************
+//  Header specifications for all Navigation Data Messages
+//  Ultimately the header should be largely generic for all messages.
+// ********************************************************************
+//
+// Source: ndmxml-4.0.0-tdm-2.0.xsd
+// ********************************************************************
+//  NOTE: This is version 4.0, Rev 0 of the NDM/XML Schema (11/06/2022.
+//  If this schema changed in Rev 0, it is noted below, else no change.
+// ********************************************************************
+// ********************************************************************
+//  NOTE: This is version 4.0.0 of the NDM/XML Schema (05/19/2023).
+//  This component of the schema is the "TDM" module, which contains
+//  elements that are used exclusively in the Tracking Data Message
+//  (TDM).
+//
+//  Compatible document versions are:
+//     NDM/XML 505.0-B-3   Blue Book (05/2023)
+//     TDM     503.0-B-2   Blue Book (06/2020)
+//
+// ********************************************************************
+//  *********************  BLUE BOOK CHANGE LOG  *********************
+//  03/14/2010: Original implemementation of schemas.
+//  10/13/2017: Rev A: Modified to include revA common schemas.
+//  08/29/2018: Rev B: Modified to remove revision version from file
+//                     names, since file names on SANA were static
+//                     and the schemas basically did not work.
+//  07/23/2020: 2.0.0: Updated for NDM/XML 2.0 changes (common, etc.)
+//  08/12/2021: 3.0.0: Updated for NDM/XML 3.0 changes (common, etc.)
+//  09/15/2022; 3.0.0: Final tweaks prior to NDM/XML Agency Review
+//  12/04/2022; 4.0.0: Updated for NDM/XML 4.0 changes (common, etc.)
+// ********************************************************************
+//  Include schema containing common data types, etc.
+// ********************************************************************
+//
+// ---------------------------------------------------------------------------
+
+// ********************************************************************
+//  End Generic Header specifications
+// ********************************************************************
+// ********************************************************************
+//  DATA TYPES POTENTIALLY COMMON TO MULTIPLE MESSAGES
+// ********************************************************************
 message AccType {
   AccUnits units = 1;
   double value = 10;
@@ -11,6 +97,12 @@ enum AccUnits {
   ACC_UNITS_UNSPECIFIED = 0;
   ACC_UNITS_KM_S2 = 1;
 }
+// ********************************************************************
+//  SIMPLE TYPES AND COMPLEX TYPES UNIQUE TO THE ADM and related units
+// ********************************************************************
+// ********************************************************************
+//  Miscellaneous ACM Data Types
+// ********************************************************************
 enum AcmAttitudeType {
   // Default
   ACM_ATTITUDE_TYPE_UNSPECIFIED = 0;
@@ -32,6 +124,7 @@ enum AcmCovarianceLineType {
   ACM_COVARIANCE_LINE_TYPE_QUATERNION_GYROBIAS = 5;
   ACM_COVARIANCE_LINE_TYPE_QUATERNION_ANGVEL = 6;
 }
+//  Used in ADM/ACM
 enum AdMethodType {
   // Default
   AD_METHOD_TYPE_UNSPECIFIED = 0;
@@ -90,6 +183,9 @@ enum AngleRateUnits {
   ANGLE_RATE_UNITS_UNSPECIFIED = 0;
   ANGLE_RATE_UNITS_DEG_S = 1;
 }
+// ********************************************************************
+//  Angle related Simple Types and Complex Types
+// ********************************************************************
 message AngleType {
   AngleUnits units = 1;
   double value = 10;
@@ -107,12 +203,18 @@ enum AngleUnits {
   ANGLE_UNITS_UNSPECIFIED = 0;
   ANGLE_UNITS_DEG = 1;
 }
+// ********************************************************************
+//  Simple Types and Complex Types Unique to the APM.
+// ********************************************************************
 enum ApmRateFrameType {
   // Default
   APM_RATE_FRAME_TYPE_UNSPECIFIED = 0;
   APM_RATE_FRAME_TYPE_EULER_FRAME_A = 1;
   APM_RATE_FRAME_TYPE_EULER_FRAME_B = 2;
 }
+// ********************************************************************
+//  End Angle related Simple Types and Complex Types
+// ********************************************************************
 message AreaType {
   AreaUnits units = 1;
   double value = 10;
@@ -122,6 +224,12 @@ enum AreaUnits {
   AREA_UNITS_UNSPECIFIED = 0;
   AREA_UNITS_M2 = 1;
 }
+// ********************************************************************
+//  End of ODM covariance type definitions
+// ********************************************************************
+// *****************************************************************
+//  Complex types unique to the RDM
+// *****************************************************************
 message AtmosphericReentryParametersType {
   repeated string comment = 1;
   DayIntervalTypeUR orbitLifetime = 10;
@@ -159,6 +267,9 @@ enum AttRateType {
   ATT_RATE_TYPE_EULER_RATE = 3;
   ATT_RATE_TYPE_GYRO_BIAS = 4;
 }
+// ********************************************************************
+//  "Ephemeris Line Types" used in the AEM
+// ********************************************************************
 message AttitudeStateType {
   QuaternionEphemerisType quaternionephemeris = 1;
   QuaternionDerivativeType quaternionderivative = 10;
@@ -170,6 +281,9 @@ message AttitudeStateType {
   SpinNutationType spinnutation = 70;
   SpinNutationMomType spinnutationmom = 80;
 }
+// ********************************************************************
+//  SIMPLE TYPES AND COMPLEX TYPES UNIQUE TO THE AEM
+// ********************************************************************
 enum AttitudeTypeType {
   // Default
   ATTITUDE_TYPE_TYPE_UNSPECIFIED = 0;
@@ -187,6 +301,9 @@ message BallisticCoeffType {
   BallisticCoeffUnitsType units = 1;
   double value = 10;
 }
+// ********************************************************************
+//  Simple types and relate units unique to the RDM.
+// ********************************************************************
 enum BallisticCoeffUnitsType {
   // Default
   BALLISTIC_COEFF_UNITS_TYPE_UNSPECIFIED = 0;
@@ -208,6 +325,9 @@ enum CovBasisType {
   COV_BASIS_TYPE_SIMULATED = 4;
   COV_BASIS_TYPE_OTHER = 5;
 }
+// ********************************************************************
+//  Miscellaneous ODM Data Types and related Unit Types
+// ********************************************************************
 enum CovOrderType {
   // Default
   COV_ORDER_TYPE_UNSPECIFIED = 0;
@@ -244,6 +364,7 @@ message DeltamassType {
   MassUnits units = 1;
   double value = 10;
 }
+//  Type Z for deltamass that allows value of zero (attitude maneuvers)
 message DeltamassTypeZ {
   MassUnits units = 1;
   double value = 10;
@@ -256,14 +377,21 @@ enum DisintegrationType {
   DISINTEGRATION_TYPE_BREAK_UP = 3;
   DISINTEGRATION_TYPE_MASS_LOSS_BREAK_UP = 4;
 }
+// ********************************************************************
+//  Position/Velocity/Acceleration related Simple Types/Complex Types
+// ********************************************************************
 message DistanceType {
   PositionUnits units = 1;
   double value = 10;
 }
+// ********************************************************************
+//  Time related Simple Types and Complex Types
+// ********************************************************************
 message DurationType {
   TimeUnits units = 1;
   double value = 10;
 }
+//  type 6 AEM data:  Euler Angle / Angular Velocity Type
 message EulerAngleAngVelType {
   string epoch = 1;
   AngleType angle1 = 10;
@@ -273,6 +401,7 @@ message EulerAngleAngVelType {
   AngVelComponentType angvelY = 50;
   AngVelComponentType angvelZ = 60;
 }
+//  type 5 AEM data:  Euler Angle Derivative Type
 message EulerAngleDerivativeType {
   string epoch = 1;
   AngleType angle1 = 10;
@@ -282,6 +411,12 @@ message EulerAngleDerivativeType {
   AngleRateType angle2Dot = 50;
   AngleRateType angle3Dot = 60;
 }
+// ********************************************************************
+//  NOTE:  For some spacecraft, the "eulerAngleStateType" and
+//  "spinType" described in the next 2 sections may
+//  appear in the same APM, according to the AACS design of the
+//  spacecraft.
+// ********************************************************************
 message EulerAngleStateType {
   repeated string comment = 1;
   string refFrameA = 10;
@@ -294,6 +429,7 @@ message EulerAngleStateType {
   AngleRateType angle2Dot = 80;
   AngleRateType angle3Dot = 90;
 }
+//  type 4 AEM data:  Euler Angle Type
 message EulerAngleType {
   string epoch = 1;
   AngleType angle1 = 10;
@@ -488,6 +624,9 @@ enum MomentUnits {
   MOMENT_UNITS_UNSPECIFIED = 0;
   MOMENT_UNITS_KG_M2 = 1;
 }
+// ********************************************************************
+//  Alphabetized to Here
+// ********************************************************************
 message Ms2Type {
   Ms2Units units = 1;
   double value = 10;
@@ -507,6 +646,7 @@ enum NumPerYearUnits {
   NUM_PER_YEAR_UNITS_UNSPECIFIED = 0;
   NUM_PER_YEAR_UNITS_YR = 1;
 }
+//  "OBJECT_TYPE" is used in ODM, RDM, CDM
 enum ObjectDescriptionType {
   // Default
   OBJECT_DESCRIPTION_TYPE_UNSPECIFIED = 0;
@@ -541,6 +681,9 @@ message OemCovarianceMatrixAbstractType {
   string epoch = 10;
   string covRefFrame = 20;
 }
+// ********************************************************************
+//  Start of ODM covariance type definitions
+// ********************************************************************
 message OemCovarianceMatrixType {
   repeated string comment = 1;
   string epoch = 10;
@@ -571,6 +714,9 @@ message OpmCovarianceMatrixAbstractType {
   repeated string comment = 1;
   string covRefFrame = 10;
 }
+// ********************************************************************
+//  Start of ODM covariance type definitions
+// ********************************************************************
 message OpmCovarianceMatrixType {
   repeated string comment = 1;
   string covRefFrame = 10;
@@ -640,11 +786,13 @@ enum PositionVelocityCovarianceUnits {
   POSITION_VELOCITY_COVARIANCE_UNITS_UNSPECIFIED = 0;
   POSITION_VELOCITY_COVARIANCE_UNITS_KM2_S = 1;
 }
+//  type 3 AEM data:  Quaternion Angular Velocity Type
 message QuaternionAngVelType {
   string epoch = 1;
   QuaternionType quaternion = 10;
   AngVelType angvel = 20;
 }
+//  type 2 AEM data: Quaternion Derivative Type
 message QuaternionDerivativeType {
   string epoch = 1;
   QuaternionType quaternion = 10;
@@ -665,10 +813,14 @@ enum QuaternionDotUnits {
   QUATERNION_DOT_UNITS_UNSPECIFIED = 0;
   QUATERNION_DOT_UNITS1_S = 1;
 }
+//  type 1 AEM data: Quaternion Type
 message QuaternionEphemerisType {
   string epoch = 1;
   QuaternionType quaternion = 10;
 }
+// ********************************************************************
+//  "Logical Blocks" used in the APM
+// ********************************************************************
 message QuaternionStateType {
   repeated string comment = 1;
   string refFrameA = 10;
@@ -795,6 +947,7 @@ message SpacecraftParametersType {
   AreaType dragArea = 40;
   double dragCoeff = 50;
 }
+//  type 9 AEM data:  Spin Nutation/Momentum Type
 message SpinNutationMomType {
   string epoch = 1;
   AngleType spinAlpha = 10;
@@ -805,6 +958,7 @@ message SpinNutationMomType {
   AngleType momentumDelta = 60;
   AngleRateType nutationVel = 70;
 }
+//  type 8 AEM data:  Spin Nutation Type
 message SpinNutationType {
   string epoch = 1;
   AngleType spinAlpha = 10;
@@ -830,6 +984,7 @@ message SpinStateType {
   AngleType momentumDelta = 110;
   AngleRateType nutationVel = 120;
 }
+//  type 7 AEM data:  Spin Type
 message SpinType {
   string epoch = 1;
   AngleType spinAlpha = 10;
@@ -866,19 +1021,31 @@ message TdmAngleType {
   AngleUnits units = 1;
   double value = 10;
 }
+// ********************************************************************
+//  The TDM "body" consists of 1 or more "segments", described below.
+// ********************************************************************
 message TdmBody {
   repeated TdmSegment segment = 1;
 }
+// ********************************************************************
+//  TDM Data Section
+// ********************************************************************
 message TdmData {
   repeated string comment = 1;
   repeated TrackingDataObservationType observation = 10;
 }
+// ********************************************************************
+//  A TDM V.2 header
+// ********************************************************************
 message TdmHeader {
   repeated string comment = 1;
   string creationDate = 10;
   string originator = 20;
   string messageId = 30;
 }
+// ********************************************************************
+//  TDM Metadata Section
+// ********************************************************************
 message TdmMetadata {
   repeated string comment = 1;
   string trackId = 10;
@@ -941,10 +1108,20 @@ message TdmMetadata {
   double correctionAberrationDiurnal = 580;
   YesNoType correctionsApplied = 590;
 }
+// ********************************************************************
+//  The TDM "segment" consists of a "metadata" section and a "data"
+//  section.  The segment construct is specifically stated in the
+//  structure of each TDM as described in the TDM specification.
+// ********************************************************************
 message TdmSegment {
   TdmMetadata metadata = 1;
   TdmData data = 10;
 }
+// ********************************************************************
+// ********************************************************************
+//  A TDM consists of a "header" and a "body".  The header is a
+//  construct that is shared by all NDM's, found in the "common" schema
+// ********************************************************************
 message TdmType {
   string id = 1;
   string version = 10;
@@ -984,6 +1161,16 @@ enum TorqueUnits {
   TORQUE_UNITS_UNSPECIFIED = 0;
   TORQUE_UNITS_N_M = 1;
 }
+// ********************************************************************
+//  Simple Types and Complex Types unique to the TDM
+// ********************************************************************
+// ********************************************************************
+//  NOTE:  The following structure of the TDM Data Section is based on
+//  an "observation".  Each observation contains a given epoch time,
+//  and the observable as of the epoch time. This structure reduces the
+//  pre-processing required to build a TDM from disparate input
+//  sources.
+// ********************************************************************
 message TrackingDataObservationType {
   string epoch = 1;
   AngleType angle1 = 10;
@@ -1034,6 +1221,9 @@ message TrackingDataObservationType {
   double tropoWet = 460;
   double vlbiDelay = 470;
 }
+// ********************************************************************
+//  OCM/ACM Simple Types and Complex Types
+// ********************************************************************
 enum TrajBasisType {
   // Default
   TRAJ_BASIS_TYPE_UNSPECIFIED = 0;
@@ -1047,6 +1237,9 @@ message UserDefinedParameterType {
   string parameter = 1;
   string value = 10;
 }
+// ********************************************************************
+//  USER DEFINED PARAMETERS
+// ********************************************************************
 message UserDefinedType {
   repeated SequenceWrapper_UserDefinedType sequencewrapper = 1;
 
@@ -1086,6 +1279,9 @@ enum WkgUnits {
   WKG_UNITS_UNSPECIFIED = 0;
   WKG_UNITS_W_KG = 1;
 }
+// ********************************************************************
+//  Miscellaneous Non-Numeric Simple Types and Complex Types
+// ********************************************************************
 enum YesNoType {
   // Default
   YES_NO_TYPE_UNSPECIFIED = 0;

@@ -21,7 +21,18 @@ import cdds.service.common.InterceptedService;
 import cdds.service.common.ProviderServer;
 
 /**
- * Test the communication among a TM service user and a TM service provider
+ * Test the communication among a CDDS TM service user and a CDDS TM service
+ * provider using the gRPC CddsTmServiceProvider service.
+ * <p>
+ * Both tests start a CDDS TM provider on a local port, register the TM
+ * service endpoint authorizedTmEndpoint1 together with a TM frame production
+ * and connect a TM service user. The secure test connects the user using
+ * mutual TLS and discovers the endpoints authorized for the authenticated
+ * service user by calling getEndpoints before opening the telemetry endpoint
+ * by calling openTelemetryEndpoint providing the endpoint as tm-endpoint-bin
+ * meta data. The unsecure test connects the user without TLS and opens the
+ * telemetry endpoint directly. Both tests wait for the numFrames TM frames
+ * produced by the production.
  */
 public class TmServiceTest {
 
@@ -67,6 +78,21 @@ public class TmServiceTest {
             LOG.info("END " + info.getDisplayName());
     }
 
+    /**
+     * Tests the delivery of TM frames over a secure (mTLS) connection:
+     * the test starts a secure CDDS TM provider on a local port, registers
+     * the TM service endpoint authorizedTmEndpoint1 together with a TM frame
+     * production producing numFrames frames of frameLength bytes, and
+     * connects a TM service user using mutual TLS. The user discovers the
+     * endpoints authorized for the authenticated service user by calling
+     * getEndpoints, opens the telemetry endpoint by calling
+     * openTelemetryEndpoint providing the endpoint as tm-endpoint-bin meta
+     * data and waits for the numFrames TM frames produced by the
+     * {@link TmProductionNFrames} production.
+     * <p>
+     * The test verifies that getEndpoints returns exactly the endpoint
+     * authorized for the authenticated service user.
+     */
     @Test
     public void testNTmFramesSecure() throws IOException, TimeLimitExceededException, InterruptedException, ExecutionException, TimeoutException {
         
@@ -101,6 +127,16 @@ public class TmServiceTest {
         server.stop();
     }
 
+    /**
+     * Tests the delivery of TM frames over an unsecure (plaintext) connection:
+     * the test starts a CDDS TM provider on a local port without TLS,
+     * registers the TM service endpoint authorizedTmEndpoint1 together with a
+     * TM frame production producing numFrames frames of frameLength bytes, and
+     * connects a TM service user without TLS. The user opens the telemetry
+     * endpoint by calling openTelemetryEndpoint with authorizedTmEndpoint1
+     * and waits for the numFrames TM frames produced by the
+     * {@link TmProductionNFrames} production.
+     */
     @Test
     public void testNTmFramesUnsecure() throws IOException, TimeLimitExceededException, InterruptedException {
 

@@ -121,9 +121,9 @@ public class TcServiceTest {
     /**
      * Test two TC user and TC provider with certificates for authentication and encryption:
      * Two runs of each TC user sending and expecting
-     *          -> one TC transmission request
-     *          <- one TC ACK
-     *          <- one Transmission report
+     *          one TC transmission request
+     *          one TC ACK
+     *          one Transmission report
      * @throws IOException
      * @throws InterruptedException     
      * @throws TimeLimitExceededException

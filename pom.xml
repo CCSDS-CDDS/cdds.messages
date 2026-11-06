@@ -224,6 +224,55 @@
         </configuration>
       </plugin>
 
+      <!-- generate Javadoc into target/generated-docs -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.4.0</version>
+        <configuration>
+          <encoding>UTF-8</encoding>
+          <charset>UTF-8</charset>
+          <docencoding>UTF-8</docencoding>
+          <doclint>none</doclint>
+          <failOnError>false</failOnError>
+          <failOnWarnings>false</failOnWarnings>
+          <detectJavaApiLink>false</detectJavaApiLink>
+          <quiet>true</quiet>
+          <notimestamp>true</notimestamp>
+        </configuration>
+        <executions>
+          <!-- complete Javadoc: generated protobuf sources plus all test sources -->
+          <execution>
+            <id>complete-javadoc</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>test-javadoc-no-fork</goal>
+            </goals>
+            <configuration>
+              <reportOutputDirectory>${project.build.directory}/generated-docs</reportOutputDirectory>
+              <destDir>javadoc</destDir>
+              <sourcepath>${project.build.directory}/generated-sources:${project.basedir}/src/test/java:${project.build.directory}/generated-test-sources/protobuf</sourcepath>
+              <subpackages>ccsds:cdds:com</subpackages>
+            </configuration>
+          </execution>
+          <!-- Javadoc for the *ServiceTest classes only -->
+          <execution>
+            <id>service-test-javadoc</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>test-javadoc-no-fork</goal>
+            </goals>
+            <configuration>
+              <reportOutputDirectory>${project.build.directory}/generated-docs</reportOutputDirectory>
+              <destDir>javadoc-service-tests</destDir>
+              <sourceFileIncludes>
+                <sourceFileInclude>**/*ServiceTest.java</sourceFileInclude>
+              </sourceFileIncludes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
       <!-- <plugin>
                         <groupId>org.apache.avro</groupId>
                         <artifactId>avro-maven-plugin</artifactId>

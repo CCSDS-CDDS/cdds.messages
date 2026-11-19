@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ccsds.org/cdds/v1/schemas/cdds-endpoint-tm.schema.json",
+  "title": "TmServiceEndpoint",
+  "description": "Allows the identification of a TM service endpoint in terms of the parameters provided below, derived from the TmServiceEndpoint message of cdds-tm-service.proto. The JSON encoded TmServiceEndpoint is transferred in the tm-endpoint-bin gRPC method metadata when opening a TM endpoint.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "endpointName": {
+      "type": "string",
+      "description": "An optional endpoint name to distinguish endpoints; for instance for spacecrafts supporting multiple bands."
+    },
+    "serviceVersion": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "The CDDS service version of this service"
+    },
+    "serviceProvider": {
+      "type": "string",
+      "description": "The name of the service provider organization providing the TM service"
+    },
+    "terminal": {
+      "type": "string",
+      "description": "The terminal providing the TM service"
+    },
+    "serviceUser": {
+      "type": "string",
+      "description": "The serviceUser (spacecraft) for which TM shall be delivered"
+    },
+    "frameQuality": {
+      "$ref": "cdds-types.schema.json#/$defs/FrameQuality",
+      "description": "The frame quality of the exchanged TM."
+    },
+    "gvcIds": {
+      "$ref": "cdds-types.schema.json#/$defs/GvcIdList",
+      "description": "The GVCIDs of the exchanged TM. Requested GVCIDs shall be checked against provided GVCIDs. If the check is successful, the requested GVCID(s) shall be provided."
+    },
+    "qos": {
+      "$ref": "cdds-types.schema.json#/$defs/EnumQoS",
+      "description": "The QoS used for the provisioning of telemetry messages"
+    }
+  },
+  "required": [
+    "serviceVersion",
+    "serviceProvider",
+    "serviceUser",
+    "qos"
+  ],
+  "not": {
+    "required": [
+      "frameQuality",
+      "gvcIds"
+    ],
+    "description": "The frame quality and the GVCIDs are mutually exclusive (oneof qualityOrGvcId); a service endpoint is requested either by frame quality or by GVCID."
+  }
+}

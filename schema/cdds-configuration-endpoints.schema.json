@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ccsds.org/cdds/v1/schemas/cdds-configuration-endpoints.schema.json",
+  "title": "CddsEndpoints",
+  "description": "A list of CDDS service endpoints of the different CDDS services, derived from the CddsEndpoints message of cdds-configuration-endpoints.proto. The endpoints are grouped by service type in the following order: TC, TM, monitoring, control, TD. Several endpoints of the same service type are allowed within the per-service list.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "tcEndpoints": {
+      "type": "array",
+      "items": {
+        "$ref": "cdds-endpoint-tc.schema.json"
+      },
+      "description": "The list of CDDS TC Service endpoints."
+    },
+    "tmEndpoints": {
+      "type": "array",
+      "items": {
+        "$ref": "cdds-endpoint-tm.schema.json"
+      },
+      "description": "The list of CDDS TM Service endpoints."
+    },
+    "monitoringEndpoints": {
+      "type": "array",
+      "items": {
+        "$ref": "cdds-endpoint-monitoring.schema.json"
+      },
+      "description": "The list of CDDS Monitoring Service endpoints."
+    },
+    "controlEndpoints": {
+      "type": "array",
+      "items": {
+        "$ref": "cdds-endpoint-control.schema.json"
+      },
+      "description": "The list of CDDS Control Service endpoints."
+    },
+    "trackingEndpoints": {
+      "type": "array",
+      "items": {
+        "$ref": "cdds-endpoint-td.schema.json"
+      },
+      "description": "The list of CDDS Tracking Data Service endpoints."
+    }
+  }
+}

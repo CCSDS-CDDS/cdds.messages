@@ -17,7 +17,7 @@ import javax.net.ssl.SSLException;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
-import ccsds.cdds.v1.CddsServiceProvider.ServiceProviderAddress;
+import ccsds.cdds.v1.CddsConfigurationServiceProvider.ServiceProviderAddress;
 import ccsds.cdds.v1.Telecommand.TelecommandMessage;
 import ccsds.cdds.v1.Telecommand.TelecommandReport;
 import ccsds.cdds.v1.Types.FrameVersion;

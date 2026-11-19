@@ -1,0 +1,143 @@
+{
+  "tcEndpoints": [
+    {
+      "endpointName": "myGroundStation.mySpacecraft.tc.cltu",
+      "serviceVersion": 1,
+      "serviceProvider": "myProvider",
+      "terminal": "myGroundStation",
+      "serviceUser": "mySpacecraft",
+      "cltu": true,
+      "ackTimeout": 5
+    }
+  ],
+  "tmEndpoints": [
+    {
+      "endpointName": "myGroundStation.mySpacecraft.tm.vc0",
+      "serviceVersion": 1,
+      "serviceProvider": "myProvider",
+      "terminal": "myGroundStation",
+      "serviceUser": "mySpacecraft",
+      "gvcIds": {
+        "gvcId": [
+          {
+            "spacecraftId": "4711",
+            "version": "USLP",
+            "virtualChannelId": 0
+          }
+        ]
+      },
+      "qos": "EXACTLY_ONCE"
+    },
+    {
+      "endpointName": "myGroundStation.mySpacecraft.tm.vc7",
+      "serviceVersion": 1,
+      "serviceProvider": "myProvider",
+      "terminal": "myGroundStation",
+      "serviceUser": "mySpacecraft",
+      "gvcIds": {
+        "gvcId": [
+          {
+            "spacecraftId": "4711",
+            "version": "USLP",
+            "virtualChannelId": 7
+          }
+        ]
+      },
+      "qos": "AT_MOST_ONCE"
+    }
+  ],
+  "monitoringEndpoints": [
+    {
+      "endpointName": "myGroundStation.mySpacecraft.mon.cyclic",
+      "serviceVersion": 1,
+      "serviceProvider": "myProvider",
+      "terminal": "myGroundStation",
+      "serviceUser": "mySpacecraft",
+      "qos": "EXACTLY_ONCE",
+      "monitoringCycle": {
+        "seconds": 10,
+        "milliseconds": "500"
+      },
+      "mode": "CYCLIC_MONITORING_MODE",
+      "monitoringParameters": [
+        {
+          "functionalResourceParameterId": {
+            "oidString": "my.fr-parameter-id",
+            "arcs": ["1", "2", "3", "4", "5"]
+          }
+        },
+        {
+          "functionalResourceParameterName": {
+            "functionalResourceParameterIdentifier": {
+              "oidString": "my.fr-parameter-name-id",
+              "arcs": ["1", "2", "3", "4", "6"]
+            },
+            "functionalResourceInstance": "2"
+          }
+        },
+        {
+          "parameterGroup": "myParameterGroup"
+        }
+      ],
+      "reportedEvents": [
+        {
+          "functionalResourceEventId": {
+            "oidString": "my.fr-event-id",
+            "arcs": ["1", "2", "3", "5", "1"]
+          }
+        },
+        {
+          "functionalResourceEventName": {
+            "functionalResourceEventId": {
+              "oidString": "my.fr-event-name-id",
+              "arcs": ["1", "2", "3", "5", "2"]
+            },
+            "functionalResourceInstance": "2"
+          }
+        }
+      ]
+    }
+  ],
+  "controlEndpoints": [
+    {
+      "endpointName": "myGroundStation.mySpacecraft.ctl.fr-directives",
+      "serviceVersion": 1,
+      "serviceProvider": "myProvider",
+      "terminal": "myGroundStation",
+      "serviceUser": "mySpacecraft",
+      "ackTimeout": 5,
+      "functionalResourceDirectives": [
+        {
+          "functionalResourceDirective": {
+            "oidString": "my.fr-directive-all-instances",
+            "arcs": ["1", "2", "3", "6", "1"]
+          }
+        },
+        {
+          "functionalResourceDirective": {
+            "oidString": "my.fr-directive-instance",
+            "arcs": ["1", "2", "3", "6", "2"]
+          },
+          "functionalResourceInstance": "2"
+        }
+      ],
+      "genericDirectiveIds": []
+    }
+  ],
+  "trackingEndpoints": [
+    {
+      "endpointName": "myGroundStation.mySpacecraft.td.kvn",
+      "serviceVersion": 1,
+      "serviceProvider": "myProvider",
+      "terminal": "myGroundStation",
+      "serviceUser": "mySpacecraft",
+      "trackingDataType": ["DOPPLER_INSTANTANEOUS", "DOPPLER_INTEGRATED", "RANGE"],
+      "trackingDataFormat": "KVN",
+      "latencyLimit": {
+        "seconds": 1,
+        "milliseconds": "500"
+      },
+      "qos": "EXACTLY_ONCE"
+    }
+  ]
+}

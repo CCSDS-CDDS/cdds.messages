@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ccsds.org/cdds/v1/schemas/cdds-endpoint-tc.schema.json",
+  "title": "TcServiceEndpoint",
+  "description": "Allows the identification of a TC service endpoint in terms of the parameters provided below, derived from the TcServiceEndpoint message of cdds-tc-service.proto. The JSON encoded TcServiceEndpoint is transferred in the tc-endpoint-bin gRPC method metadata when opening a TC endpoint.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "endpointName": {
+      "type": "string",
+      "description": "An optional endpoint name to distinguish endpoints; for instance for spacecrafts supporting multiple bands."
+    },
+    "serviceVersion": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "The CDDS service version of this service"
+    },
+    "serviceProvider": {
+      "type": "string",
+      "description": "The name of the service provider organization providing the TC service"
+    },
+    "terminal": {
+      "type": "string",
+      "description": "The name of the terminal providing the TC service"
+    },
+    "serviceUser": {
+      "type": "string",
+      "description": "The service user (spacecraft) for which TC shall be delivered"
+    },
+    "cltu": {
+      "type": "boolean",
+      "description": "If the cltu field is set to true, the endpoint supports CLTUs."
+    },
+    "gvcIds": {
+      "$ref": "cdds-types.schema.json#/$defs/GvcIdList",
+      "description": "If the GVCIDs field is set, the endpoint supports TC frames conforming to the specified GVCIDs."
+    },
+    "ackTimeout": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Within ack timeout in seconds, the provider shall respond to TelecommandMessage#transmissionRequest message with either TelecommandReport#ack or TelecommandReport#failure"
+    }
+  },
+  "required": [
+    "serviceVersion",
+    "serviceProvider",
+    "serviceUser",
+    "ackTimeout"
+  ],
+  "not": {
+    "required": [
+      "cltu",
+      "gvcIds"
+    ],
+    "description": "Indicates the use of the endpoint for uplink of CLTU, or a TC VC when the TC User provides TC frames for transmission (oneof type); the endpoint is requested either for CLTU uplink or for the uplink of TC frames for the specified GVCIDs."
+  }
+}

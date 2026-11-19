@@ -2,7 +2,7 @@ syntax = "proto3";
 package ccsds.cdds.v1.tm; 
 import "telemetry.proto";
 import "types.proto";
-import "cdds-service-provider.proto";
+import "cdds-configuration-service-provider.proto";
 
 
 /**
@@ -79,24 +79,6 @@ message TmServiceEndpoint {
      * The QoS used for the provisioning of telemetry messages
      */
     EnumQoS qos = 70;
-}
-
-/**
- * The configuration of a telemetry service shared between user and provider.
- */
-message TmServiceConfiguration {
-    
-    /**
-     * Address or DNS name of the gRPC server hosting the CDDS TM Service Provider.
-     * The IP address configuration is only needed for the CDDS TM Service User.
-     */
-    ServiceProviderAddress gRpcServer = 1;
-
-    /**
-     * Configuration of TM service endpoints in terms of frame quality or global virtual channel identifier. Optionally provider and ground station names can be included.
-     * Note: The service user can also use the getEndpoints method to discover services at runtime.
-     */
-    TmServiceEndpointList endpoints = 10;
 }
 
 /**

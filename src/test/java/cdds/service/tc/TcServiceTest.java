@@ -16,7 +16,7 @@ import org.junit.jupiter.api.TestInfo;
 
 import com.google.protobuf.ByteString;
 
-import ccsds.cdds.v1.CddsServiceProvider.ServiceProviderAddress;
+import ccsds.cdds.v1.CddsConfigurationServiceProvider.ServiceProviderAddress;
 import ccsds.cdds.v1.Telecommand.ReportRequest;
 import ccsds.cdds.v1.Telecommand.TelecommandMessage;
 import ccsds.cdds.v1.Telecommand.TelecommandTransmissionRequest;

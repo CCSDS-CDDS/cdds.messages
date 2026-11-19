@@ -1,0 +1,47 @@
+syntax = "proto3";
+package cdds.cdds.v1;
+
+import "cdds-tc-service.proto";
+import "cdds-tm-service.proto";
+import "cdds-monitoring-service.proto";
+import "cdds-control-service.proto";
+import "cdds-td-service.proto";
+
+
+/**
+ * A list of CDDS service endpoints of the different CDDS services.
+ * Corresponds to the JSON schema cdds-configuration-endpoints.schema.json: Eachfield is the list of
+ * endpoints for a service.
+ * Several endpoints of the same service type are allowed; the endpoints should be grouped
+ * by service type in the following order: TC, TM, monitoring, control, TD.
+ */
+message CddsEndpoints {
+
+    /**
+     * The list of CDDS TC Service endpoints.
+     */
+    repeated ccsds.cdds.v1.tc.TcServiceEndpoint tcEndpoints = 1;
+
+    /**
+     * The list of CDDS TM Service endpoints.
+     */
+    repeated ccsds.cdds.v1.tm.TmServiceEndpoint tmEndpoints = 10;
+
+    /**
+     * The list of CDDS Monitoring Service endpoints.
+     */
+    repeated ccsds.cdds.v1.monitoring.MonitoringServiceEndpoint monitoringEndpoints = 20;
+
+    /**
+     * The list of CDDS Control Service endpoints.
+     */
+    repeated ccsds.cdds.v1.control.ControlServiceEndpoint controlEndpoints = 30;
+
+    /**
+     * The list of CDDS Tracking Data Service endpoints.
+     */
+    repeated ccsds.cdds.v1.td.TrackingDataServiceEndpoint trackingEndpoints = 40;
+
+}
+
+

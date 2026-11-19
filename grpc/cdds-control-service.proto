@@ -2,7 +2,7 @@ syntax = "proto3";
 package ccsds.cdds.v1.control;
 import "types.proto"; 
 import "control.proto";
-import "cdds-service-provider.proto";
+import "cdds-configuration-service-provider.proto";
 
 /**
  * This is the gRPC definition of the CDDS Control Service to invoke ground station control directives.
@@ -77,24 +77,6 @@ message ControlServiceEndpoint {
      * The list of generic control directives available for this endpoint
      */
     repeated string genericDirectiveIds = 70;
-}
-
-/**
- * The configuration of a control service shared between user and provider.
- */
-message ControlServiceConfiguration {
-    
-    /**
-     * Address or DNS name of the gRPC server hosting the CDDS Control Service Provider.
-     * The IP address configuration is only needed for the CDDS Control Service User.
-     */
-    ServiceProviderAddress gRpcServer = 1;
-
-    /**
-     * Configuration of control service endpoints denoting control directives.
-     * Note: The service user can also use the getEndpoints method to discover services at runtime.
-     */
-    ControlServiceEndpointList endpoints = 10;
 }
 
 /**

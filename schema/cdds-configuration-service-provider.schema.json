@@ -1,13 +1,31 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://ccsds.org/cdds/v1/schemas/cdds-grpc-service-provider-address.schema.json",
-  "title": "CDDS gRPC Service Provider Address",
-  "description": "The address of a gRPC server hosting a CDDS service provider, derived from the ServiceProviderAddress message of cdds-service-provider.proto. The type is shared between the CDDS service configuration schemas.",
+  "$id": "https://ccsds.org/cdds/v1/schemas/cdds-configuration-service-provider.schema.json",
+  "title": "ServiceConfiguration",
+  "description": "Configures a gRPC service provider and the associated endpoints, derived from the ServiceConfiguration message of cdds-configuration-service-provider.proto.",
   "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "serviceProviderAddress": {
+      "$ref": "#/$defs/ServiceProviderAddress",
+      "description": "The service provider address"
+    },
+    "endPointNames": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Note that one service provider can support multiple service endpoints of the same and / or different types."
+    }
+  },
+  "required": [
+    "serviceProviderAddress",
+    "endPointNames"
+  ],
   "$defs": {
     "ServiceProviderAddress": {
       "title": "ServiceProviderAddress",
-      "description": "Address or DNS name of the gRPC server hosting the CDDS service provider. The IP address configuration is only needed for the CDDS service user.",
+      "description": "Address or DNS name of the gRPC server hosting the CDDS service provider, derived from the ServiceProviderAddress message of cdds-configuration-service-provider.proto. The IP address configuration is only needed for the CDDS service user.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -21,7 +39,7 @@
         },
         "address": {
           "type": "string",
-          "description": "The IP address or DNS resolve able name of the gRPC provider. For a provider the address can be omitted."
+          "description": "The IP address or DNS resolvable name of the gRPC provider. For a provider the address can be omitted."
         },
         "port": {
           "type": "integer",

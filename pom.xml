@@ -174,7 +174,7 @@
                 <argument>--doc_opt=src/main/resources/cdds.tmpl,cdds-test.html:ccsds_schema_ndmxml.proto${sort-source}</argument>
 
                 <!-- proto files -->
-                <argument>${project.basedir}/grpc/cdds-service-provider.proto</argument>
+                <argument>${project.basedir}/grpc/cdds-configuration-service-provider.proto</argument>
                 <argument>${project.basedir}/grpc/cdds-tc-service.proto</argument>
                 <argument>${project.basedir}/grpc/cdds-tm-service.proto</argument>
                 <argument>${project.basedir}/grpc/cdds-td-service.proto</argument>

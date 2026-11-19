@@ -1,0 +1,19 @@
+{
+  "serviceProviderAddress": {
+    "serviceProvider": "myProvider",
+    "terminal": "myGroundStation",
+    "address": "my-provider.example.com",
+    "port": 8443,
+    "rootCertificateFile": "cert/cdds-ca.pem",
+    "certificateFile": "cert/cdds-user.pem",
+    "privateKeyFile": "cert/cdds-user.key"
+  },
+  "endPointNames": [
+    "myGroundStation.mySpacecraft.tc.cltu",
+    "myGroundStation.mySpacecraft.tm.vc0",
+    "myGroundStation.mySpacecraft.tm.vc7",
+    "myGroundStation.mySpacecraft.mon.cyclic",
+    "myGroundStation.mySpacecraft.ctl.fr-directives",
+    "myGroundStation.mySpacecraft.td.kvn"
+  ]
+}

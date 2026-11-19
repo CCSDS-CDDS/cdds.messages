@@ -8,7 +8,7 @@
   "properties": {
     "endpointName": {
       "type": "string",
-      "description": "An optional endpoint name to distinguish endpoints; for instance for spacecrafts supporting multiple bands."
+      "description": "An endpoint name to identify an endpoint; for instance for spacecrafts supporting multiple bands."
     },
     "serviceVersion": {
       "type": "integer",

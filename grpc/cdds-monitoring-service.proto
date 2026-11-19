@@ -39,10 +39,10 @@ service MonitoringServiceProvider {
 message MonitoringServiceEndpoint {
 
     /**
-     * An optional endpoint name to distinguish endpoints;
+     * An endpoint name to identify an endpoint;
      * for instance for spacecrafts supporting multiple bands.
      */
-    optional string endpointName = 1;
+    string endpointName = 1;
 
     /**
      * The CDDS service version of this service

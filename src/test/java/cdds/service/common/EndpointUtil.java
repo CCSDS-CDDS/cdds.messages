@@ -37,9 +37,8 @@ public class EndpointUtil {
             s.append("no tc type set" + DOT);
         }
 
-        if(ep.hasEndpointName()) {
-            s.append(ep.getEndpointName());
-        }
+        s.append(ep.getEndpointName());
+        
 
         return s.toString();
     }

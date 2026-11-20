@@ -1,5 +1,5 @@
 syntax = "proto3";
-package cdds.cdds.v1;
+package ccsds.cdds.v1;
 
 import "cdds-tc-service.proto";
 import "cdds-tm-service.proto";
